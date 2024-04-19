@@ -1,16 +1,26 @@
-import { useState } from 'react'
-import './App.css'
+import "./App.css";
+import { NavbarWithSearch } from "./Components/Navbar";
+import { Sidebar } from "./Components/Sidebar";
+import { VideoPlayer } from "./Components/VideoPlayer";
+import { Routes, Route } from "react-router-dom";
+import { Signin } from "./Pages/Signin";
+import { Signup } from "./Pages/Signup";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+      {/* <NavbarWithSearch />
+      <Sidebar /> */}
+      <Routes>
+        {/* <Route path='/' element={}  /> */}
+        <Route path="/signin" Component={Signin} />
+        <Route path="/signup" Component={Signup} />
+        <Route path="/videos" Component={VideoPlayer} />
+        
+        
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
