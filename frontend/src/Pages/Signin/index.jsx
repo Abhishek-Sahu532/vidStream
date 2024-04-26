@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 export function Signin() {
   return (
-    <Card className="w-96  mx-auto mt-[20vh]">
+    <Card className="w-96  mx-auto mt-36">
       <CardHeader
         variant="gradient"
         color="gray"
@@ -33,6 +33,15 @@ export function Signin() {
         <Button variant="gradient" fullWidth>
           Sign In
         </Button>
+        <Button fullWidth
+        size="lg"
+        variant="gradient"
+        // color="blue-gray"
+        className="flex items-center gap-8 mt-2"
+      >
+        <img src="https://docs.material-tailwind.com/icons/google.svg" alt="metamask" className="h-6 w-6" />
+        Continue with Google
+      </Button>
         <Typography variant="small" className="mt-6 flex justify-center">
           Don&apos;t have an account?
           <Typography

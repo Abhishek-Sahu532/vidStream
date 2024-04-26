@@ -1,4 +1,3 @@
-import { Typography } from "@material-tailwind/react";
 
 export function VideoPlacehoderSkeleton() {
   return (

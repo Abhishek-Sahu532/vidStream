@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 export const Signup = () => {
   return (
-    <div className=" flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
+    <div className="mt-10 flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
     <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
       Sign Up
     </h4>
