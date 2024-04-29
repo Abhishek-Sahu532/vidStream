@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import  jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -24,13 +24,9 @@ const generateAccessAndRefreshToken = async (userId) => {
   }
 };
 
-//registering the user
+//registering the user -- TESTED
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullname, email, username, password } = req.body;
-
-  // if(fullname === ''){
-  //     throw ApiError(400, "Fullname is required")
-  // }
 
   //validation
   if (
@@ -38,15 +34,13 @@ export const registerUser = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All fields are required");
   }
-
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
-
+  console.log("existedUser", existedUser);
   if (existedUser) {
     throw new ApiError(409, "User already exists");
   }
-
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
@@ -71,9 +65,9 @@ export const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
   });
 
-  const createdUser = await user
-    .findById(user._id)
-    .select("-password -refreshToken");
+  const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
@@ -84,7 +78,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
-//login user
+//login user -- TESTED
 export const loginUser = asyncHandler(async (req, res) => {
   //todos
   //getting details from user - email and password
@@ -94,7 +88,6 @@ export const loginUser = asyncHandler(async (req, res) => {
   // if the given values is correct- generate the accesstoken and refreshToken and share with the client in cookies
 
   const { username, email, password } = req.body;
-
   if (!username && !email) {
     throw new ApiError(400, "username or password is required");
   }
@@ -125,8 +118,8 @@ export const loginUser = asyncHandler(async (req, res) => {
   //by default an user or client can change the cookies in the browser but when we modify the httpOnly and secure with the true value so only from server we can change the cookies.
   return res
     .status(200)
-    .cookie("accessToekn", accessToken, options)
-    .cookie("refreshTOken", refreshToken, select)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .json(
       new ApiResponse(
         200,
@@ -140,7 +133,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-//logout user
+//logout user -- TESTED
 export const logoutUser = asyncHandler(async (req, res) => {
   //clear the cookies from the client and database
   await User.findByIdAndUpdate(
@@ -152,12 +145,10 @@ export const logoutUser = asyncHandler(async (req, res) => {
       new: true, //to getting the updated value
     }
   );
-
   const options = {
     httpOnly: true,
     secure: true,
   };
-
   return res
     .status(200)
     .clearCookie("accessToken", options)

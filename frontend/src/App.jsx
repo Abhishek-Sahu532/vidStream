@@ -12,7 +12,7 @@ import Root from "./Pages/Root";
 
 function App() {
   return (
-    <>
+    <div className="w-screen overflow-auto overflow-x-hidden h-screen">
       <NavbarWithSearch />
     
       <Routes>
@@ -24,7 +24,7 @@ function App() {
         <Route path="/video-upload" Component={VideoUpload} />
        
       </Routes>
-    </>
+    </div>
   );
 }
 

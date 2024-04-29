@@ -38,7 +38,7 @@ export function VideoUpload() {
             Select a Video
           </Typography>
 
-          <div className="flex flex-row gap-6 justify-between">
+          <div className="flex flex-row gap-6 justify-center align-middle">
             <div className="!border-blue-gray-200 focus:!border-gray-900 border border-solid w-[300px]">
               <input type="file" name="file" id="file" className="sr-only" />
               <label
@@ -59,23 +59,10 @@ export function VideoUpload() {
               </label>
             </div>
 
-            <div className="w-[50%] rounded-md">
-              {/* <VideoPlayer />
-               */}
-              <HoverVideoPlayer className='rounded-md'
+            <div className="ml-8 w-[50%] rounded-md">
+              <HoverVideoPlayer
+                className="rounded-md"
                 videoSrc={videoFile}
-                //   pausedOverlay={
-                //     <img
-                //       src={thumbnail}
-                //       alt=""
-                //       style={{
-                //         // Make the image expand to cover the video's dimensions
-                //         width: "100%",
-                //         height: "100%",
-                //         objectFit: "cover",
-                //       }}
-                //     />
-                //   }
                 loadingOverlay={
                   <div className="loading-overlay">
                     <div className="loading-spinner" />
@@ -86,49 +73,48 @@ export function VideoUpload() {
           </div>
         </div>
 
-
-<div className="mt-5">
-<Typography variant="h6" color="blue-gray" className="-mb-3">
+        <div className="mt-5">
+          <Typography variant="h6" color="blue-gray" className="mb-3">
             Select a Thumbnail
           </Typography>
-    <div className="flex flex-row justify-between gap-6">
-    <label className="block">
-                <input
-                  type="file"
-                  className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4  file:rounded-full file:border-0  file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700      hover:file:bg-violet-100   "
-                />
+
+          <div className="flex flex-row gap-6 justify-center align-middle">
+            <div className="!border-blue-gray-200 focus:!border-gray-900 border border-solid w-[300px]">
+              <input type="file" name="file" id="file" className="sr-only" />
+              <label
+                htmlFor="file"
+                className="relative flex min-h-[200px] items-center justify-center rounded-md  p-12 text-center"
+              >
+                <div className="  !border-t-blue-gray-200 focus:!border-t-gray-900">
+                  <span className="mb-2 block text-xl font-semibold text-[#07074D]">
+                    Drop file here
+                  </span>
+                  <span className="mb-2 block text-base font-medium text-[#6B7280]">
+                    Or
+                  </span>
+                  <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
+                    Browse
+                  </span>
+                </div>
               </label>
-    </div>
-    <div>
-    <img
-                className="h-24 w-24 object-cover rounded-sm "
+            </div>
+
+            <div className="ml-8 w-[50%] rounded-md">
+              {/* <VideoPlayer />
+               */}
+              <img
+                className="h-60 w-80 object-cover rounded-sm "
                 src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
                 alt="Selected Thumbnail Photo"
               />
-    </div>
-</div>
-        {/* <div className="mb-1 flex flex-col gap-6">
-
-
-    
-        <div className="mb-6 pt-4">
-      
-</div>
-      
-      
-          <div className="flex">
-            <div>
-             
-            </div>
-            <div className="shrink-0 ml-4">
-            
             </div>
           </div>
+        </div>
 
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
+        <div className="flex flex-row gap-6 justify-center align-middle mt-5">
+          <Typography variant="h6" color="blue-gray" className="text-center ">
             Title
           </Typography>
-
           <Input
             size="lg"
             placeholder="name@mail.com"
@@ -137,20 +123,22 @@ export function VideoUpload() {
               className: "before:content-none after:content-none",
             }}
           />
-
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
+        </div>
+        <div className="mt-8">
+          <Typography variant="h6" color="blue-gray" className="mb-3">
             Description
           </Typography>
           <Textarea
             size="lg"
-            placeholder="name@mail.com"
+            placeholder="Description"
             className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             labelProps={{
               className: "before:content-none after:content-none",
             }}
           ></Textarea>
-        </div> */}
-        {/* <Checkbox
+        </div>
+
+        <Checkbox
           label={
             <Typography
               variant="small"
@@ -169,8 +157,8 @@ export function VideoUpload() {
           containerProps={{ className: "-ml-2.5" }}
         />
         <Button className="mt-6" fullWidth>
-         Upload
-        </Button> */}
+          Upload
+        </Button>
       </form>
     </Card>
   );

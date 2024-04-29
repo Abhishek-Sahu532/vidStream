@@ -75,7 +75,7 @@ export function NavbarWithSearch() {
   );
 
   return (
-    <Navbar className="w-[100vw] bg-transparent py-12 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
+    <Navbar className="w-full  bg-blue-gray-500 px-15 py-5 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
       <div className=" w-full flex flex-wrap items-center justify-between text-blue-gray-900">
         <Sidebar />
 
