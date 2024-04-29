@@ -3,12 +3,11 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Button,
 } from "@material-tailwind/react";
 
 export function SuggestionCard() {
   return (
-    <Card className="m-3 w-full max-w-[24rem] flex-row mt-24 bg-blue-gray-400">
+    <Card className="w-full mb-4 flex-row  bg-blue-gray-100">
       <CardHeader
         shadow={false}
         floated={false}
@@ -24,7 +23,7 @@ export function SuggestionCard() {
         <Typography
           variant="p"
           color="gray"
-          className="p-0 mb-1 h-10 text-sm  text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ..."
+          className="text p-0 mb-1 h-11 text-md font-semibold text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ..."
         >
           startupsd ddddddddd ddddddddddd ddddddddddddd ddddddddddd
           ddddddddddddddddddddd

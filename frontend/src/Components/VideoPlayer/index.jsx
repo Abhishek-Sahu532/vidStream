@@ -36,7 +36,7 @@ export const VideoPlayer = () => {
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
   return (
-    <div className="col-span-2">
+    <div className="">
       <div>
         <video className="h-full w-full rounded-lg " controls muted>
           <source
