@@ -20,26 +20,22 @@ export const Signup = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors , isSubmitting},
-  } = useForm({
-    defaultValues : {
-      fullname : '',
-      email : '',
-      username : '',
-      password: '',
-      avatar : null
+  } = useForm()
 
-    }
-  })
+
   const onSubmit = (data) => {
-    try {
-      console.log(data)
-      dispatch(registerUser(data))
-    } catch (error) {
-      setError('root', error)
-    }
+    
+    const myForm = new FormData();
+    myForm.set("fullname", data.fullname);
+    myForm.set("email", data.email);
+    myForm.set("username", data.username);
+    myForm.set("password", data.password);
+    myForm.set("avatar", data.avatar[0]);
+    myForm.set("coverImage", data.coverImage[0]);
+    dispatch(registerUser(myForm));
   }
+
 useEffect(()=>{
 if(isAuthenticated){
   navigate('/profile')
@@ -124,11 +120,23 @@ if(isAuthenticated){
             <input
               type="file"  {...register("avatar", {
                 required : 'Avatar is required',
-                
               } ) }
               className="block w-full border peer border-blue-gray-200  shadow-sm rounded-lg text-sm focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 disabled:opacity-50 disabled:pointer-events-none  file:border-0 file:me-4 file:py-3 file:px-4  dark:file:bg-neutral-700 dark:file:text-neutral-400"
             />
              {errors.avatar && <p className="my-2 text-red-600">{errors.avatar.message}</p>}
+          </div>
+
+          <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+            Cover Image
+          </h6>
+          <div className="relative h-11 w-full min-w-[200px] mb-6">
+            <input
+              type="file"  {...register("coverImage", {
+                required : 'coverImage is required',
+              } ) }
+              className="block w-full border peer border-blue-gray-200  shadow-sm rounded-lg text-sm focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 disabled:opacity-50 disabled:pointer-events-none  file:border-0 file:me-4 file:py-3 file:px-4  dark:file:bg-neutral-700 dark:file:text-neutral-400"
+            />
+             {errors.coverImage && <p className="my-2 text-red-600">{errors.coverImage.message}</p>}
           </div>
         </div>
 
@@ -187,7 +195,7 @@ if(isAuthenticated){
         </button>
         <p className="block mt-4 font-sans text-base antialiased font-normal leading-relaxed text-center text-gray-700">
           Already have an account?
-          <Link to="signin" className="font-medium text-gray-900">
+          <Link to="/signin" className="font-medium text-gray-900">
             {" "}
             Sign In
           </Link>

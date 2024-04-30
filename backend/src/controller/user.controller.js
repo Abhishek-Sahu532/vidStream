@@ -101,6 +101,11 @@ export const loginUser = asyncHandler(async (req, res) => {
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid credentials");
+
+    // return res.status(401).json({
+    //   success: false,
+    //   message : 'Invalid credentials'
+    // })
   }
   const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
     user._id

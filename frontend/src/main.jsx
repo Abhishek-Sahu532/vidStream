@@ -6,9 +6,16 @@ import store from "./Store.jsx";
 import { Provider } from "react-redux";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
+ 
+ 
+ <Provider store={store}>
+
     <BrowserRouter>
+    
       <App />
+
     </BrowserRouter>
+    {/* </ToastContainer> */}
   </Provider>
+
 );
