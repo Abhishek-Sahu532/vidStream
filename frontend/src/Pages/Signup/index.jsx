@@ -1,8 +1,22 @@
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form"
 
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../actions/UserAction";
+import { useEffect } from "react";
+
 
 export const Signup = () => {
+
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { error, loading, isAuthenticated } = useSelector(
+    (state) => state.user
+  );
+  console.log(error, loading, isAuthenticated )
   const {
     register,
     handleSubmit,
@@ -21,11 +35,16 @@ export const Signup = () => {
   const onSubmit = (data) => {
     try {
       console.log(data)
+      dispatch(registerUser(data))
     } catch (error) {
       setError('root', error)
     }
   }
-  console.log(errors)
+useEffect(()=>{
+if(isAuthenticated){
+  navigate('/profile')
+}
+},[isAuthenticated, navigate])
 
   return (
     <div className="mt-28 flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
