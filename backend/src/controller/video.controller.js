@@ -29,7 +29,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
   }
 
   const videoOnCloudinary = await uploadOnCloudinary(videoLocalPath);
-  const ThubmnailOnCloudinary = await uploadOnCloudinary(videoLocalPath);
+  const ThubmnailOnCloudinary = await uploadOnCloudinary(thumbnailLocalPath);
 
   if (!videoOnCloudinary) {
     return new ApiError(400, "Video file is required");

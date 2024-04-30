@@ -6,33 +6,73 @@ import {
   Typography,
   Textarea,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 import HoverVideoPlayer from "react-hover-video-player";
-import videoFile from "../../assets/Images/videoFile.mp4";
+// import videoFile from "../../assets/Images/videoFile.mp4";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 export function VideoUpload() {
-  // const manageThumbnail = ()=>{
-  //     photoName = $refs.photo.files[0].name
-  //     const reader = new FileReader()
-  //     reader.onload = (e) => {
-  //         photoPreview = e.target.result;
-  //     };
-  //     reader.readAsDataURL($refs.photo.files[0])
-  // }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [video, setVideo] = useState("");
+  const [thumbanail, setThumbnail] = useState("");
+
+  const changeVideoPreview = () => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith("video/")) {
+      const videoUrl = URL.createObjectURL(file);
+      setVideo(videoUrl);
+    } else {
+      // Handle error: File type is not supported
+      // alert("Please select a valid video file.");
+      toast.error("Please select a valid video file.");
+    }
+  };
+
+  const changeImagePreview = () => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const imgUrl = URL.createObjectURL(file);
+      setThumbnail(imgUrl);
+    } else {
+      // Handle error: File type is not supported
+      // alert("Please select a valid video file.");
+      toast.error("Please select a valid image file.");
+    }
+  };
+
+  const onSubmit = (data) => {
+    const myForm = new FormData();
+    myForm.set("video", data.video[0]);
+
+    myForm.set("thumbnail", data.thumbnail[0]);
+    myForm.set("title", data.title);
+    myForm.set("description", data.description);
+    // dispatch(registerUser(myForm));
+    console.log(myForm);
+  };
+
+  useEffect(() => {}, []);
 
   return (
-    <Card
-      color="transparent"
-      shadow={false}
-      className="mt-28 px-16 bg-blue-gray-400"
-    >
+    <Card color="transparent" shadow={false} className="mt-28 px-16 b">
       <Typography variant="h4" color="blue-gray">
         Upload a Video
       </Typography>
       <Typography color="gray" className="mt-1 font-normal">
         Nice to meet you! Enter your details to register.
       </Typography>
-      <form className="mt-8 mb-2  max-w-screen-lg  flex flex-col">
+      <form
+        className="mt-8 mb-2  max-w-screen-lg  flex flex-col "
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div>
           <Typography variant="h6" color="blue-gray" className="mb-3">
             Select a Video
@@ -40,9 +80,19 @@ export function VideoUpload() {
 
           <div className="flex flex-row gap-6 justify-center align-middle">
             <div className="!border-blue-gray-200 focus:!border-gray-900 border border-solid w-[300px]">
-              <input type="file" name="file" id="file" className="sr-only" />
+              <input
+                type="file"
+                name="fileForVideo"
+                id="fileForVideo"
+                className="sr-only"
+                {...register("video", {
+                  required: "Video is required",
+                })}
+                onChange={changeVideoPreview}
+                accept="video/mp4, video/*"
+              />
               <label
-                htmlFor="file"
+                htmlFor="fileForVideo"
                 className="relative flex min-h-[200px] items-center justify-center rounded-md  p-12 text-center"
               >
                 <div className="  !border-t-blue-gray-200 focus:!border-t-gray-900">
@@ -62,7 +112,7 @@ export function VideoUpload() {
             <div className="ml-8 w-[50%] rounded-md">
               <HoverVideoPlayer
                 className="rounded-md"
-                videoSrc={videoFile}
+                videoSrc={video}
                 loadingOverlay={
                   <div className="loading-overlay">
                     <div className="loading-spinner" />
@@ -71,6 +121,9 @@ export function VideoUpload() {
               />{" "}
             </div>
           </div>
+          {errors.video && (
+            <p className="my-2 text-red-600">{errors.video.message}</p>
+          )}
         </div>
 
         <div className="mt-5">
@@ -80,9 +133,18 @@ export function VideoUpload() {
 
           <div className="flex flex-row gap-6 justify-center align-middle">
             <div className="!border-blue-gray-200 focus:!border-gray-900 border border-solid w-[300px]">
-              <input type="file" name="file" id="file" className="sr-only" />
+              <input
+                type="file"
+                name="fileForThumbnail"
+                id="fileForThumbnail"
+                className="sr-only"
+                {...register("thumbnail", {
+                  required: "Thumbnail is required",
+                })} accept="image/*"
+                onChange={changeImagePreview}
+              />
               <label
-                htmlFor="file"
+                htmlFor="fileForThumbnail"
                 className="relative flex min-h-[200px] items-center justify-center rounded-md  p-12 text-center"
               >
                 <div className="  !border-t-blue-gray-200 focus:!border-t-gray-900">
@@ -100,15 +162,16 @@ export function VideoUpload() {
             </div>
 
             <div className="ml-8 w-[50%] rounded-md">
-              {/* <VideoPlayer />
-               */}
               <img
-                className="h-60 w-80 object-cover rounded-sm "
-                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
+                className="h-60 w-80 border object-cover rounded-sm "
+                src={thumbanail}
                 alt="Selected Thumbnail Photo"
               />
             </div>
           </div>
+          {errors.thumbnail && (
+            <p className="my-2 text-red-600">{errors.thumbnail.message}</p>
+          )}
         </div>
 
         <div className="flex flex-row gap-6 justify-center align-middle mt-5">
@@ -116,19 +179,33 @@ export function VideoUpload() {
             Title
           </Typography>
           <Input
+            {...register("title", {
+              required: "Title is required",
+              minLength: "5",
+              
+            })}
             size="lg"
-            placeholder="name@mail.com"
+            placeholder="Title of the video"
             className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             labelProps={{
               className: "before:content-none after:content-none",
             }}
           />
         </div>
+        {errors.title && (
+          <p className="my-2 text-red-600">{errors.title.message}</p>
+        )}
         <div className="mt-8">
           <Typography variant="h6" color="blue-gray" className="mb-3">
             Description
           </Typography>
+
           <Textarea
+            {...register("description", {
+              required: "Description is required",
+              minLength: "5",
+              maxLength: "100",
+            })}
             size="lg"
             placeholder="Description"
             className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -137,8 +214,13 @@ export function VideoUpload() {
             }}
           ></Textarea>
         </div>
-
+        {errors.description && (
+          <p className="my-2 text-red-600">{errors.description.message}</p>
+        )}
         <Checkbox
+          {...register("checkbox", {
+            required: "Please check the Terms & Conditions",
+          })}
           label={
             <Typography
               variant="small"
@@ -156,7 +238,10 @@ export function VideoUpload() {
           }
           containerProps={{ className: "-ml-2.5" }}
         />
-        <Button className="mt-6" fullWidth>
+        {errors.checkbox && (
+          <p className="my-2 text-red-600">{errors.checkbox.message}</p>
+        )}
+        <Button className="mt-6" fullWidth type="submit">
           Upload
         </Button>
       </form>

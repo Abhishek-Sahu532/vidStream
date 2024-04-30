@@ -78,6 +78,11 @@ export const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
+return res
+    .status(200)
+    .json(new ApiResponse(200, video, "Video uploaded successfully"));
+});
+
 //login user -- TESTED
 export const loginUser = asyncHandler(async (req, res) => {
   //todos

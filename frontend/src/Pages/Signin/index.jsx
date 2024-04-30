@@ -28,25 +28,25 @@ export function Signin() {
     (state) => state.user
   );
 
-  console.log(error, loading, isAuthenticated)
+  console.log(error, loading, isAuthenticated);
   const onSubmit = (data) => {
     const myForm = new FormData();
     myForm.set("email", data.email);
     myForm.set("password", data.password);
-    dispatch(signin(data.email,data.username, data.password));
+    dispatch(signin(data.email, data.username, data.password));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/profile");
-      toast.success()
-      console.log(user.message)
+      toast.success();
+      console.log(user.message);
     }
-    if(error){
-      toast.error(error)
+    if (error) {
+      toast.error(error);
     }
-    console.log('error', error)
-  }, [isAuthenticated, navigate, error, user ]);
+    console.log("error", error);
+  }, [isAuthenticated, navigate, error, user]);
 
   return (
     <Card className="w-96  mx-auto mt-36">
