@@ -13,6 +13,9 @@ import HoverVideoPlayer from "react-hover-video-player";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { uploadAVideo } from "../../actions/VideoAction";
+
 
 export function VideoUpload() {
   const {
@@ -23,7 +26,7 @@ export function VideoUpload() {
 
   const [video, setVideo] = useState("");
   const [thumbanail, setThumbnail] = useState("");
-
+const dispatch = useDispatch()
   const changeVideoPreview = () => {
     const file = event.target.files[0];
     if (file && file.type.startsWith("video/")) {
@@ -56,7 +59,8 @@ export function VideoUpload() {
     myForm.set("title", data.title);
     myForm.set("description", data.description);
     // dispatch(registerUser(myForm));
-    console.log(myForm);
+    dispatch(uploadAVideo(myForm))
+    // console.log(myForm);
   };
 
   useEffect(() => {}, []);

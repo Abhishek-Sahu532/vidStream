@@ -5,15 +5,17 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  LOGOUT_FAIL,
+  LOGOUT_SUCCESS,
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
 const extractErrorMessage = (htmlResponse) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlResponse, 'text/html');
-  const errorMessage = doc.body.innerHTML.match(/Error.*?(?=<br>)/i); 
+  const errorMessage = doc.body.innerHTML.match(/Error.*?(?=<br>)/i);
   console.log("errorMessage", errorMessage)
-  return errorMessage ? errorMessage[0].trim() : ''; 
+  return errorMessage ? errorMessage[0].trim() : '';
 };
 
 export const registerUser = (userData) => async (dispatch) => {
@@ -26,36 +28,46 @@ export const registerUser = (userData) => async (dispatch) => {
       userData,
       config
     );
-    console.log("user", data);
-    dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
+
+    dispatch({ type: REGISTER_USER_SUCCESS, payload: data });
+    console.log("usesfsdfdsfr", data);
   } catch (error) {
     dispatch({
       type: REGISTER_USER_FAIL,
-    
+
       payload: error.response.data.message,
     });
-    console.log('error from action', error)
   }
- 
+
 };
 
-export const signin = (email, password) => async (dispatch) => {
+export const signin = (email, username,  password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
     const config = { headers: { "Content-Type": "application/json" } };
     const { data } = await axios.post(
       `/api/v1/users/login`,
-      { email, password },
+      { email,username, password },
       config
     );
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.user });
   } catch (error) {
-   console.log(
-    'action error', error.response.data
-   )
-    dispatch({ type: LOGIN_FAIL, payload:  extractErrorMessage(error.response.data) });
+    console.log(
+      'action error', error.response.data
+    )
+    dispatch({ type: LOGIN_FAIL, payload: extractErrorMessage(error.response.data) });
     // console.log('error from action', error.response.data )
   }
 
 };
+
+
+export const signout = () => async (dispatch) => {
+try {
+  await axios.get(`/api/v1/users/logout`)
+  dispatch({type: LOGOUT_SUCCESS})
+} catch (error) {
+  dispatch({ type: LOGOUT_FAIL, payload: extractErrorMessage(error.response.data) });
+}
+}

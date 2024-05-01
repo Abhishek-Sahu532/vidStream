@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
+
 export function Signin() {
   const {
     register,
@@ -28,19 +29,16 @@ export function Signin() {
     (state) => state.user
   );
 
-  console.log(error, loading, isAuthenticated);
+  console.log(error, loading, isAuthenticated, user);
   const onSubmit = (data) => {
-    const myForm = new FormData();
-    myForm.set("email", data.email);
-    myForm.set("password", data.password);
+
     dispatch(signin(data.email, data.username, data.password));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/profile");
-      toast.success();
-      console.log(user.message);
+      toast.success(user.message);
     }
     if (error) {
       toast.error(error);

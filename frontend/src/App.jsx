@@ -23,6 +23,8 @@ function App() {
         <Route path="/video-detail" Component={VideoDetails} />
         <Route path="/video-upload" Component={VideoUpload} />
       </Routes>
+
+      
       <ToastContainer
         position="top-right"
         autoClose={5000}

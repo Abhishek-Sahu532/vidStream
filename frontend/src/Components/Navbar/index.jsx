@@ -9,10 +9,13 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
+import { useSelector } from "react-redux";
+import { ProfileMenu } from "../ProfileMemu";
+import { NotificationsMenu } from "../NotificationMenu";
 
 export function NavbarWithSearch() {
   const [openNav, setOpenNav] = useState(false);
-
+  const { isAuthenticated } = useSelector((state) => state.user);
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -75,8 +78,8 @@ export function NavbarWithSearch() {
   );
 
   return (
-    <Navbar className="w-full  bg-blue-gray-500 px-15 py-5 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
-      <div className=" w-full flex flex-wrap items-center justify-between text-blue-gray-900">
+    <Navbar className="w-full  bg-blue-gray-500  py-5 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
+      <div className=" w-full flex flex-wrap items-center justify-around text-blue-gray-900">
         <Sidebar />
 
         {/* <div className=" flex items-center gap-1 pb-16">
@@ -93,7 +96,9 @@ export function NavbarWithSearch() {
         </Typography>
 
         <div className="hidden lg:block">{navList}</div>
-        <div className="hidden items-center gap-x-2 lg:flex">
+
+        <div className="hidden items-center gap-x-1 lg:flex">
+          {/* search input */}
           <div className="relative flex w-full gap-2 md:w-max">
             <Input
               type="search"
@@ -132,18 +137,40 @@ export function NavbarWithSearch() {
             Search
           </Button>
           {/* <hr className="bg-blue-gray-800" /> */}
-          <div className="flex items-center gap-x-1">
-            <Link to="signin">
+
+          {isAuthenticated && isAuthenticated ? (
+            <>
               {" "}
-              <Button
-                variant="gradient"
-                size="sm"
-                className="hidden lg:inline-block"
-              >
-                <span>Sign in</span>
-              </Button>
-            </Link>
-          </div>
+              <NotificationsMenu /> <ProfileMenu />
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-x-1">
+                <Link to="/signup">
+                  {" "}
+                  <Button
+                    variant="gradient"
+                    size="sm"
+                    className="hidden lg:inline-block"
+                  >
+                    <span>Sign Up</span>
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex items-center gap-x-1">
+                <Link to="/signin">
+                  {" "}
+                  <Button
+                    variant="gradient"
+                    size="sm"
+                    className="hidden lg:inline-block"
+                  >
+                    <span>Sign In</span>
+                  </Button>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
 
         <IconButton
@@ -184,6 +211,7 @@ export function NavbarWithSearch() {
           )}
         </IconButton>
       </div>
+
       <Collapse open={openNav}>
         <div className="container mx-auto">
           {navList}
@@ -228,20 +256,25 @@ export function NavbarWithSearch() {
             </Button>
             {/* login button */}
           </div>
-          <div className="flex ">
-            <Link to="login">
-              <Button fullWidth variant="text" size="sm" className="">
-                <span>Log In</span>
-              </Button>{" "}
-            </Link>
 
-            <Link to="signin">
-              {" "}
-              <Button fullWidth variant="gradient" size="sm" className="">
-                <span>Sign in</span>
-              </Button>
-            </Link>
-          </div>
+          {isAuthenticated && isAuthenticated ? (
+            <ProfileMenu />
+          ) : (
+            <div className="flex ">
+              <Link to="/signup">
+                <Button fullWidth variant="text" size="sm" className="">
+                  <span>Sign Up</span>
+                </Button>{" "}
+              </Link>
+
+              <Link to="/signin">
+                {" "}
+                <Button fullWidth variant="gradient" size="sm" className="">
+                  <span>Sign In</span>
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </Collapse>
     </Navbar>

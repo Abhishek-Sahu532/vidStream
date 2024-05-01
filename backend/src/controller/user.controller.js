@@ -37,7 +37,6 @@ export const registerUser = asyncHandler(async (req, res) => {
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
-  console.log("existedUser", existedUser);
   if (existedUser) {
     throw new ApiError(409, "User already exists");
   }
@@ -78,10 +77,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
-return res
-    .status(200)
-    .json(new ApiResponse(200, video, "Video uploaded successfully"));
-});
 
 //login user -- TESTED
 export const loginUser = asyncHandler(async (req, res) => {
@@ -93,24 +88,17 @@ export const loginUser = asyncHandler(async (req, res) => {
   // if the given values is correct- generate the accesstoken and refreshToken and share with the client in cookies
 
   const { username, email, password } = req.body;
+  
   if (!username && !email) {
     throw new ApiError(400, "username or password is required");
   }
-
   const user = await User.findOne({ $or: [{ username }, { email }] });
-
   if (!user) {
     throw new ApiError(404, "User does not exist");
   }
-
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid credentials");
-
-    // return res.status(401).json({
-    //   success: false,
-    //   message : 'Invalid credentials'
-    // })
   }
   const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
     user._id
