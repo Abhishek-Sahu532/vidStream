@@ -16,7 +16,6 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { uploadAVideo } from "../../actions/VideoAction";
 
-
 export function VideoUpload() {
   const {
     register,
@@ -26,7 +25,7 @@ export function VideoUpload() {
 
   const [video, setVideo] = useState("");
   const [thumbanail, setThumbnail] = useState("");
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const changeVideoPreview = () => {
     const file = event.target.files[0];
     if (file && file.type.startsWith("video/")) {
@@ -53,13 +52,12 @@ const dispatch = useDispatch()
 
   const onSubmit = (data) => {
     const myForm = new FormData();
-    myForm.set("video", data.video[0]);
-
+    myForm.set("videoFile", data.video[0]);
     myForm.set("thumbnail", data.thumbnail[0]);
     myForm.set("title", data.title);
     myForm.set("description", data.description);
-    // dispatch(registerUser(myForm));
-    dispatch(uploadAVideo(myForm))
+
+    dispatch(uploadAVideo(myForm));
     // console.log(myForm);
   };
 
@@ -144,7 +142,8 @@ const dispatch = useDispatch()
                 className="sr-only"
                 {...register("thumbnail", {
                   required: "Thumbnail is required",
-                })} accept="image/*"
+                })}
+                accept="image/*"
                 onChange={changeImagePreview}
               />
               <label
@@ -186,7 +185,6 @@ const dispatch = useDispatch()
             {...register("title", {
               required: "Title is required",
               minLength: "5",
-              
             })}
             size="lg"
             placeholder="Title of the video"

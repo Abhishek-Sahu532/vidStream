@@ -26,7 +26,7 @@ const extractErrorMessage = (htmlResponse) => {
 
 //UPLOAD A VIDEO
 export const uploadAVideo = (formdata) => async (dispatch) => {
-  console.log('formdata', formdata)
+ 
   try {
     dispatch({ type: VIDEO_UPLOAD_REQUEST });
     const config = {
@@ -34,13 +34,20 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     };
+    console.log('formdata', formdata)
     const { data } = await axios.post(
-      `/api/v1/video/publish-a-video`,
+      '/api/v1/video/publish-a-video',
+      formdata,
       config,
-      formdata
+      
     );
+
+  
+    console.log('data', data)
     dispatch({ type: VIDEO_UPLOAD_SUCCESS, payload: data });
+    console.log('payload', payload)
   } catch (error) {
+    console.log(error)
     dispatch({
       type: VIDEO_UPLOAD_FAIL,
       payload:  extractErrorMessage(error.response.data)

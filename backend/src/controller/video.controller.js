@@ -13,13 +13,14 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
+  
   // TODO: get video, upload to cloudinary, create video
   if (!title || !description) {
     return new ApiError(400, "Please fill the require details");
   }
-
+  
   const videoLocalPath = req.files?.videoFile[0]?.path;
-  const thumbnailLocalPath = req.files?.videoFile[0]?.path;
+  const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
 
   if (!videoLocalPath) {
     return new ApiError(400, "Video file is required");
@@ -38,11 +39,13 @@ const publishAVideo = asyncHandler(async (req, res) => {
   if (!ThubmnailOnCloudinary) {
     return new ApiError(400, "Thubmnail file is required");
   }
+  console.log(videoOnCloudinary)
   const video = await Video.create({
     title,
     description,
     videoFile: videoOnCloudinary.url,
     thumbnail: ThubmnailOnCloudinary.url,
+    duration : videoOnCloudinary.duration,
   });
 
   return res

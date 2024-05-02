@@ -21,7 +21,7 @@ function App() {
         <Route path="/signup" Component={Signup} />
         <Route path="/videos" Component={VideoPlayer} />
         <Route path="/video-detail" Component={VideoDetails} />
-        <Route path="/video-upload" Component={VideoUpload} />
+        <Route path="/upload-a-video" Component={VideoUpload} />
       </Routes>
 
       

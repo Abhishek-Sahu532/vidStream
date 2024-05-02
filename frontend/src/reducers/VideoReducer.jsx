@@ -16,7 +16,9 @@ export const videoReducer = (state = { video: {} }, action) => {
       return {
         loading: false,
         success: action.payload.message,
-        video: action.payload.video,
+        video: action.payload.data,
+        
+    
       };
     case VIDEO_UPLOAD_FAIL:
       return {
