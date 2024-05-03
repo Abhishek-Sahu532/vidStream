@@ -77,7 +77,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
-
 //login user -- TESTED
 export const loginUser = asyncHandler(async (req, res) => {
   //todos
@@ -88,7 +87,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   // if the given values is correct- generate the accesstoken and refreshToken and share with the client in cookies
 
   const { username, email, password } = req.body;
-  
+
   if (!username && !email) {
     throw new ApiError(400, "username or password is required");
   }

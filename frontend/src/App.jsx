@@ -9,6 +9,7 @@ import { VideoUpload } from "./Pages/VideoUpload";
 import Root from "./Pages/Root";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { UserProfile } from "./Pages/UserProfile";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
         <Route path="/videos" Component={VideoPlayer} />
         <Route path="/video-detail" Component={VideoDetails} />
         <Route path="/upload-a-video" Component={VideoUpload} />
+        
+ <Route path="/user-profile" Component={UserProfile} />
       </Routes>
 
       
