@@ -28,16 +28,14 @@ export function Signin() {
   const { error, loading, isAuthenticated, user } = useSelector(
     (state) => state.user
   );
-
-  console.log(error, loading, isAuthenticated, user);
-  const onSubmit = (data) => {
+ const onSubmit = (data) => {
 
     dispatch(signin(data.email, data.username, data.password));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/profile");
+      navigate("/my-profile");
       toast.success(user.message);
     }
     if (error) {

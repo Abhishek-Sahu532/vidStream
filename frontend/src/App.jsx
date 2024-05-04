@@ -8,14 +8,14 @@ import { VideoDetails } from "./Pages/VideoDetails";
 import { VideoUpload } from "./Pages/VideoUpload";
 import Root from "./Pages/Root";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { UserProfile } from "./Pages/UserProfile";
+import { MyProfile } from "./Pages/MyProfile";
 
 function App() {
   return (
     <div className="w-screen overflow-auto overflow-x-hidden h-screen">
       <NavbarWithSearch />
-
       <Routes>
         <Route path="/" Component={Root} />
         <Route path="/signin" Component={Signin} />
@@ -23,11 +23,10 @@ function App() {
         <Route path="/videos" Component={VideoPlayer} />
         <Route path="/video-detail" Component={VideoDetails} />
         <Route path="/upload-a-video" Component={VideoUpload} />
-        
- <Route path="/user-profile" Component={UserProfile} />
+        <Route path="/user-profile" Component={UserProfile} />
+        <Route path="/my-profile" Component={MyProfile} />
       </Routes>
 
-      
       <ToastContainer
         position="top-right"
         autoClose={5000}

@@ -10,10 +10,10 @@ export const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { error, loading, isAuthenticated } = useSelector(
+  const { error, loading, isAuthenticated, success } = useSelector(
     (state) => state.user
   );
-  console.log(error, loading, isAuthenticated);
+  console.log(error, loading, success, isAuthenticated);
   const {
     register,
     handleSubmit,
@@ -32,10 +32,10 @@ export const Signup = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (success) {
       navigate("/signin");
     }
-  }, [isAuthenticated, navigate]);
+  }, [success, navigate]);
 
   return (
     <div className="mt-28 flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
@@ -69,7 +69,7 @@ export const Signup = () => {
             <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
           </div>
           <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-            Username
+            Username*
           </h6>
           <div className="relative h-11 w-full min-w-[200px]">
             <input
@@ -88,7 +88,7 @@ export const Signup = () => {
           </div>
 
           <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-            Email
+            Email*
           </h6>
           <div className="relative h-11 w-full min-w-[200px]">
             <input
@@ -105,7 +105,7 @@ export const Signup = () => {
             <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
           </div>
           <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-            Password
+            Password*
           </h6>
           <div className="relative h-11 w-full min-w-[200px]">
             <input
@@ -125,7 +125,7 @@ export const Signup = () => {
           </div>
 
           <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-            Avatar
+            Avatar*
           </h6>
           <div className="relative h-11 w-full min-w-[200px] mb-6">
             <input
@@ -146,14 +146,11 @@ export const Signup = () => {
           <div className="relative h-11 w-full min-w-[200px] mb-6">
             <input
               type="file"
-              {...register("coverImage", {
-                required: "coverImage is required",
+              {...register("coverImage" ,{
+                required : false
               })}
               className="block w-full border peer border-blue-gray-200  shadow-sm rounded-lg text-sm focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 disabled:opacity-50 disabled:pointer-events-none  file:border-0 file:me-4 file:py-3 file:px-4  dark:file:bg-neutral-700 dark:file:text-neutral-400"
             />
-            {errors.coverImage && (
-              <p className="my-2 text-red-600">{errors.coverImage.message}</p>
-            )}
           </div>
         </div>
 

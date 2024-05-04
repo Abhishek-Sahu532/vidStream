@@ -11,7 +11,8 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 
-export const VideoDetailsCard = () => {
+export const VideoDetailsCard = (vid) => {
+  console.log(vid)
   return (
     <div>
       <Card className="max-w-[21rem] overflow-hidden">

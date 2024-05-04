@@ -15,14 +15,14 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { uploadAVideo } from "../../actions/VideoAction";
-
+import { useNavigate } from "react-router-dom";
 export function VideoUpload() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+const navigate = useNavigate();
   const [video, setVideo] = useState("");
   const [thumbanail, setThumbnail] = useState("");
   const dispatch = useDispatch();
@@ -50,14 +50,15 @@ export function VideoUpload() {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit =  (data) => {
     const myForm = new FormData();
     myForm.set("videoFile", data.video[0]);
     myForm.set("thumbnail", data.thumbnail[0]);
     myForm.set("title", data.title);
     myForm.set("description", data.description);
 
-    dispatch(uploadAVideo(myForm));
+     dispatch(uploadAVideo(myForm));
+    navigate('/my-profile')
     // console.log(myForm);
   };
 
@@ -206,7 +207,6 @@ export function VideoUpload() {
             {...register("description", {
               required: "Description is required",
               minLength: "5",
-              maxLength: "100",
             })}
             size="lg"
             placeholder="Description"

@@ -51,7 +51,8 @@ export const signin = (email, username,  password) => async (dispatch) => {
       config
     );
 
-    dispatch({ type: LOGIN_SUCCESS, payload: data.user });
+    dispatch({ type: LOGIN_SUCCESS, payload: data.data.user });
+    console.log(data.data.user)
   } catch (error) {
     console.log(
       'action error', error.response.data

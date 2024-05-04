@@ -2,31 +2,22 @@ import {
   VIDEO_UPLOAD_FAIL,
   VIDEO_UPLOAD_REQUEST,
   VIDEO_UPLOAD_SUCCESS,
+  VIDEO_FETCHED_REQUEST,
+  VIDEO_FETCHED_SUCCESS,
+  VIDEO_FETCHED_FAIL,
 } from "../constaints/VideoConstaints";
-import axios  from 'axios'
-
+import axios from "axios";
 
 const extractErrorMessage = (htmlResponse) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlResponse, 'text/html');
-  const errorMessage = doc.body.innerHTML.match(/Error.*?(?=<br>)/i); 
-  console.log("errorMessage", errorMessage)
-  return errorMessage ? errorMessage[0].trim() : ''; 
+  const doc = parser.parseFromString(htmlResponse, "text/html");
+  const errorMessage = doc.body.innerHTML.match(/Error.*?(?=<br>)/i);
+  console.log("errorMessage", errorMessage);
+  return errorMessage ? errorMessage[0].trim() : "";
 };
-
-
-
-
-
-
-
-
-
-
 
 //UPLOAD A VIDEO
 export const uploadAVideo = (formdata) => async (dispatch) => {
- 
   try {
     dispatch({ type: VIDEO_UPLOAD_REQUEST });
     const config = {
@@ -34,23 +25,35 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     };
-    console.log('formdata', formdata)
+    console.log("formdata", formdata);
     const { data } = await axios.post(
-      '/api/v1/video/publish-a-video',
+      "/api/v1/video/publish-a-video",
       formdata,
-      config,
-      
+      config
     );
-
-  
-    console.log('data', data)
     dispatch({ type: VIDEO_UPLOAD_SUCCESS, payload: data });
-    console.log('payload', payload)
   } catch (error) {
-    console.log(error)
+    console.log(error);
     dispatch({
       type: VIDEO_UPLOAD_FAIL,
-      payload:  extractErrorMessage(error.response.data)
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
+//FETCH VIDEOS
+
+export const fetchAllVideos = () => async (dispatch) => {
+  try {
+    dispatch({ type: VIDEO_FETCHED_REQUEST });
+    const { data } = await axios.get("/api/v1/video/videos");
+    dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
+    console.log("data fetched", data);
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: VIDEO_FETCHED_FAIL,
+      payload: extractErrorMessage(error.response.data),
     });
   }
 };

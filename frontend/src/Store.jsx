@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { thunk } from "redux-thunk";
 import { userReducer } from "./reducers/UserReducer";
-import { videoReducer } from "./reducers/VideoReducer";
+import { getAllVideosReducer, videoReducer } from "./reducers/VideoReducer";
 import {
   persistStore,
   persistReducer,
@@ -20,7 +20,8 @@ import storage from "redux-persist/lib/storage";
 
 const rootReducer = combineReducers({
   user: userReducer,
-  video : videoReducer
+  video : videoReducer,
+  videos : getAllVideosReducer
 });
 
 const persistConfig ={

@@ -9,9 +9,11 @@ import {
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/UserAction";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function ProfileMenu() {
   const dispatch = useDispatch();
+  const navigate =useNavigate()
 
   const menuListItems = [
     {
@@ -102,7 +104,8 @@ export function ProfileMenu() {
   ];
   const signOuthandler = () => {
     dispatch(signout());
-    toast.success("User Sing out successfully");
+    toast.success("User Sign out successfully");
+navigate('/')
   };
   return (
     <Menu>
