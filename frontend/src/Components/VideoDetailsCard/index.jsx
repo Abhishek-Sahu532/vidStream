@@ -11,8 +11,9 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 
-export const VideoDetailsCard = (vid) => {
-  console.log(vid)
+
+
+export const VideoDetailsCard = ({vid}) => {
   return (
     <div>
       <Card className="max-w-[21rem] overflow-hidden">
@@ -24,11 +25,11 @@ export const VideoDetailsCard = (vid) => {
         >
           <div>
             <HoverVideoPlayer
-              videoSrc={videoFile}
+              videoSrc={vid.videoFile}
               pausedOverlay={
                 <img
-                  src={thumbnail}
-                  alt=""
+                  src={vid.thumbnail}
+                  alt={vid.title}
                   style={{
                     // Make the image expand to cover the video's dimensions
                     width: "100%",
@@ -45,7 +46,7 @@ export const VideoDetailsCard = (vid) => {
             />
           </div>
         </CardHeader>
-
+{/* watch it this section, specially avatar and tooltip */}
         <CardBody>
           <Tooltip content="Natali Craig">
             <Avatar
@@ -58,7 +59,7 @@ export const VideoDetailsCard = (vid) => {
           </Tooltip>
 
           <Typography variant="h6" color="blue-gray" className="mt-[-30px] pl-12 ">
-            Videos Title
+            {vid.title}
           </Typography>
           <Typography
             variant="lead"
@@ -66,8 +67,7 @@ export const VideoDetailsCard = (vid) => {
             className="mt-1 font-extralight text-sm"
           >
             {" "}
-            video description Because it&apos;s about motivating the doers.
-            Because I&apos;m here to follow my dreams and inspire others.
+            {vid.description}
           </Typography>
         </CardBody>
         <CardFooter className="flex items-center justify-between mt-[-1rem] py-2 px-5">

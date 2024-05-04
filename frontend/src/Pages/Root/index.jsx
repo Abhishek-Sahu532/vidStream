@@ -1,29 +1,37 @@
-import { useSelector } from "react-redux"
-import {Advertisement }from "../../Components/Events"
-import {VideoDetailsCard }from "../../Components/VideoDetailsCard"
-
-
+import { useSelector, useDispatch } from "react-redux";
+import { Advertisement } from "../../Components/Events";
+import { VideoDetailsCard } from "../../Components/VideoDetailsCard";
+import { useEffect } from "react";
+import { fetchAllVideos } from "../../actions/VideoAction";
+import {Loader} from '../../Components/Loader'
 const Root = () => {
+  const { loading, videos } = useSelector((state) => state.videos);
+  console.log(videos);
+  const dispatch = useDispatch();
 
-  const {loading, videos} = useSelector((state) => state.videos)
-  console.log(videos)
+  useEffect(() => {
+    dispatch(fetchAllVideos());
+  }, []);
+
   return (
     <div>
       <Advertisement />
-      <div className="flex gap-10 p-8 flex-wrap justify-around ">
-      {
-        video && video.map((vid, index)=>(
-          <VideoDetailsCard vid={vid}  key={index}/>
-        ))
-      }
-      
-      {/* <VideoDetailsCard />
-      <VideoDetailsCard />
-      <VideoDetailsCard /> */}
-      </div>
-    
-    </div>
-  )
-}
 
-export default Root
+      {loading && loading ? (
+        <Loader />
+      ) : (
+        <div className="flex gap-10 p-8 flex-wrap justify-around ">
+          {videos &&
+            videos.map((video, index) => (
+              <VideoDetailsCard vid={video} key={index} />
+            ))}
+
+          {/* <VideoDetailsCard />
+<VideoDetailsCard /> */}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Root;

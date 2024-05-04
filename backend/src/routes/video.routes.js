@@ -18,7 +18,7 @@ router.route('/publish-a-video').post(verifyJWT, upload.fields([
     }
 ]), publishAVideo )
 
-router.route('/videos').get(getAllVideos)
+router.route('/all-videos').get(getAllVideos)
 
 
 

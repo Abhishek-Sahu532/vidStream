@@ -46,7 +46,7 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
 export const fetchAllVideos = () => async (dispatch) => {
   try {
     dispatch({ type: VIDEO_FETCHED_REQUEST });
-    const { data } = await axios.get("/api/v1/video/videos");
+    const { data } = await axios.get("/api/v1/video/all-videos");
     dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
     console.log("data fetched", data);
   } catch (error) {
