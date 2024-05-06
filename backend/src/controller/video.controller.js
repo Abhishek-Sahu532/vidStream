@@ -5,15 +5,25 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
+
+//receive the public id from cloudinary to update or delete the previous file
+function getPublicIdFromUrl(url) {
+  const parts = url.split("/");
+  const publicIdWithExtension = parts[parts.length - 1];
+  const publicId = publicIdWithExtension.split(".")[0];
+  return publicId;
+}
 
 const getAllVideos = asyncHandler(async (req, res) => {
   // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
   //TODO: get all videos based on query, sort, pagination
   const videos = await Video.find({});
-
+  // console.log("videos", videos);
   if (!videos) {
     return new ApiError(400, "Videos not fetched");
   }
+
 
   return res
     .status(200)
@@ -50,13 +60,16 @@ const publishAVideo = asyncHandler(async (req, res) => {
   if (!ThubmnailOnCloudinary) {
     return new ApiError(400, "Thubmnail file is required");
   }
-  console.log(videoOnCloudinary);
+  // console.log(videoOnCloudinary)
+
+  
   const video = await Video.create({
     title,
     description,
     videoFile: videoOnCloudinary.url,
     thumbnail: ThubmnailOnCloudinary.url,
     duration: videoOnCloudinary.duration,
+    uploader : req.user
   });
 
   return res
@@ -97,10 +110,48 @@ const getVideoById = asyncHandler(async (req, res) => {
     );
 });
 
-//UPDATE THE VIDEO BY VIDEO ID
+// UPDATE A VIDEO BY OBJECT ID
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+  const { title, description } = req.body;
   //TODO: update video details like title, description, thumbnail
+  if (!videoId) {
+    throw new ApiError(404, "Id is not valid");
+  }
+
+  const updatedVideoData = { title, description };
+  //destructuring the title and description to later add the thumbnail path
+
+  const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+
+  //if thumbnail path receiving from client
+  if (thumbnailLocalPath) {
+    // Get the old video data
+    const oldVideo = await Video.findById(videoId);
+    if (!oldVideo) {
+      throw new ApiError(404, "Video not found");
+    }
+
+    const publicId = await getPublicIdFromUrl(oldVideo.thumbnail);
+    await deleteFromCloudinary(publicId);
+    //deleting the previous files before new file to save
+    const ThubmnailOnCloudinary = await uploadOnCloudinary(thumbnailLocalPath);
+    if (!ThubmnailOnCloudinary) {
+      throw new ApiError(404, "thumbnail upload failed");
+    }
+    updatedVideoData.thumbnail = ThubmnailOnCloudinary.url;
+  }
+
+  const video = await Video.findByIdAndUpdate(videoId, updatedVideoData, {
+    new: true,
+  });
+
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, video, "Video updated successfully"));
 });
 
 //DELETE THE VIDEO BY VIDEO ID

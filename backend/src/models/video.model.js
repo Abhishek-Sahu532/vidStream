@@ -33,7 +33,7 @@ const videoSchema = new Schema(
       default: true,
     },
     uploader: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
   },

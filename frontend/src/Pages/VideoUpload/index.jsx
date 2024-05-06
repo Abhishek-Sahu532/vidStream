@@ -58,8 +58,8 @@ const navigate = useNavigate();
     myForm.set("description", data.description);
 
      dispatch(uploadAVideo(myForm));
-    navigate('/my-profile')
-    // console.log(myForm);
+    // navigate('/my-profile')
+    // console.log(myForm); 
   };
 
   useEffect(() => {}, []);
