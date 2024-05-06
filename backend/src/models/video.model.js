@@ -34,7 +34,7 @@ const videoSchema = new Schema(
     },
     uploader: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
     },
   },
   { timestamps: true }
