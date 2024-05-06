@@ -5,6 +5,9 @@ import {
   VIDEO_FETCHED_REQUEST,
   VIDEO_FETCHED_SUCCESS,
   VIDEO_FETCHED_FAIL,
+  VIDEO_DETAILS_FAIL,
+  VIDEO_DETAILS_REQUEST,
+  VIDEO_DETAILS_SUCCESS,
 } from "../constaints/VideoConstaints";
 import axios from "axios";
 
@@ -48,11 +51,28 @@ export const fetchAllVideos = () => async (dispatch) => {
     dispatch({ type: VIDEO_FETCHED_REQUEST });
     const { data } = await axios.get("/api/v1/video/all-videos");
     dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
-    console.log("data fetched", data);
+    
   } catch (error) {
     console.log(error);
     dispatch({
       type: VIDEO_FETCHED_FAIL,
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
+export const getVideosDetails = (id) => async (dispatch) => {
+  try {
+    console.log('videoid' , id)
+    dispatch({type : VIDEO_DETAILS_REQUEST});
+    const {data} = await axios.get(`/api/v1/video/${id}`)
+    
+    dispatch({type : VIDEO_DETAILS_SUCCESS,payload : data})
+    console.log(data)
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: VIDEO_DETAILS_FAIL,
       payload: extractErrorMessage(error.response.data),
     });
   }

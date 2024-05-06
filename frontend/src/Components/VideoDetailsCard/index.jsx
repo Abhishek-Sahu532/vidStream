@@ -1,6 +1,5 @@
 import HoverVideoPlayer from "react-hover-video-player";
-import thumbnail from "../../assets/Images/thumbnail.jpg";
-import videoFile from "../../assets/Images/videoFile.mp4";
+
 import {
   Card,
   CardHeader,
@@ -10,12 +9,15 @@ import {
   Avatar,
   Tooltip,
 } from "@material-tailwind/react";
+import { Link, useParams } from "react-router-dom";
 
 
 
 export const VideoDetailsCard = ({vid}) => {
+  const {videoId} = useParams()
+  console.log('videoid', videoId)
   return (
-    <div>
+    <Link to={`/video/${vid._id}`}>
       <Card className="max-w-[21rem] overflow-hidden">
         <CardHeader
           floated={false}
@@ -58,12 +60,11 @@ export const VideoDetailsCard = ({vid}) => {
             />
           </Tooltip>
 
-          <Typography variant="h6" color="blue-gray" className="mt-[-30px] pl-12 ">
+          <Typography   className="mt-[-30px] pl-12 ">
             {vid.title}
           </Typography>
           <Typography
-            variant="lead"
-            color="gray"
+           
             className="mt-1 font-extralight text-sm"
           >
             {" "}
@@ -86,6 +87,6 @@ export const VideoDetailsCard = ({vid}) => {
           <Typography className="font-normal text-xs">January 10</Typography>
         </CardFooter>
       </Card>
-    </div>
+    </Link>
   );
 };

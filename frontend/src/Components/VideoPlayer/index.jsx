@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 
 import { CommentSection } from "../CommentSection";
+import { useSelector } from "react-redux";
 
 function Icon({ id, open }) {
   return (
@@ -33,15 +34,18 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = () => {
+
+const { loading, success,  video } = useSelector((state) => state.video);
+console.log(video)
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
   return (
     <div className="">
       <div>
-        <video className="h-full w-full rounded-lg " controls muted>
+        <video className="h-full w-full rounded-lg" controls muted>
           <source
-            src="https://docs.material-tailwind.com/demo.mp4"
-            type="video/mp4"
+            src={video.videoFile}
+           
           />
           Your browser does not support the video tag.
         </video>

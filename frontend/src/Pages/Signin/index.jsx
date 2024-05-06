@@ -87,9 +87,15 @@ export function Signin() {
           {errors.password && (
             <p className="my-2 text-red-600">{errors.password.message}</p>
           )}
+          <div className="flex justify-between">
           <div className="-ml-2.5">
             <Checkbox label="Remember Me" />
           </div>
+          <div className="-ml-2.5 ">
+          <Link to='/reset-password' >
+           <p >Forget Password ?</p></Link>
+          </div>
+</div>
         </CardBody>
         <CardFooter className="pt-0">
           <Button variant="gradient" type="submit" fullWidth>
