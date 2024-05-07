@@ -12,7 +12,10 @@ import {
 } from "@material-tailwind/react";
 
 import { CommentSection } from "../CommentSection";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
+// import { Loader } from "../Loader";
+const { format } = require('date-fns');
+
 
 function Icon({ id, open }) {
   return (
@@ -33,14 +36,34 @@ function Icon({ id, open }) {
   );
 }
 
-export const VideoPlayer = () => {
+export const VideoPlayer = ({video}) => {
 
-const { loading, success,  video } = useSelector((state) => state.video);
+//   const dateString = "2024-05-03T17:35:28.227Z";
+// const date = new Date(dateString);
+
+// const formattedDate = date.toLocaleDateString('en-US', {
+//     year: '2-digit',
+//     month: 'short',
+//     day: '2-digit'
+// });
+
+// console.log(formattedDate); // Output: May 03, 24
+
+
+// const dateString = "2024-05-03T17:35:28.227Z";
+// const date = new Date(dateString);
+
+// const formattedDate = format(date, "MMM dd, yy");
+// console.log(formattedDate); // Output: May 03, 24
+
+
+  // const { loading, success,  video } = useSelector((state) => state.video);
 console.log(video)
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
   return (
-    <div className="">
+
+     <div >
       <div>
         <video className="h-full w-full rounded-lg" controls muted>
           <source
@@ -184,5 +207,7 @@ console.log(video)
       </div>
       <CommentSection />
     </div>
+ 
+
   );
 };

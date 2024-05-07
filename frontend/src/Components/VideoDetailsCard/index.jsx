@@ -11,11 +11,8 @@ import {
 } from "@material-tailwind/react";
 import { Link, useParams } from "react-router-dom";
 
-
-
-export const VideoDetailsCard = ({vid}) => {
-  const {videoId} = useParams()
-  console.log('videoid', videoId)
+export const VideoDetailsCard = ({ vid }) => {
+  
   return (
     <Link to={`/video/${vid._id}`}>
       <Card className="max-w-[21rem] overflow-hidden">
@@ -48,7 +45,7 @@ export const VideoDetailsCard = ({vid}) => {
             />
           </div>
         </CardHeader>
-{/* watch it this section, specially avatar and tooltip */}
+        {/* watch it this section, specially avatar and tooltip */}
         <CardBody>
           <Tooltip content="Natali Craig">
             <Avatar
@@ -60,13 +57,8 @@ export const VideoDetailsCard = ({vid}) => {
             />
           </Tooltip>
 
-          <Typography   className="mt-[-30px] pl-12 ">
-            {vid.title}
-          </Typography>
-          <Typography
-           
-            className="mt-1 font-extralight text-sm"
-          >
+          <Typography className="mt-[-30px] pl-12 ">{vid.title}</Typography>
+          <Typography className="mt-1 font-extralight text-sm">
             {" "}
             {vid.description}
           </Typography>
