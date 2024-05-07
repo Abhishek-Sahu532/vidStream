@@ -19,10 +19,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
   //TODO: get all videos based on query, sort, pagination
   const videos = await Video.find({}).populate({
-    path: 'uploader',
-    select : 'fullname username avatar'
-  }
-  );
+    path: "uploader",
+    select: "fullname username avatar",
+  });
   // console.log("videos", videos);
   if (!videos) {
     return new ApiError(400, "Videos not fetched");
@@ -33,7 +32,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, videos, "Video fetched successfully"));
 });
 
-// UPLOAD A VIDEO
+// UPLOAD A VIDEO - TESTED
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
@@ -79,24 +78,31 @@ const publishAVideo = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, video, "Video uploaded successfully"));
 });
 
-
-// GET VIDEO BY VIDEO ID
+// GET VIDEO BY VIDEO ID --TESTED
 const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: get video by id
-  console.log(videoId);
+  // console.log(videoId);
   if (!videoId) {
     new ApiError(404, "Id is not valid");
   }
 
-  const video = await Video.findById(videoId).populate('user', 'fullname avatar username');
+  const video = await Video.findById(videoId).populate({
+    path: "user",
+    select: "fullname avatar username",
+    options: { strictPopulate: false },
+  });
   if (!video) {
     return res.status(404).json({ message: "Video not found" });
   }
   //INCREMENTING THE VIDEO COUN
   video.views += 1;
   await video.save();
-  console.log(video);
+
+  // const user = req;
+  // console.log("userrrrrrrrr", user);
+
+  // console.log(video);
   return res
     .status(200)
     .json(
@@ -108,7 +114,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     );
 });
 
-// UPDATE A VIDEO BY OBJECT ID
+// UPDATE A VIDEO BY OBJECT ID 
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { title, description } = req.body;
@@ -118,6 +124,7 @@ const updateVideo = asyncHandler(async (req, res) => {
   }
 
   const updatedVideoData = { title, description };
+
   //destructuring the title and description to later add the thumbnail path
 
   const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
@@ -126,6 +133,7 @@ const updateVideo = asyncHandler(async (req, res) => {
   if (thumbnailLocalPath) {
     // Get the old video data
     const oldVideo = await Video.findById(videoId);
+    console.log('oldvideo', oldVideo)
     if (!oldVideo) {
       throw new ApiError(404, "Video not found");
     }
@@ -140,6 +148,8 @@ const updateVideo = asyncHandler(async (req, res) => {
     updatedVideoData.thumbnail = ThubmnailOnCloudinary.url;
   }
 
+  console.log( title, description, thumbnailLocalPath )
+  console.log(videoId)
   const video = await Video.findByIdAndUpdate(videoId, updatedVideoData, {
     new: true,
   });
@@ -152,10 +162,28 @@ const updateVideo = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, video, "Video updated successfully"));
 });
 
-//DELETE THE VIDEO BY VIDEO ID
+//DELETE THE VIDEO BY VIDEO ID --TESTED
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+  console.log(videoId)
   //TODO: delete video
+  if (!videoId) {
+    throw new ApiError(404, "Id is not valid");
+  }
+
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(404, "Video is not found");
+  }
+  const publicIdForThumbnail = await getPublicIdFromUrl(video.thumbnail);
+  const publicIdForVideoFile = await getPublicIdFromUrl(video.thumbnail);
+  await deleteFromCloudinary(publicIdForThumbnail);
+  await deleteFromCloudinary(publicIdForVideoFile);
+
+  await Video.findByIdAndDelete(videoId);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Video deleted successfully"));
 });
 
 //PUBLISH STATUS

@@ -1,3 +1,5 @@
+import { v2 as cloudinary } from "cloudinary";
+
 // Function to delete file from Cloudinary using public ID
 export const deleteFromCloudinary = async (publicId) => {
   try {

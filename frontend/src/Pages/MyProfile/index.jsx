@@ -8,20 +8,31 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
-
+import { IoMdClose } from "react-icons/io";
+import { Link } from "react-router-dom";
+import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
 export const MyProfile = () => {
   const { loading, user } = useSelector((state) => state.user);
 
   console.log(user);
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(!open);
- 
+  const handleOpen = () => setOpen(true);
+
+  const handleClose = ()=> setOpen(false)
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
       {/* COVER IMAGE */}
       <div className="bg-cover  ">
-        <img src={user && user.coverImage ? user.coverImage : ' https://yt3.ggpht.com/HR5bTyedjHyoOd9h2zty2OAqZ3MFM6T7_R48jhdd2rQE2aSPHOD2B-ibdv-yLSTy4_AAF6XdoCk=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no'} alt="banner" className="w-full h-44" />
+        <img
+          src={
+            user && user.coverImage
+              ? user.coverImage
+              : " https://yt3.ggpht.com/HR5bTyedjHyoOd9h2zty2OAqZ3MFM6T7_R48jhdd2rQE2aSPHOD2B-ibdv-yLSTy4_AAF6XdoCk=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no"
+          }
+          alt="banner"
+          className="w-full h-44"
+        />
       </div>
       {/* PROFILE CONTAINER */}
       <div className="-mt-1 bg-grey-lighter">
@@ -49,43 +60,15 @@ export const MyProfile = () => {
               >
                 Update Profile
               </Button>
-              <Dialog
-                open={open}
-                handler={handleOpen}
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0.9, y: -100 },
-                }}
-              >
-                <DialogHeader>Its a simple dialog.</DialogHeader>
-                <DialogBody>
-                  The key to more success is to have a lot of pillows. Put it
-                  this way, it took me twenty five years to get these plants,
-                  twenty five years of blood sweat and tears, and I&apos;m never
-                  giving up, I&apos;m just getting started. I&apos;m up to
-                  something. Fan luv.
-                </DialogBody>
-                <DialogFooter>
-                  <Button
-                    variant="text"
-                    color="red"
-                    onClick={handleOpen}
-                    className="mr-1"
-                  >
-                    <span>Cancel</span>
-                  </Button>
-                  <Button variant="gradient" color="green" onClick={handleOpen}>
-                    <span>Confirm</span>
-                  </Button>
-                </DialogFooter>
-              </Dialog>
-              <button className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4">
-                Manage Videos
-              </button>
+           <UpdateProfileDialogBox open={open} handleClose={handleClose}  />
 
-              <span>
-                <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
-              </span>
+           
+              <Link to="/user-videos">
+                <Button className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4">
+                  Manage Videos
+                </Button>
+              </Link>
+             
             </div>
           </div>
           <div className="w-[70%]">

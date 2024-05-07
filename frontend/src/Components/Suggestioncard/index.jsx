@@ -21,8 +21,6 @@ export function SuggestionCard() {
       </CardHeader> 
       <CardBody className="p-3">
         <Typography
-          variant="p"
-          color="gray"
           className="text p-0 mb-1 h-11 text-md font-semibold text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ..."
         >
           startupsd ddddddddd ddddddddddd ddddddddddddd ddddddddddd
@@ -30,8 +28,6 @@ export function SuggestionCard() {
         </Typography>
         <hr className="text-blue-gray-800"/>
         <Typography
-          variant="p"
-          color="gray"
           className="p-0 mt-1 h-10 text-sm text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ..."
         >
         Channel
