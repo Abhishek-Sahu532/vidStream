@@ -58,9 +58,9 @@ export const VideoDetailsCard = ({ vid }) => {
           </Tooltip>
 
           <Typography className="mt-[-30px] pl-12 ">{vid.title}</Typography>
-          <Typography className="mt-1 font-extralight text-sm">
+          <Typography className="mt-1 font-extralight text-sm h-10 overflow-hidden">
             {" "}
-            {vid.description}
+            {vid.description} 
           </Typography>
         </CardBody>
         <CardFooter className="flex items-center justify-between mt-[-1rem] py-2 px-5">

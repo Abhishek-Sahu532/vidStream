@@ -479,14 +479,10 @@ export const forgetPassword = asyncHandler(async (req, res) => {
 //reset password
 
 export const resetPassword = asyncHandler(async (req, res) => {
-  const tooken = req.params.token
-  console.log(tooken , 'tooken')
   const resetPasswordTokenByUser = crypto
     .createHash("sha256")
     .update(req.params.token)
     .digest("hex");
-
-
 
   const user = await User.findOne({
     resetPasswordToken: resetPasswordTokenByUser,

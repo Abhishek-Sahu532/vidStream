@@ -18,6 +18,8 @@ function App() {
   return (
     <div className="w-screen overflow-auto overflow-x-hidden h-screen">
       <NavbarWithSearch />
+
+      
       <Routes>
         <Route path="/" Component={Root} />
         <Route path="/signin" Component={Signin} />

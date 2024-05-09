@@ -86,7 +86,6 @@ export const signout = () => async (dispatch) => {
 
 export const forgetPassword = (myForm) => async (dispatch) => {
   try {
-    console.log(myForm)
     dispatch({ type: FORGET_PASSWORD_REQUEST });
     const config = {
       headers: { "Content-Type": "application/json" },
@@ -96,9 +95,8 @@ export const forgetPassword = (myForm) => async (dispatch) => {
       myForm,
       config
     );
-
     dispatch({ type: FORGET_PASSWORD_SUCCESS, payload: data.message });
-    console.log("data from forget password", data);
+  
   } catch (error) {
     dispatch({
       type: FORGET_PASSWORD_FAIL,
@@ -109,9 +107,10 @@ export const forgetPassword = (myForm) => async (dispatch) => {
 
 //RESET PASSWORD
 
-export const resetPassword = (token, myForm) => async (dispatch) => {
+export const resetPassword = ({token}, myForm) => async (dispatch) => {
   try {
-    console.log( `/api/v1/users/forget-password/${token}`) //watch it
+    console.log(token)
+  
     dispatch({ type: RESET_PASSWORD_REQUEST });
     const config = { headers: { "Content-Type": "application/json" } };
     const { data } = await axios.put(
@@ -119,7 +118,6 @@ export const resetPassword = (token, myForm) => async (dispatch) => {
       myForm,
       config
     );
-
 
     dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data.success });
     console.log("data from reset password", data);

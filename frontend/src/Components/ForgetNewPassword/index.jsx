@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { resetPassword } from "../../actions/UserAction";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const ForgetNewPassword = () => {
   const dispatch = useDispatch();
-  const { loading, error, success, message } = useSelector(
+  const navigate = useNavigate()
+  const {  error, success, message } = useSelector(
     (state) => state.forgetPassword
   );
   const token = useParams()
@@ -35,7 +36,8 @@ export const ForgetNewPassword = () => {
       toast.error(error);
     }
     if (success) {
-      toast.success(message);
+      toast.success('Password Changed Successfully');
+      navigate('/signin')
     }
   }, [toast, error, success, message]);
 
