@@ -7,6 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
+
 //receive the public id from cloudinary to update or delete the previous file
 function getPublicIdFromUrl(url) {
   const parts = url.split("/");

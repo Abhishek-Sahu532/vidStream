@@ -92,7 +92,7 @@ export function Signin() {
             <Checkbox label="Remember Me" />
           </div>
           <div className="-ml-2.5 ">
-          <Link to='/reset-password' >
+          <Link to='/forget-password' >
            <p >Forget Password ?</p></Link>
           </div>
 </div>

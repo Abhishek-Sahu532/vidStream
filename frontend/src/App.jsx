@@ -11,8 +11,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserProfile } from "./Pages/UserProfile";
 import { MyProfile } from "./Pages/MyProfile";
-import { ResetPassword } from "./Components/ResetPassword";
-import { NewPassword } from "./Components/NewPassword";
+import { ForgetNewPassword } from "./Components/ForgetNewPassword";
+import { ForgetPassword } from "./Components/ForgetPassword";
 
 function App() {
   return (
@@ -27,8 +27,8 @@ function App() {
         <Route path="/upload-a-video" Component={VideoUpload} />
         <Route path="/user-profile" Component={UserProfile} />
         <Route path="/my-profile" Component={MyProfile} />
-        <Route path="/reset-password" Component={ResetPassword} />
-        <Route path="/reset-password/:token" Component={NewPassword} />
+        <Route path="/forget-password" Component={ForgetPassword} />
+        <Route path="/forget-password/:token" Component={ForgetNewPassword} />
       </Routes>
 
       <ToastContainer

@@ -1,7 +1,18 @@
 import {
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAIL, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL,
+  REGISTER_USER_FAIL,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
+  FORGET_PASSWORD_REQUEST,
+  FORGET_PASSWORD_SUCCESS,
+  FORGET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL,
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
 
@@ -18,8 +29,8 @@ export const userReducer = (state = { user: {} }, action) => {
         ...state,
         loading: false,
         isAuthenticated: false,
-        success: true
-      }
+        success: true,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,
@@ -40,14 +51,54 @@ export const userReducer = (state = { user: {} }, action) => {
       return {
         loading: false,
         user: null,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
     case LOGOUT_FAIL:
       return {
         ...state,
         loading: false,
         error: action.payload,
-      }
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const forgetPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FORGET_PASSWORD_REQUEST:
+    case RESET_PASSWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+         };
+    case FORGET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+        success : true
+      };
+
+    case RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: action.payload,
+      };
+    case FORGET_PASSWORD_FAIL:
+    case RESET_PASSWORD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     case CLEAR_ERRORS:
       return {
         ...state,

@@ -5,6 +5,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import sendEmail from "../utils/SendEmail.js";
+import crypto from "crypto";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -41,7 +43,10 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already exists");
   }
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath =  req.files?.coverImage && req.files?.coverImage ? req.files?.coverImage[0]?.path : '';
+  const coverImageLocalPath =
+    req.files?.coverImage && req.files?.coverImage
+      ? req.files?.coverImage[0]?.path
+      : "";
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
@@ -430,4 +435,76 @@ export const getWatchHistory = asyncHandler(async (req, res) => {
         "Watch history fetched successfully"
       )
     );
+});
+
+//forget password
+
+export const forgetPassword = asyncHandler(async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+  // console.log(req.body.email)
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  //get resetpassword token
+  const resetToken = await user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+  const resetPasswordLink = `${process.env.FRONTEND_URL}/forget-password/${resetToken}`; //TEMP
+
+  // const resetPasswordLink = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;
+
+  const message = `Your password reset token is TEMP :- \n ${resetPasswordLink} \nIf you have not requested this email then please ignore it  `;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `Password Recovery For Youtube Project`,
+      message,
+    });
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, {}, `Email sent to ${user.email} successfully.`)
+      );
+  } catch (e) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    console.log(e);
+    throw new ApiError(500, e);
+  }
+});
+
+//reset password
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const tooken = req.params.token
+  console.log(tooken , 'tooken')
+  const resetPasswordTokenByUser = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+
+
+  const user = await User.findOne({
+    resetPasswordToken: resetPasswordTokenByUser,
+  });
+  if (!user) {
+    throw new ApiError(404, "Token is expired");
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    throw new ApiError(404, "Password does not matched");
+  }
+
+  user.password = req.body.password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, `Password changed successfully.`));
 });

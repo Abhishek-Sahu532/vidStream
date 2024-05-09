@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   changeCurrentPassword,
+  forgetPassword,
   getCurrentUser,
   getUserChannelProfile,
   getWatchHistory,
@@ -8,6 +9,7 @@ import {
   logoutUser,
   refAccessToken,
   registerUser,
+  resetPassword,
   updateAccountDetails,
   updateCoverImage,
   updateUserAvatar,
@@ -55,5 +57,9 @@ router.route("/c/:username").get(verifyJWT, getUserChannelProfile);
 
 router.route("/history").get(verifyJWT, getWatchHistory);
 
+
+router.route('/forget-password').post(forgetPassword)
+
+router.route('/forget-password/:token').put(resetPassword)
 
 export default router;
