@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import Title from "../../Title";
 
 
 export function Signin() {
@@ -45,7 +46,9 @@ export function Signin() {
   }, [isAuthenticated, navigate, error, user]);
 
   return (
+    
     <Card className="w-96  mx-auto mt-36">
+    <Title  title="Sign in" />
       <CardHeader
         variant="gradient"
         color="gray"

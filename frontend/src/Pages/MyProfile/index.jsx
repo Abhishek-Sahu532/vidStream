@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
+import Title from "../../Title";
 export const MyProfile = () => {
   const { loading, user } = useSelector((state) => state.user);
 
@@ -19,16 +20,17 @@ export const MyProfile = () => {
 
   const handleOpen = () => setOpen(true);
 
-  const handleClose = ()=> setOpen(false)
+  const handleClose = () => setOpen(false);
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
+      <Title title={user.fullname} />
       {/* COVER IMAGE */}
       <div className="bg-cover  ">
         <img
           src={
             user && user.coverImage
               ? user.coverImage
-              : " https://yt3.ggpht.com/HR5bTyedjHyoOd9h2zty2OAqZ3MFM6T7_R48jhdd2rQE2aSPHOD2B-ibdv-yLSTy4_AAF6XdoCk=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no"
+              : "https://yt3.ggpht.com/HR5bTyedjHyoOd9h2zty2OAqZ3MFM6T7_R48jhdd2rQE2aSPHOD2B-ibdv-yLSTy4_AAF6XdoCk=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no"
           }
           alt="banner"
           className="w-full h-44"
@@ -60,15 +62,13 @@ export const MyProfile = () => {
               >
                 Update Profile
               </Button>
-           <UpdateProfileDialogBox open={open} handleClose={handleClose}  />
+              <UpdateProfileDialogBox open={open} handleClose={handleClose} />
 
-           
               <Link to="/user-videos">
                 <Button className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4">
                   Manage Videos
                 </Button>
               </Link>
-             
             </div>
           </div>
           <div className="w-[70%]">

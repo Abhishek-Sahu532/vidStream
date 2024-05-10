@@ -78,7 +78,7 @@ export function NavbarWithSearch() {
   );
 
   return (
-    <Navbar className="w-full  bg-blue-gray-500  py-5 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
+    <Navbar className="w-full   py-5 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
       <div className=" w-full flex flex-wrap items-center justify-around text-blue-gray-900">
         <Sidebar />
 
@@ -88,13 +88,14 @@ export function NavbarWithSearch() {
           Youtube
         </Typography>
       </div> */}
+      <Link to='/'>
         <Typography
           variant="h4"
           className="mr-4 cursor-pointer py-1.5 font-medium"
         >
           Youtube
         </Typography>
-
+</Link>
         <div className="hidden lg:block">{navList}</div>
 
         <div className="hidden items-center gap-x-1 lg:flex">

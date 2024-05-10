@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { resetPassword } from "../../actions/UserAction";
 import { useNavigate, useParams } from "react-router-dom";
+import Title from "../../Title";
 
 export const ForgetNewPassword = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export const ForgetNewPassword = () => {
 
   return (
     <Card className="w-96 mx-auto  mt-24">
+    <Title title='Reset Password' />
       <div className="flex flex-col items-center justify-center w-full p-[29px] border-blue_gray-100_01 border border-solid bg-white-A700 rounded-[10px]">
         <form
           onSubmit={handleSubmit(onSubmit)}

@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 
 import { CommentSection } from "../CommentSection";
+import Title from "../../Title";
 // import { useSelector } from "react-redux";
 // import { Loader } from "../Loader";
 
@@ -64,6 +65,7 @@ console.log(video)
   return (
 
      <div >
+     <Title title={video.title} />
       <div>
         <video className="h-full w-full rounded-lg" controls muted>
           <source

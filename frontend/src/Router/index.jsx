@@ -28,21 +28,20 @@ const router = createBrowserRouter(
 
       <Route path="video/:id" element={<VideoDetails />} />
 
-      {/* <Route
-        path="upload-a-video"
-        element={<ProtectedRoutes element={<VideoUpload />} />}
-      /> */}
-      <Route path="user-profile" element={<UserProfile />} />
-      <Route path="my-profile" element={<MyProfile />} />
       <Route path="forget-password" element={<ForgetPassword />} />
       <Route path="forget-password/:token" element={<ForgetNewPassword />} />
 
-      {/* <Route>
-<Route
-        path="upload-a-video" 
-        element={<VideoUpload />} exact
-      />
-</Route> */}
+      <Route path="upload-a-video" element={<ProtectedRoutes />}>
+        <Route index element={<VideoUpload />} />
+      </Route>
+
+      <Route path="my-profile" element={<ProtectedRoutes />}>
+        <Route index element={<MyProfile />} />
+      </Route>
+
+      <Route path="user-profile" element={<ProtectedRoutes />}>
+        <Route index element={<UserProfile />} />
+      </Route>
     </Route>
   )
 );

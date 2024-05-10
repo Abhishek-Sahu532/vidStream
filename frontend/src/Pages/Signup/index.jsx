@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../actions/UserAction";
 import { useEffect } from "react";
+import Title from "../../Title";
 
 export const Signup = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ export const Signup = () => {
 
   return (
     <div className="mt-28 flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
+     <Title  title="Sign up" />
       <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
         Sign Up
       </h4>

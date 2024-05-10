@@ -5,6 +5,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { forgetPassword } from "../../actions/UserAction";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import Title from "../../Title";
 
 export const ForgetPassword = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ export const ForgetPassword = () => {
   }, [toast, error, success, message]);
   return (
     <Card className="w-96 mx-auto  mt-24">
+    <Title title='Forget Password' />
       <div className="flex flex-col items-center justify-center w-full p-[29px] border-blue_gray-100_01 border border-solid bg-white-A700 rounded-[10px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center justify-start w-full gap-[31px] my-[9px]">

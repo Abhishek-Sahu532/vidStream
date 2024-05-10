@@ -4,6 +4,7 @@ import { VideoDetailsCard } from "../../Components/VideoDetailsCard";
 import { useEffect } from "react";
 import { fetchAllVideos } from "../../actions/VideoAction";
 import { Loader } from "../../Components/Loader";
+
 const Root = () => {
   const { loading, videos } = useSelector((state) => state.videos);
   console.log(videos);
@@ -15,7 +16,7 @@ const Root = () => {
 
   return (
     <div>
-      <Advertisement />
+            <Advertisement />
       {loading && loading ? (
         <Loader />
       ) : (

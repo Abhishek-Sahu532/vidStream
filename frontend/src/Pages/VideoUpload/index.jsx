@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { uploadAVideo } from "../../actions/VideoAction";
 import { useNavigate } from "react-router-dom";
+import Title from "../../Title";
 export function VideoUpload() {
   const {
     register,
@@ -66,6 +67,7 @@ const navigate = useNavigate();
 
   return (
     <Card color="transparent" shadow={false} className="mt-28 px-16 b">
+    <Title title='Upload A Video' />
       <Typography variant="h4" color="blue-gray">
         Upload a Video
       </Typography>
