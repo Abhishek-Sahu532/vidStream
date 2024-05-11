@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../actions/UserAction";
 import { useEffect } from "react";
 import Title from "../../Title";
+import { toast } from "react-toastify";
 
 export const Signup = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ export const Signup = () => {
     myForm.set("avatar", data.avatar[0]);
     myForm.set("coverImage", data.coverImage[0]);
     dispatch(registerUser(myForm));
+    toast.success('User Successfully Singed In')
   };
 
   useEffect(() => {

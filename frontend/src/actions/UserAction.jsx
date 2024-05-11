@@ -13,6 +13,9 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
+  FETCH_USER_HISTORY_REQUEST,
+  FETCH_USER_HISTORY_SUCCESS,
+  FETCH_USER_HISTORY_FAIL,
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -96,7 +99,6 @@ export const forgetPassword = (myForm) => async (dispatch) => {
       config
     );
     dispatch({ type: FORGET_PASSWORD_SUCCESS, payload: data.message });
-  
   } catch (error) {
     dispatch({
       type: FORGET_PASSWORD_FAIL,
@@ -107,23 +109,39 @@ export const forgetPassword = (myForm) => async (dispatch) => {
 
 //RESET PASSWORD
 
-export const resetPassword = ({token}, myForm) => async (dispatch) => {
-  try {
-    console.log(token)
-  
-    dispatch({ type: RESET_PASSWORD_REQUEST });
-    const config = { headers: { "Content-Type": "application/json" } };
-    const { data } = await axios.put(
-      `/api/v1/users/forget-password/${token}`,
-      myForm,
-      config
-    );
+export const resetPassword =
+  ({ token }, myForm) =>
+  async (dispatch) => {
+    try {
+      console.log(token);
 
-    dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data.success });
-    console.log("data from reset password", data);
+      dispatch({ type: RESET_PASSWORD_REQUEST });
+      const config = { headers: { "Content-Type": "application/json" } };
+      const { data } = await axios.put(
+        `/api/v1/users/forget-password/${token}`,
+        myForm,
+        config
+      );
+
+      dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data.success });
+      console.log("data from reset password", data);
+    } catch (error) {
+      dispatch({
+        type: RESET_PASSWORD_FAIL,
+        payload: extractErrorMessage(error.response.data),
+      });
+    }
+  };
+
+export const fetchHistory = () => async (dispatch) => {
+  try {
+    dispatch({ type: FETCH_USER_HISTORY_REQUEST });
+
+    const { data } = await axios.get("api/v1/users/history");
+    dispatch({type: FETCH_USER_HISTORY_SUCCESS , payload : data })
   } catch (error) {
     dispatch({
-      type: RESET_PASSWORD_FAIL,
+      type: FETCH_USER_HISTORY_FAIL,
       payload: extractErrorMessage(error.response.data),
     });
   }

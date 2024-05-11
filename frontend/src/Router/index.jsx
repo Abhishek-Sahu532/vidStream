@@ -4,7 +4,6 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Layout from "../Layout";
 
 import { Signin } from "../Pages/Signin";
 import { Signup } from "../Pages/Signup";
@@ -17,10 +16,12 @@ import { MyProfile } from "../Pages/MyProfile";
 import { ForgetNewPassword } from "../Components/ForgetNewPassword";
 import { ForgetPassword } from "../Components/ForgetPassword";
 import ProtectedRoutes from "../ProtectedRoutes";
+import App from "../App";
+import { History } from "../Pages/History";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
+    <Route path="/" element={<App />}>
       <Route path="" element={<Root />} />
 
       <Route path="signin" element={<Signin />} />
@@ -42,6 +43,11 @@ const router = createBrowserRouter(
       <Route path="user-profile" element={<ProtectedRoutes />}>
         <Route index element={<UserProfile />} />
       </Route>
+      <Route path="user/history" element={<ProtectedRoutes />}>
+        <Route index element={<History />} />
+      </Route>
+
+      
     </Route>
   )
 );

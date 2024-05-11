@@ -24,7 +24,7 @@ export function NavbarWithSearch() {
   }, []);
 
   const navList = (
-    <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+    <ul className="flex flex-col gap-2 items-center lg:flex-row lg:gap-6">
       <Typography
         as="li"
         variant="small"
@@ -78,7 +78,7 @@ export function NavbarWithSearch() {
   );
 
   return (
-    <Navbar className="w-full   py-5 lg:px-8 lg:py-4 fixed top-0 rounded-none z-40 ">
+    <Navbar className="fixed top-0 left-0 w-full bg-white z-50">
       <div className=" w-full flex flex-wrap items-center justify-around text-blue-gray-900">
         <Sidebar />
 

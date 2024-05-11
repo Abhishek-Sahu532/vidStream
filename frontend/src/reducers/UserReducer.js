@@ -13,6 +13,9 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
+  FETCH_USER_HISTORY_REQUEST,
+  FETCH_USER_HISTORY_SUCCESS,
+  FETCH_USER_HISTORY_FAIL,
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
 
@@ -77,13 +80,13 @@ export const forgetPasswordReducer = (state = {}, action) => {
         ...state,
         loading: true,
         error: null,
-         };
+      };
     case FORGET_PASSWORD_SUCCESS:
       return {
         ...state,
         loading: false,
         message: action.payload,
-        success : true
+        success: true,
       };
 
     case RESET_PASSWORD_SUCCESS:
@@ -99,6 +102,37 @@ export const forgetPasswordReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const fetchUserHistoryReducer = (state = [], action) => {
+  switch (action.type) {
+    case FETCH_USER_HISTORY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case FETCH_USER_HISTORY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+      };
+    case FETCH_USER_HISTORY_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    }
     case CLEAR_ERRORS:
       return {
         ...state,

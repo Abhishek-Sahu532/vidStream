@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { thunk } from "redux-thunk";
-import { forgetPasswordReducer, userReducer } from "./reducers/UserReducer";
+import { fetchUserHistoryReducer, forgetPasswordReducer, userReducer } from "./reducers/UserReducer";
 import { getAllVideosReducer, videoReducer } from "./reducers/VideoReducer";
 import {
   persistStore,
@@ -22,6 +22,7 @@ const rootReducer = combineReducers({
   video: videoReducer,
   videos: getAllVideosReducer,
   forgetPassword: forgetPasswordReducer,
+  history : fetchUserHistoryReducer
 });
 
 const persistConfig = {
