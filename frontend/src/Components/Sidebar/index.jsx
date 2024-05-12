@@ -31,7 +31,10 @@ export function Sidebar() {
   return (
     <>
       {" "}
-      <Button className="bg-transparent  text-black shadow-none hover:shadow-none" onClick={openDrawer}>
+      <Button
+        className="bg-transparent  text-black shadow-none hover:shadow-none"
+        onClick={openDrawer}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -47,8 +50,11 @@ export function Sidebar() {
           />
         </svg>
       </Button>
-
-      <Drawer open={drawerOpen} onClose={closeDrawer} className="mt-20 w-10 shadow-none h-[100vh]">
+      <Drawer
+        open={drawerOpen}
+        onClose={closeDrawer}
+        className="mt-20 w-10 shadow-none h-[100vh]"
+      >
         <Card className="h-[100vh]">
           {/* <div className=" flex items-center gap-1 pb-16">
         <img src="https://docs.material-tailwind.com/img/logo-ct-dark.png" alt="brand" className="h-8 w-8" />
@@ -63,79 +69,71 @@ export function Sidebar() {
                 <ListItemPrefix className="border-b-0 p-3">
                   <IoMdHome className="h-6 w-6" />
                 </ListItemPrefix>
-                <Typography  className="mr-auto font-normal">
-                  Home
-                </Typography>
+                <Typography className="mr-auto font-normal">Home</Typography>
               </ListItem>
             </Link>
             <Link to="/subscription">
-            <ListItem className="p-0" selected={open === 2}>
-              <ListItemPrefix className="border-b-0 p-3">
-                <ShoppingBagIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              <Typography className="mr-auto font-normal">
-                Subscription
-              </Typography>
-            </ListItem>
+              <ListItem className="p-0" selected={open === 2}>
+                <ListItemPrefix className="border-b-0 p-3">
+                  <ShoppingBagIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                <Typography className="mr-auto font-normal">
+                  Subscription
+                </Typography>
+              </ListItem>
             </Link>
             <hr className="my-1 w-40 border-blue-gray-400" />
             <ListItem>
               You <MdKeyboardArrowRight className="h-6 w-6   " />
             </ListItem>
             <Link to="/channel">
-            <ListItem>
-              <ListItemPrefix>
-                <UserCircleIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Your Channel
-            </ListItem>
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Your Channel
+              </ListItem>
             </Link>
-            <Link to="/history">
-            <ListItem>
-              <ListItemPrefix>
-                <RiChatHistoryFill className="h-5 w-5" />
-              </ListItemPrefix>
-              History
-            </ListItem>
+            <Link to="/user/history">
+              <ListItem>
+                <ListItemPrefix>
+                  <RiChatHistoryFill className="h-5 w-5" />
+                </ListItemPrefix>
+                History
+              </ListItem>
             </Link>
             <Link to="/playlists">
-            <ListItem>
-              <ListItemPrefix>
-                <MdPlaylistAddCheckCircle className="h-5 w-5" />
-              </ListItemPrefix>
-              Playlists
-            </ListItem>
+              <ListItem>
+                <ListItemPrefix>
+                  <MdPlaylistAddCheckCircle className="h-5 w-5" />
+                </ListItemPrefix>
+                Playlists
+              </ListItem>
             </Link>
-            <Link to="/WL">
-            <ListItem>
-              <ListItemPrefix>
-                <MdWatchLater className="h-5 w-5" />
-              </ListItemPrefix>
-              Watch later
-            </ListItem>
+            <Link to="/watch-later">
+              <ListItem>
+                <ListItemPrefix>
+                  <MdWatchLater className="h-5 w-5" />
+                </ListItemPrefix>
+                Watch later
+              </ListItem>
             </Link>
-            <Link to="/LL">
-            <ListItem>
-              <ListItemPrefix>
-                <BiSolidLike className="h-5 w-5" />
-              </ListItemPrefix>
-              Liked Videos
-            </ListItem>
+            <Link to="/liked-videos">
+              <ListItem>
+                <ListItemPrefix>
+                  <BiSolidLike className="h-5 w-5" />
+                </ListItemPrefix>
+                Liked Videos
+              </ListItem>
             </Link>
             <Link to="/settings">
-            <ListItem>
-              <ListItemPrefix>
-                <Cog6ToothIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Settings
-            </ListItem>
+              <ListItem>
+                <ListItemPrefix>
+                  <Cog6ToothIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Settings
+              </ListItem>
             </Link>
-            <ListItem>
-              <ListItemPrefix>
-                <PowerIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Log Out
-            </ListItem>
           </List>
         </Card>
       </Drawer>

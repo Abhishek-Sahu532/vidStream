@@ -45,8 +45,8 @@ export function NavbarWithSearch() {
             fill="#90A4AE"
           />
         </svg>
-        <Link to="/account" className="flex items-center">
-          Account
+        <Link to="/about-us" className="flex items-center">
+          About Us
         </Link>
       </Typography>
 
@@ -70,32 +70,26 @@ export function NavbarWithSearch() {
             fill="#90A4AE"
           />
         </svg>
-        <Link to="/docs" className="flex items-center">
-          Docs
+        <Link to="/FAQ" className="flex items-center">
+          FAQ
         </Link>
       </Typography>
     </ul>
   );
 
   return (
-    <Navbar className="fixed top-0 left-0 w-full bg-white z-50">
+   
+    <Navbar className="fixed top-0 left-0 w-full bg-white z-50 rounded-none max-w-screen-3xl">
       <div className=" w-full flex flex-wrap items-center justify-around text-blue-gray-900">
         <Sidebar />
-
-        {/* <div className=" flex items-center gap-1 pb-16">
-        <img src="https://docs.material-tailwind.com/img/logo-ct-dark.png" alt="brand" className="h-8 w-8" />
-        <Typography variant="h5" color="blue-gray">
-          Youtube
-        </Typography>
-      </div> */}
-      <Link to='/'>
-        <Typography
-          variant="h4"
-          className="mr-4 cursor-pointer py-1.5 font-medium"
-        >
-          Youtube
-        </Typography>
-</Link>
+        <Link to="/">
+          <Typography
+            variant="h4"
+            className="mr-4 cursor-pointer py-1.5 font-medium"
+          >
+            Youtube
+          </Typography>
+        </Link>
         <div className="hidden lg:block">{navList}</div>
 
         <div className="hidden items-center gap-x-1 lg:flex">
@@ -279,5 +273,6 @@ export function NavbarWithSearch() {
         </div>
       </Collapse>
     </Navbar>
+    
   );
 }

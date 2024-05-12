@@ -13,9 +13,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 export function ProfileMenu() {
   const dispatch = useDispatch();
-  const {loading, user} = useSelector((state)=> state.user)
+  const { loading, user } = useSelector((state) => state.user);
   const navigate = useNavigate();
- 
 
   const menuListItems = [
     {
@@ -45,7 +44,6 @@ export function ProfileMenu() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-         
           fill="currentColor"
           className="w-6 h-6"
         >
@@ -74,7 +72,7 @@ export function ProfileMenu() {
           />
         </svg>
       ),
-      link: "/my-box",
+      link: "/user/inbox",
       func: "",
     },
     {
@@ -107,18 +105,21 @@ export function ProfileMenu() {
   return (
     <Menu>
       <MenuHandler>
-      {loading ?? loading ? '' :  <Avatar
-          variant="circular"
-          alt={user.fullname}
-          className="cursor-pointer"
-          src= {user.avatar}
-        /> }
-       
+        {loading ?? loading ? (
+          ""
+        ) : (
+          <Avatar
+            variant="circular"
+            alt={user.fullname}
+            className="cursor-pointer"
+            src={user.avatar}
+          />
+        )}
       </MenuHandler>
       <MenuList className="mt-4">
         {menuListItems.map((item) => (
           <Link to={item.link} key={item.name}>
-            <MenuItem  className="flex items-center gap-2">
+            <MenuItem className="flex items-center gap-2">
               {item.iconPath}
 
               <Typography variant="small" className="font-medium ">
