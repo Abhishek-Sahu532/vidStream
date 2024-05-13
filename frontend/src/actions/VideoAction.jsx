@@ -63,7 +63,7 @@ export const fetchAllVideos = () => async (dispatch) => {
 
 export const getVideosDetails = (id) => async (dispatch) => {
   try {
-    console.log('videoid' , id)
+    
     dispatch({type : VIDEO_DETAILS_REQUEST});
     const {data} = await axios.get(`/api/v1/video/${id}`)
     

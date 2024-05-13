@@ -89,7 +89,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   }
 
   const video = await Video.findById(videoId).populate({
-    path: "user",
+    path: "uploader",
     select: "fullname avatar username",
     options: { strictPopulate: false },
   });
@@ -100,10 +100,6 @@ const getVideoById = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save();
 
-  // const user = req;
-  // console.log("userrrrrrrrr", user);
-
-  // console.log(video);
   return res
     .status(200)
     .json(

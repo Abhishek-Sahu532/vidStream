@@ -18,7 +18,9 @@ import { ForgetPassword } from "../Components/ForgetPassword";
 import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
 import { History } from "../Pages/History";
-import { CommingSoon } from "../Components/CommingSoon";
+import {CommingSoon} from '../Components/CommingSoon'
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(

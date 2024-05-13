@@ -7,7 +7,6 @@ import { registerUser } from "../../actions/UserAction";
 import { useEffect } from "react";
 import Title from "../../Title";
 import { toast } from "react-toastify";
-
 export const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ export const Signup = () => {
   const { error, loading, isAuthenticated, success } = useSelector(
     (state) => state.user
   );
-  console.log(error, loading, success, isAuthenticated);
+
   const {
     register,
     handleSubmit,
@@ -35,10 +34,13 @@ export const Signup = () => {
   };
 
   useEffect(() => {
-    if (success) {
+    if (isAuthenticated) {
       navigate("/signin");
     }
-  }, [success, navigate]);
+    if(error){
+      toast.error(error)
+    }
+  }, [success, navigate, isAuthenticated, error]);
 
   return (
     <div className="mt-28 flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">

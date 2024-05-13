@@ -9,10 +9,17 @@ import {
   Avatar,
   Tooltip,
 } from "@material-tailwind/react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const VideoDetailsCard = ({ vid }) => {
-  
+  const dateString = vid.createdAt;
+  const date = new Date(dateString);
+
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "2-digit",
+    month: "short",
+    day: "2-digit",
+  });
   return (
     <Link to={`/video/${vid._id}`}>
       <Card className="max-w-[21rem] overflow-hidden">
@@ -47,12 +54,12 @@ export const VideoDetailsCard = ({ vid }) => {
         </CardHeader>
         {/* watch it this section, specially avatar and tooltip */}
         <CardBody>
-          <Tooltip content="Natali Craig">
+          <Tooltip content={vid.uploader.fullname}>
             <Avatar
               size="sm"
               variant="circular"
               alt="natali craig"
-              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1061&q=80"
+              src={vid.uploader.avatar}
               className="border-2 border-white hover:z-10"
             />
           </Tooltip>
@@ -60,7 +67,7 @@ export const VideoDetailsCard = ({ vid }) => {
           <Typography className="mt-[-30px] pl-12 ">{vid.title}</Typography>
           <Typography className="mt-1 font-extralight text-sm h-10 overflow-hidden">
             {" "}
-            {vid.description} 
+            {vid.description}
           </Typography>
         </CardBody>
         <CardFooter className="flex items-center justify-between mt-[-1rem] py-2 px-5">
@@ -72,11 +79,13 @@ export const VideoDetailsCard = ({ vid }) => {
                 className="mt-1 font-extralight text-xs"
               >
                 {" "}
-                video owner name
+                {vid.uploader.fullname}
               </Typography>
             </Tooltip>
           </div>
-          <Typography className="font-normal text-xs">January 10</Typography>
+          <Typography className="font-normal text-xs">
+            {formattedDate}
+          </Typography>
         </CardFooter>
       </Card>
     </Link>

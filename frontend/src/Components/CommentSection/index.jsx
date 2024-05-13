@@ -1,12 +1,32 @@
 import { Textarea, IconButton, Avatar } from "@material-tailwind/react";
 // import { LinkIcon } from "@heroicons/react/24/outline";
 import "emoji-picker-element";
+
+import { useForm } from "react-hook-form";
+import { createAComment } from "../../actions/Comment.Action";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 export const CommentSection = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    const myForm = new FormData()
+    myForm.append('content' , data.content)
+    dispatch(createAComment(id , myForm))  
+  };
   return (
     <>
       <div className="bg-gray-100 p-6">
         <h2 className="text-lg font-bold mb-4">Comments</h2>
-        <form className="bg-white p-4 rounded-lg shadow-md">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white p-4 rounded-lg shadow-md"
+        >
           <h3 className="text-lg font-bold mb-2">Add a comment</h3>
           <div className="flex w-full flex-row items-center gap-2 rounded-[99px] border border-gray-900/10 bg-gray-900/5 p-2">
             <div className="flex">
@@ -29,6 +49,9 @@ export const CommentSection = () => {
               </IconButton>
             </div>
             <Textarea
+              {...register("content", {
+                required: "Comment is required",
+              })}
               rows={1}
               resize={true}
               placeholder="Your Message"
@@ -40,8 +63,13 @@ export const CommentSection = () => {
                 className: "before:content-none after:content-none",
               }}
             />
+
             <div>
-              <IconButton variant="text" className="rounded-full">
+              <IconButton
+                variant="text"
+                className="rounded-full"
+               type="submit"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -59,8 +87,13 @@ export const CommentSection = () => {
               </IconButton>
             </div>
           </div>
+         
         </form>
-        <div className="flex flex-col space-y-4 mt-4">
+
+        {errors.content && (
+            <p className="my-2 text-red-600">{errors.content.message}</p>
+          )}
+        {/* <div className="flex flex-col space-y-4 mt-4">
           <div className="bg-white p-4 rounded-lg shadow-md ">
             <div className="flex gap-4">
               <Avatar
@@ -125,7 +158,7 @@ export const CommentSection = () => {
               dolore magna aliqua.
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

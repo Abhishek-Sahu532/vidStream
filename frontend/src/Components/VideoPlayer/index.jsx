@@ -38,28 +38,15 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({video}) => {
+  const dateString = video.createdAt;
+  const date = new Date(dateString);
 
-//   const dateString = "2024-05-03T17:35:28.227Z";
-// const date = new Date(dateString);
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "2-digit",
+    month: "short",
+    day: "2-digit",
+  });
 
-// const formattedDate = date.toLocaleDateString('en-US', {
-//     year: '2-digit',
-//     month: 'short',
-//     day: '2-digit'
-// });
-
-// console.log(formattedDate); // Output: May 03, 24
-
-
-// const dateString = "2024-05-03T17:35:28.227Z";
-// const date = new Date(dateString);
-
-// const formattedDate = format(date, "MMM dd, yy");
-// console.log(formattedDate); // Output: May 03, 24
-
-
-  // const { loading, success,  video } = useSelector((state) => state.video);
-console.log(video)
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
   return (
@@ -79,16 +66,17 @@ console.log(video)
       <div className="p-3 flex gap-2 bg-blue-gray-400">
         <div>
           {" "}
+          <Tooltip content={video?.uploader?.fullname}>
           <Avatar
-            src="https://docs.material-tailwind.com/img/face-2.jpg"
+            src={video.uploader?.avatar}
             alt="avatar"
             size="md"
-          />
+          />   </Tooltip>
         </div>
-
+       
         <div className="pl-4">
-          <p className=" text-xl ">channel name</p>
-          <p>uploader name</p>
+          <p className=" text-xl ">{video?.uploader?.fullname}</p>
+          <p>subscriber number</p>
         </div>
 
         <div className="ml-12 flex gap-2 ">
@@ -186,28 +174,23 @@ console.log(video)
 
       <div className="pt-4 p-4 flex flex-col gap-2">
         <div className="flex gap-4 ">
-          <Typography className="font-semibold ">1335 views</Typography>
-          <Typography className="font-semibold ">Timestamp ago</Typography>
-          <Tooltip content="Material Tailwind">
-            <Typography className="font-semibold ">Channel name</Typography>
-          </Tooltip>
+          <Typography className="font-semibold ">{video.views} Views</Typography>
+          <Typography className="font-semibold ">{formattedDate}</Typography>
+         
         </div>
 
         <div className="mb-6">
           <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
             <AccordionHeader onClick={() => handleOpen(1)} className="text-sm">
-              What is Material Tailwind?
+          Video Description
             </AccordionHeader>
             <AccordionBody>
-              We&apos;re not always in the position that we want to be at.
-              We&apos;re constantly growing. We&apos;re constantly making
-              mistakes. We&apos;re constantly trying to express ourselves and
-              actualize our dreams.
+             {video.description}
             </AccordionBody>
           </Accordion>
         </div>
       </div>
-      <CommentSection />
+      <CommentSection videoId={video._id}  />
     </div>
  
 

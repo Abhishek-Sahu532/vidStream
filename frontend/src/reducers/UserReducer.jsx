@@ -17,12 +17,16 @@ import {
   FETCH_USER_HISTORY_SUCCESS,
   FETCH_USER_HISTORY_FAIL,
   CLEAR_ERRORS,
+  LOAD_USER_REQUEST,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAIL,
 } from "../constaints/UserConstaints";
 
 export const userReducer = (state = { user: {} }, action) => {
   switch (action.type) {
     case REGISTER_USER_REQUEST:
     case LOGIN_REQUEST:
+    case LOAD_USER_REQUEST:
       return {
         loading: true,
         isAuthenticated: false,
@@ -35,11 +39,20 @@ export const userReducer = (state = { user: {} }, action) => {
         success: true,
       };
     case LOGIN_SUCCESS:
+    case LOAD_USER_SUCCESS:
       return {
         ...state,
         loading: false,
         isAuthenticated: true,
         user: action.payload,
+      };
+    case LOAD_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        user: null,
+        error: action.payload,
       };
     case REGISTER_USER_FAIL:
     case LOGIN_FAIL:

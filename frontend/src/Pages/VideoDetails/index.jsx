@@ -10,21 +10,18 @@ import Title from "../../Title";
 
 export const VideoDetails = () => {
   const { id } = useParams();
-  // console.log(id)
+
   const dispatch = useDispatch();
-  const { loading, success, error, video } = useSelector(
+  const { loading, error, video } = useSelector(
     (state) => state.video
   );
-  // console.log(video);
+ 
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
-    // if(success){
-    //   toast.success("success")
-    // }
     dispatch(getVideosDetails(id));
-  }, []);
+  }, [toast, error, dispatch]);
   return (
     <>
       {loading && loading ? (

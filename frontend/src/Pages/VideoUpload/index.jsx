@@ -7,9 +7,7 @@ import {
   Textarea,
 } from "@material-tailwind/react";
 import { toast } from "react-toastify";
-
 import HoverVideoPlayer from "react-hover-video-player";
-// import videoFile from "../../assets/Images/videoFile.mp4";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -17,24 +15,31 @@ import { useDispatch } from "react-redux";
 import { uploadAVideo } from "../../actions/VideoAction";
 import { useNavigate } from "react-router-dom";
 import Title from "../../Title";
+
+import { useSelector } from "react-redux";
+
 export function VideoUpload() {
+
+const { success, loading, error} = useSelector((state)=> state.video )
+console.log( success, loading, error)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 const navigate = useNavigate();
+
   const [video, setVideo] = useState("");
   const [thumbanail, setThumbnail] = useState("");
+
   const dispatch = useDispatch();
+
   const changeVideoPreview = () => {
     const file = event.target.files[0];
     if (file && file.type.startsWith("video/")) {
       const videoUrl = URL.createObjectURL(file);
       setVideo(videoUrl);
     } else {
-      // Handle error: File type is not supported
-      // alert("Please select a valid video file.");
       toast.error("Please select a valid video file.");
     }
   };
@@ -46,7 +51,6 @@ const navigate = useNavigate();
       setThumbnail(imgUrl);
     } else {
       // Handle error: File type is not supported
-      // alert("Please select a valid video file.");
       toast.error("Please select a valid image file.");
     }
   };
@@ -63,7 +67,16 @@ const navigate = useNavigate();
     // console.log(myForm); 
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+if(success){
+  toast.success(success)
+ navigate('/my-profile')
+}
+if(error){
+  toast.error(error)
+}
+
+  }, [success, toast, navigate, error]);
 
   return (
     <Card color="transparent" shadow={false} className="mt-28 px-16 b">

@@ -16,6 +16,9 @@ import {
   FETCH_USER_HISTORY_REQUEST,
   FETCH_USER_HISTORY_SUCCESS,
   FETCH_USER_HISTORY_FAIL,
+  LOAD_USER_REQUEST,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAIL,
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -23,7 +26,7 @@ const extractErrorMessage = (htmlResponse) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlResponse, "text/html");
   const errorMessage = doc.body.innerHTML.match(/Error.*?(?=<br>)/i);
-  console.log("errorMessage", errorMessage);
+  // console.log("errorMessage", errorMessage);
   return errorMessage ? errorMessage[0].trim() : "";
 };
 
@@ -32,7 +35,7 @@ export const registerUser = (userData) => async (dispatch) => {
   try {
     dispatch({ type: REGISTER_USER_REQUEST });
     const config = { headers: { "Content-Type": "multipart/form-data" } }; //multipart/form-data instead of json type, because in registration images also included
-    console.log("userdata", userData);
+    // console.log("userdata", userData);
     const { data } = await axios.post(
       `/api/v1/users/register`,
       userData,
@@ -40,7 +43,7 @@ export const registerUser = (userData) => async (dispatch) => {
     );
 
     dispatch({ type: REGISTER_USER_SUCCESS, payload: data });
-    console.log("usesfsdfdsfr", data);
+    // console.log("usesfsdfdsfr", data);
   } catch (error) {
     dispatch({
       type: REGISTER_USER_FAIL,
@@ -61,9 +64,8 @@ export const signin = (email, username, password) => async (dispatch) => {
     );
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.data.user });
-    console.log(data.data.user);
   } catch (error) {
-    console.log("action error", error.response.data);
+    // console.log("action error", error.response.data);
     dispatch({
       type: LOGIN_FAIL,
       payload: extractErrorMessage(error.response.data),
@@ -113,7 +115,7 @@ export const resetPassword =
   ({ token }, myForm) =>
   async (dispatch) => {
     try {
-      console.log(token);
+      // console.log(token);
 
       dispatch({ type: RESET_PASSWORD_REQUEST });
       const config = { headers: { "Content-Type": "application/json" } };
@@ -124,7 +126,7 @@ export const resetPassword =
       );
 
       dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data.success });
-      console.log("data from reset password", data);
+      // console.log("data from reset password", data);
     } catch (error) {
       dispatch({
         type: RESET_PASSWORD_FAIL,
@@ -138,11 +140,21 @@ export const fetchHistory = () => async (dispatch) => {
     dispatch({ type: FETCH_USER_HISTORY_REQUEST });
 
     const { data } = await axios.get("api/v1/users/history");
-    dispatch({type: FETCH_USER_HISTORY_SUCCESS , payload : data })
+    dispatch({ type: FETCH_USER_HISTORY_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
       type: FETCH_USER_HISTORY_FAIL,
       payload: extractErrorMessage(error.response.data),
     });
+  }
+};
+
+export const getUserDetails = () => async (dispatch) => {
+  try {
+    dispatch({ type: LOAD_USER_REQUEST });
+    const { data } = await axios.get("/api/v1/users/current-user");
+    dispatch({ type: LOAD_USER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: LOAD_USER_FAIL, payload: error.response.data.message });
   }
 };

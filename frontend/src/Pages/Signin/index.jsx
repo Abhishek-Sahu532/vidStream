@@ -26,7 +26,7 @@ export function Signin() {
   } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, loading, isAuthenticated, user } = useSelector(
+  const { error, isAuthenticated, user } = useSelector(
     (state) => state.user
   );
  const onSubmit = (data) => {
@@ -42,7 +42,7 @@ export function Signin() {
     if (error) {
       toast.error(error);
     }
-    console.log("error", error);
+   
   }, [isAuthenticated, navigate, error, user]);
 
   return (
