@@ -1,19 +1,12 @@
 import React, { useState } from "react";
 import { UserProfileTabs } from "../../Components/UserProfileTabs";
-import {
-  Button,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
+import { Button} from "@material-tailwind/react";
 import { useSelector } from "react-redux";
-import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
 import Title from "../../Title";
 export const MyProfile = () => {
-  const { loading, user } = useSelector((state) => state.user);
+  const {  user } = useSelector((state) => state.user);
 
   console.log(user);
   const [open, setOpen] = useState(false);

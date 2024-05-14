@@ -18,9 +18,7 @@ import { ForgetPassword } from "../Components/ForgetPassword";
 import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
 import { History } from "../Pages/History";
-import {CommingSoon} from '../Components/CommingSoon'
-
-
+import { CommingSoon } from "../Components/CommingSoon";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,9 +41,9 @@ const router = createBrowserRouter(
         <Route index element={<MyProfile />} />
       </Route>
 
-      <Route path="channel" element={<ProtectedRoutes />}>
+      {/* <Route path="channel" element={<ProtectedRoutes />}>
         <Route index element={<UserProfile />} />
-      </Route>
+      </Route> */}
       <Route path="user/history" element={<ProtectedRoutes />}>
         <Route index element={<History />} />
       </Route>
@@ -61,19 +59,16 @@ const router = createBrowserRouter(
       <Route path="liked-videos" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
-      <Route path="about-us" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
-      </Route>
-      <Route path="FAQ" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
-      </Route>
       <Route path="user/inbox" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
       <Route path="help" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
-
+      
+      <Route path="channel/:username" element={<UserProfile />} />
+      <Route path="FAQ" element={<CommingSoon />} />
+      <Route path="about-us" element={<CommingSoon />} />
       <Route path="*" element={<CommingSoon />} />
     </Route>
   )

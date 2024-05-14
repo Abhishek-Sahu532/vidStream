@@ -1,9 +1,9 @@
 import { configureStore  } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { thunk } from "redux-thunk";
-import { fetchUserHistoryReducer, forgetPasswordReducer, userReducer } from "./reducers/UserReducer";
+import { fetchUserHistoryReducer, forgetPasswordReducer, userReducer, getUserProfileReducer, createSubscriberReducer } from "./reducers/UserReducer";
 import {  getAllVideosReducer, videoReducer } from "./reducers/VideoReducer"; 
-import { createCommentReducer } from "./reducers/CommentReducer";
+import { allCommentReducer, createCommentReducer } from "./reducers/CommentReducer";
 
 
 
@@ -27,7 +27,10 @@ const rootReducer = combineReducers({
   videos: getAllVideosReducer,
   forgetPassword: forgetPasswordReducer,
   history : fetchUserHistoryReducer,
-  comment : createCommentReducer
+  createComment : createCommentReducer,
+  comments : allCommentReducer,
+  userProfile : getUserProfileReducer,
+  createSubscriber : createSubscriberReducer
 });
 
 // const persistConfig = {

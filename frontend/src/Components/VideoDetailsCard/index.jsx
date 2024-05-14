@@ -73,7 +73,7 @@ export const VideoDetailsCard = ({ vid }) => {
         <CardFooter className="flex items-center justify-between mt-[-1rem] py-2 px-5">
           <div className="flex items-center">
             <Tooltip content="video owner name">
-              <Typography
+                     <Typography
                 variant="lead"
                 color="gray"
                 className="mt-1 font-extralight text-xs"
@@ -81,6 +81,7 @@ export const VideoDetailsCard = ({ vid }) => {
                 {" "}
                 {vid.uploader.fullname}
               </Typography>
+  
             </Tooltip>
           </div>
           <Typography className="font-normal text-xs">

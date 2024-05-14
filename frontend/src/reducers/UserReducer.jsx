@@ -20,6 +20,12 @@ import {
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
+  GET_USERPROFILE_REQUEST,
+  GET_USERPROFILE_SUCCESS,
+  GET_USERPROFILE_FAIL,
+  CREATE_SUBSCRIBER_REQUEST,
+  CREATE_SUBSCRIBER_SUCCESS,
+  CREATE_SUBSCRIBER_FAIL,
 } from "../constaints/UserConstaints";
 
 export const userReducer = (state = { user: {} }, action) => {
@@ -151,6 +157,66 @@ export const fetchUserHistoryReducer = (state = [], action) => {
         ...state,
         error: null,
       };
+    default:
+      return state;
+  }
+};
+
+export const getUserProfileReducer = (state = { userProfile: {} }, action) => {
+  switch (action.type) {
+    case GET_USERPROFILE_REQUEST:
+      return {
+        loading: true,
+        ...state,
+      };
+    case GET_USERPROFILE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userProfile: action.payload,
+        success: true,
+      };
+    case GET_USERPROFILE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        loading: false,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const createSubscriberReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CREATE_SUBSCRIBER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case CREATE_SUBSCRIBER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+      };
+    case CREATE_SUBSCRIBER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        loading: false,
+        error: null,
+      };
+
     default:
       return state;
   }

@@ -13,6 +13,7 @@ import {
 
 import { CommentSection } from "../CommentSection";
 import Title from "../../Title";
+import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
 // import { Loader } from "../Loader";
 
@@ -65,13 +66,14 @@ export const VideoPlayer = ({video}) => {
       {/* description area */}
       <div className="p-3 flex gap-2 bg-blue-gray-400">
         <div>
-          {" "}
+          {" "} <Link to={`/channel/${video?.uploader?.username}`}>
           <Tooltip content={video?.uploader?.fullname}>
+         
           <Avatar
             src={video.uploader?.avatar}
             alt="avatar"
             size="md"
-          />   </Tooltip>
+          />  </Tooltip></Link> 
         </div>
        
         <div className="pl-4">

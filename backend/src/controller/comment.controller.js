@@ -29,7 +29,7 @@ export const createComment = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while creating the comment");
   }
 
-//commnet created till now
+  //commnet created till now
 
   return res
     .status(201)

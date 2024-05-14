@@ -19,6 +19,9 @@ import {
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
+  GET_USERPROFILE_REQUEST,
+  GET_USERPROFILE_SUCCESS,
+  GET_USERPROFILE_FAIL
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -158,3 +161,15 @@ export const getUserDetails = () => async (dispatch) => {
     dispatch({ type: LOAD_USER_FAIL, payload: error.response.data.message });
   }
 };
+
+
+export const getChannelProfile = (username) =>async (dispatch)=>{
+try {
+  dispatch({type: GET_USERPROFILE_REQUEST});
+  const {data} = await axios.get(`/api/v1/users/c/${username}`)
+  dispatch({type : GET_USERPROFILE_SUCCESS, payload: data})
+console.log(data)
+} catch (error) {
+  dispatch({ type: GET_USERPROFILE_FAIL, payload: error.response.data.message });
+}
+}

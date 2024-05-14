@@ -1,7 +1,19 @@
 import React from "react";
 import { UserProfileTabs } from "../../Components/UserProfileTabs";
+import {useParams} from 'react-router-dom'
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {getChannelProfile} from '../../actions/UserAction'
+
 
 export const UserProfile = () => {
+    const {username} = useParams();
+    const dispatch = useDispatch()
+    console.log(username)
+    useEffect(() => {
+      dispatch(getChannelProfile(username))
+    }, [dispatch])
+    
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
     {/* COVER IMAGE */}

@@ -227,7 +227,7 @@ export const changeCurrentPassword = asyncHandler(async (req, res) => {
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
   
-  console.log(req.user)
+  // console.log(req.user)
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "Current user fetched successfulyy"));
@@ -347,12 +347,12 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         subscribersCount: {
           $size: "$subscribers",
         },
-        chaneelsSubscribedToCount: {
+        channelsSubscribedToCount: {
           $size: "$subscribedTo",
         },
         isSubscribedTo: {
-          $count: {
-            if: { $in: [req.user?._id, "$subscribes.subscriber"] },
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribedTo.subscriber"] },
             then: true,
             else: false,
           },
@@ -364,10 +364,11 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         fullname: 1,
         username: 1,
         subscribersCount: 1,
-        chaneelsSubscribedToCount: 1,
+        channelsSubscribedToCount: 1,
         avatar: 1,
         coverImage: 1,
         email: 1,
+        isSubscribedTo : 1
       },
     },
   ]);
