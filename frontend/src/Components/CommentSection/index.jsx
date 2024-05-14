@@ -3,22 +3,31 @@ import { Textarea, IconButton, Avatar } from "@material-tailwind/react";
 import "emoji-picker-element";
 
 import { useForm } from "react-hook-form";
-import { createAComment } from "../../actions/Comment.Action";
-import { useDispatch } from "react-redux";
+import { createAComment, getVideoComments } from "../../actions/Comment.Action";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 export const CommentSection = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+
+  const { comments, success } = useSelector((state) => state.comments);
+
+  console.log(comments.data.docs);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    const myForm = new FormData()
-    myForm.append('content' , data.content)
-    dispatch(createAComment(id , myForm))  
+    const myForm = new FormData();
+    myForm.append("content", data.content);
+    dispatch(createAComment(id, myForm));
   };
+
+  useEffect(() => {
+    dispatch(getVideoComments(id));
+  }, [dispatch, getVideoComments, id]);
   return (
     <>
       <div className="bg-gray-100 p-6">
@@ -65,11 +74,7 @@ export const CommentSection = () => {
             />
 
             <div>
-              <IconButton
-                variant="text"
-                className="rounded-full"
-               type="submit"
-              >
+              <IconButton variant="text" className="rounded-full" type="submit">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -87,13 +92,46 @@ export const CommentSection = () => {
               </IconButton>
             </div>
           </div>
-         
         </form>
 
         {errors.content && (
-            <p className="my-2 text-red-600">{errors.content.message}</p>
-          )}
-        {/* <div className="flex flex-col space-y-4 mt-4">
+          <p className="my-2 text-red-600">{errors.content.message}</p>
+        )}
+      </div>
+
+
+      {/* {success && success ? (
+        <div className="flex flex-col space-y-4 mt-4">
+          {comments &&
+            comments?.data.docs((com) => (
+              <div className="bg-white p-4 rounded-lg shadow-md ">
+                <div className="flex gap-4">
+                  <Avatar
+                    src="https://docs.material-tailwind.com/img/face-2.jpg"
+                    alt="avatar"
+                  />
+                  <div>
+                    {" "}
+                    <h3 className="text-lg font-bold">John Doe</h3>
+                    <p className="text-gray-700 text-sm mb-2">
+                      Posted on April 17, 2023
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-gray-700">
+                  This is a sample comment. Lorem ipsum dolor sit amet,
+                  consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                  ut labore et dolore magna aliqua.
+                </p>
+              </div>
+            ))}
+        </div>
+      ) : (
+        ""
+      )} */}
+
+      {/* <div className="flex flex-col space-y-4 mt-4">
           <div className="bg-white p-4 rounded-lg shadow-md ">
             <div className="flex gap-4">
               <Avatar
@@ -159,7 +197,6 @@ export const CommentSection = () => {
             </p>
           </div>
         </div> */}
-      </div>
     </>
   );
 };

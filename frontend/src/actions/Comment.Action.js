@@ -1,8 +1,11 @@
 import axios from "axios";
 import {   NEW_COMMENT_FAIL,
     NEW_COMMENT_REQUEST,
-    NEW_COMMENT_RESET,
-    NEW_COMMENT_SUCCESS, } from "../constaints/CommentConstaints";
+    NEW_COMMENT_SUCCESS,
+    GET_COMMENT_REQUEST,
+    GET_COMMENT_SUCCESS,
+    GET_COMMENT_FAIL,
+     } from "../constaints/CommentConstaints";
 const extractErrorMessage = (htmlResponse) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlResponse, "text/html");
@@ -28,5 +31,21 @@ const extractErrorMessage = (htmlResponse) => {
       type: NEW_COMMENT_FAIL,
       payload: extractErrorMessage(error.response.data),
     });
+    }
+  }
+
+
+  export const getVideoComments = (videoId)=> async (dispatch)=>{
+    try {
+      dispatch({type : GET_COMMENT_REQUEST})
+      console.log(videoId)
+      const {data} = await axios.get(`/api/v1/comment/getcomments/${videoId}`);
+      dispatch({type : GET_COMMENT_SUCCESS, payload: data})
+      console.log(data)
+    } catch (error) {
+      dispatch({
+        type: GET_COMMENT_FAIL,
+        payload: extractErrorMessage(error.response.data),
+      });
     }
   }

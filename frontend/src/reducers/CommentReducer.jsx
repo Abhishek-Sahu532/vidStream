@@ -10,7 +10,7 @@ import {
   CLEAR_ERRORS,
 } from "../constaints/CommentConstaints";
 
-export const createCommentReducer = (state = { comment: {} }, action) => {
+export const createCommentReducer = (state = { comments: {} }, action) => {
   switch (action.type) {
     case NEW_COMMENT_REQUEST:
       return {

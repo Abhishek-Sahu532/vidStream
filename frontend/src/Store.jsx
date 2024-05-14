@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
   createComment : createCommentReducer,
   comments : allCommentReducer,
   userProfile : getUserProfileReducer,
-  createSubscriber : createSubscriberReducer
+  createSubscriber : createSubscriberReducer,
 });
 
 // const persistConfig = {
