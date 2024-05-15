@@ -1,4 +1,4 @@
-import { Textarea, IconButton, Avatar } from "@material-tailwind/react";
+import { Textarea, IconButton, Avatar, Typography } from "@material-tailwind/react";
 // import { LinkIcon } from "@heroicons/react/24/outline";
 import "emoji-picker-element";
 
@@ -7,13 +7,15 @@ import { createAComment, getVideoComments } from "../../actions/Comment.Action";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
+
 export const CommentSection = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const { comments, success } = useSelector((state) => state.comments);
+  const {  isAuthenticated } = useSelector((state) => state.user);
 
-  console.log(comments.data.docs);
   const {
     register,
     handleSubmit,
@@ -26,6 +28,9 @@ export const CommentSection = () => {
   };
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error("Login to do a comment");
+    }
     dispatch(getVideoComments(id));
   }, [dispatch, getVideoComments, id]);
   return (
@@ -99,104 +104,32 @@ export const CommentSection = () => {
         )}
       </div>
 
-
-      {/* {success && success ? (
+      {success && success ? (
         <div className="flex flex-col space-y-4 mt-4">
           {comments &&
-            comments?.data.docs((com) => (
+            comments?.data.docs.map((com) => (
               <div className="bg-white p-4 rounded-lg shadow-md ">
                 <div className="flex gap-4">
-                  <Avatar
-                    src="https://docs.material-tailwind.com/img/face-2.jpg"
-                    alt="avatar"
-                  />
+                  <Avatar src={com.owner.avatar} alt="avatar" />
                   <div>
                     {" "}
-                    <h3 className="text-lg font-bold">John Doe</h3>
+                    <h3 className="text-lg font-bold">{com.owner.fullname}</h3>
                     <p className="text-gray-700 text-sm mb-2">
                       Posted on April 17, 2023
                     </p>
                   </div>
                 </div>
 
-                <p className="text-gray-700">
-                  This is a sample comment. Lorem ipsum dolor sit amet,
-                  consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                  ut labore et dolore magna aliqua.
-                </p>
+                <p className="text-gray-700">{com.content}</p>
               </div>
             ))}
         </div>
       ) : (
-        ""
-      )} */}
+        <>
+        <h1 className="text-blue-gray-700">There is nothing to show, Be the first to do a comment</h1>
+        </>
+      )}
 
-      {/* <div className="flex flex-col space-y-4 mt-4">
-          <div className="bg-white p-4 rounded-lg shadow-md ">
-            <div className="flex gap-4">
-              <Avatar
-                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                alt="avatar"
-              />
-              <div>
-                {" "}
-                <h3 className="text-lg font-bold">John Doe</h3>
-                <p className="text-gray-700 text-sm mb-2">
-                  Posted on April 17, 2023
-                </p>
-              </div>
-            </div>
-
-            <p className="text-gray-700">
-              This is a sample comment. Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
-            </p>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow-md ">
-            <div className="flex gap-4">
-              <Avatar
-                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                alt="avatar"
-              />
-              <div>
-                {" "}
-                <h3 className="text-lg font-bold">John Doe</h3>
-                <p className="text-gray-700 text-sm mb-2">
-                  Posted on April 17, 2023
-                </p>
-              </div>
-            </div>
-
-            <p className="text-gray-700">
-              This is a sample comment. Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
-            </p>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow-md ">
-            <div className="flex gap-4">
-              <Avatar
-                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                alt="avatar"
-              />
-              <div>
-                {" "}
-                <h3 className="text-lg font-bold">John Doe</h3>
-                <p className="text-gray-700 text-sm mb-2">
-                  Posted on April 17, 2023
-                </p>
-              </div>
-            </div>
-            <p className="text-gray-700">
-              This is a sample comment. Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
-            </p>
-          </div>
-        </div> */}
     </>
   );
 };

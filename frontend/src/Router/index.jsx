@@ -65,7 +65,7 @@ const router = createBrowserRouter(
       <Route path="help" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
-      
+
       <Route path="channel/:username" element={<UserProfile />} />
       <Route path="FAQ" element={<CommingSoon />} />
       <Route path="about-us" element={<CommingSoon />} />

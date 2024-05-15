@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Subscription } from "../models/subscription.model.js";
@@ -11,13 +11,13 @@ export const createASubscriber = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Subscriber not found");
   }
   //we will get the subscriber details from the logged user details
-  const channel = req.params;
+  const {channel} = req.params;
   if (!channel) {
     throw new ApiError(400, "Channel name is missing");
   }
-
+// console.log(subscriber, channel)
   const createdSubscriber = await Subscription.create({
-    subscriber,
+    subscriber : req.user._id,
     channel,
   });
 
@@ -29,3 +29,4 @@ export const createASubscriber = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, {}, "Subscriber created successfully"));
 });
+  

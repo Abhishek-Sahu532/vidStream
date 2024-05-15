@@ -28,7 +28,7 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     };
-    console.log("formdata", formdata);
+    // console.log("formdata", formdata);
     const { data } = await axios.post(
       "/api/v1/video/publish-a-video",
       formdata,
@@ -51,7 +51,6 @@ export const fetchAllVideos = () => async (dispatch) => {
     dispatch({ type: VIDEO_FETCHED_REQUEST });
     const { data } = await axios.get("/api/v1/video/all-videos");
     dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
-    
   } catch (error) {
     console.log(error);
     dispatch({
@@ -63,12 +62,11 @@ export const fetchAllVideos = () => async (dispatch) => {
 
 export const getVideosDetails = (id) => async (dispatch) => {
   try {
-    
-    dispatch({type : VIDEO_DETAILS_REQUEST});
-    const {data} = await axios.get(`/api/v1/video/${id}`)
-    
-    dispatch({type : VIDEO_DETAILS_SUCCESS,payload : data})
-    console.log(data)
+    dispatch({ type: VIDEO_DETAILS_REQUEST });
+    const { data } = await axios.get(`/api/v1/video/${id}`);
+
+    dispatch({ type: VIDEO_DETAILS_SUCCESS, payload: data });
+    // console.log(data);
   } catch (error) {
     console.log(error);
     dispatch({

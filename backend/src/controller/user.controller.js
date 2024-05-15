@@ -352,7 +352,13 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         },
         isSubscribedTo: {
           $cond: {
-            if: { $in: [req.user?._id, "$subscribedTo.subscriber"] },
+            if: {
+              $and: [
+                { $ifNull: [req.user, null] }, // Check if req.user exists
+                { $isArray: ["$subscribedTo"] }, // Check if subscribedTo is an array
+                { $in: [{ $ifNull: [req.user?._id, null] }, "$subscribedTo.subscriber"] } // Check subscription
+              ]
+            },
             then: true,
             else: false,
           },
@@ -373,7 +379,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
   ]);
 
-  console.log("channel :", channel);
+  // console.log("channel :", channel);
 
   if (!channel?.length) {
     throw new ApiError(404, "Channel does not exists");
