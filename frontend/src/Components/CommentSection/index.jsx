@@ -1,4 +1,9 @@
-import { Textarea, IconButton, Avatar, Typography } from "@material-tailwind/react";
+import {
+  Textarea,
+  IconButton,
+  Avatar,
+  Typography,
+} from "@material-tailwind/react";
 // import { LinkIcon } from "@heroicons/react/24/outline";
 import "emoji-picker-element";
 
@@ -14,7 +19,7 @@ export const CommentSection = () => {
   const dispatch = useDispatch();
 
   const { comments, success } = useSelector((state) => state.comments);
-  const {  isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const {
     register,
@@ -24,13 +29,14 @@ export const CommentSection = () => {
   const onSubmit = (data) => {
     const myForm = new FormData();
     myForm.append("content", data.content);
+
+    if (!isAuthenticated) {
+      toast.error("Login to do a comment");
+    }
     dispatch(createAComment(id, myForm));
   };
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      toast.error("Login to do a comment");
-    }
     dispatch(getVideoComments(id));
   }, [dispatch, getVideoComments, id]);
   return (
@@ -108,7 +114,7 @@ export const CommentSection = () => {
         <div className="flex flex-col space-y-4 mt-4">
           {comments &&
             comments?.data.docs.map((com) => (
-              <div className="bg-white p-4 rounded-lg shadow-md ">
+              <div key={com._id} className="bg-white p-4 rounded-lg shadow-md ">
                 <div className="flex gap-4">
                   <Avatar src={com.owner.avatar} alt="avatar" />
                   <div>
@@ -126,10 +132,11 @@ export const CommentSection = () => {
         </div>
       ) : (
         <>
-        <h1 className="text-blue-gray-700">There is nothing to show, Be the first to do a comment</h1>
+          <h1 className="text-blue-gray-700">
+            There is nothing to show, Be the first to do a comment
+          </h1>
         </>
       )}
-
     </>
   );
 };

@@ -8,7 +8,6 @@ import { Loader } from "../../Components/Loader";
 const Root = () => {
   const { loading, videos } = useSelector((state) => state.videos);
 
-  console.log(videos)
   const dispatch = useDispatch();
 
   useEffect(() => {

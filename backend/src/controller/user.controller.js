@@ -331,7 +331,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "channel",
-        as: "subscribers",
+        as: "subscribers", //my subscriber
       },
     },
     {
@@ -339,7 +339,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "subscriber",
-        as: "subscribedTo",
+        as: "subscribedTo", //subscriber of any user
       },
     },
     {
@@ -352,13 +352,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         },
         isSubscribedTo: {
           $cond: {
-            if: {
-              $and: [
-                { $ifNull: [req.user, null] }, // Check if req.user exists
-                { $isArray: ["$subscribedTo"] }, // Check if subscribedTo is an array
-                { $in: [{ $ifNull: [req.user?._id, null] }, "$subscribedTo.subscriber"] } // Check subscription
-              ]
-            },
+            if: { $in: [req.user?._id, "$subscribedTo.subscriber"] },
             then: true,
             else: false,
           },
@@ -374,7 +368,9 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         avatar: 1,
         coverImage: 1,
         email: 1,
-        isSubscribedTo : 1
+        isSubscribedTo : 1,
+        subscribers : 1,
+        subscribedTo: 1
       },
     },
   ]);
