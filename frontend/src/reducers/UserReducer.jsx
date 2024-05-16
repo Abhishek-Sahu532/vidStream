@@ -23,9 +23,8 @@ import {
   GET_USERPROFILE_REQUEST,
   GET_USERPROFILE_SUCCESS,
   GET_USERPROFILE_FAIL,
-  CREATE_SUBSCRIBER_REQUEST,
-  CREATE_SUBSCRIBER_SUCCESS,
-  CREATE_SUBSCRIBER_FAIL,
+  GET_USERPROFILE_RESET,
+  
 } from "../constaints/UserConstaints";
 
 export const userReducer = (state = { user: {} }, action) => {
@@ -162,35 +161,7 @@ export const fetchUserHistoryReducer = (state = [], action) => {
   }
 };
 
-export const createSubscriberReducer = (state = {}, action) => {
-  switch (action.type) {
-    case CREATE_SUBSCRIBER_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case CREATE_SUBSCRIBER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        message: action.payload,
-      };
-    case CREATE_SUBSCRIBER_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    case CLEAR_ERRORS:
-      return {
-        loading: false,
-        error: null,
-      };
 
-    default:
-      return state;
-  }
-};
 
 export const getUserProfileReducer = (state = {}, action) => {
   switch (action.type) {
@@ -214,6 +185,12 @@ export const getUserProfileReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
+      case GET_USERPROFILE_RESET:
+        return {
+          ...state,
+          loading : false,
+          success: false
+        }
     case CLEAR_ERRORS:
       return {
         loading: false,

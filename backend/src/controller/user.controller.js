@@ -320,6 +320,8 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Username is missing");
   }
 
+// console.log("req.user",{ req.user._id})
+
   const channel = await User.aggregate([
     {
       $match: {
@@ -352,7 +354,13 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         },
         isSubscribedTo: {
           $cond: {
-            if: { $in: [req.user?._id, "$subscribedTo.subscriber"] },
+            if: {
+              $and: [
+                { $ifNull: [req?.user, null] }, // Check if req.user exists
+                { $isArray: ["$subscribedTo"] }, // Check if subscribedTo is an array
+                { $in: [{ $ifNull: [req.user?._id, null] }, "$subscribedTo.channel"] } // Check subscription
+              ]
+            },
             then: true,
             else: false,
           },

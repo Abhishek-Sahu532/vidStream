@@ -37,7 +37,7 @@ export function Signin() {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/my-profile");
-      toast.success(user.message);
+      // toast.success(user.message);
     }
     if (error) {
       toast.error(error);

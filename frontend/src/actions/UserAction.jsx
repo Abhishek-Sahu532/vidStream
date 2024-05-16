@@ -22,9 +22,7 @@ import {
   GET_USERPROFILE_REQUEST,
   GET_USERPROFILE_SUCCESS,
   GET_USERPROFILE_FAIL,
-  CREATE_SUBSCRIBER_REQUEST,
-  CREATE_SUBSCRIBER_SUCCESS,
-  CREATE_SUBSCRIBER_FAIL,
+
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -159,7 +157,7 @@ export const getUserDetails = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
     const { data } = await axios.get("/api/v1/users/current-user");
-    dispatch({ type: LOAD_USER_SUCCESS, payload: data });
+    dispatch({ type: LOAD_USER_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: LOAD_USER_FAIL, payload: error.response.data.message });
   }
@@ -174,24 +172,6 @@ export const getChannelProfile = (username) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_USERPROFILE_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
-
-export const createASubscriber = (id) => async (dispatch) => {
-  try {
-    dispatch({ type: CREATE_SUBSCRIBER_REQUEST });
-    const config = { headers: { "Content-Type": "application/json" } };
-    const { data } = await axios.post(
-      `/api/v1/subscriber/create-a-subscriber/${id}`, config
-    );
-    dispatch({ type: CREATE_SUBSCRIBER_SUCCESS, payload: data });
-    console.log(data);
-  } catch (error) {
-  console.log(error)
-    dispatch({
-      type: CREATE_SUBSCRIBER_FAIL,
       payload: error.response.data.message,
     });
   }

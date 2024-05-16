@@ -1,25 +1,11 @@
 import { configureStore  } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { thunk } from "redux-thunk";
-import { fetchUserHistoryReducer, forgetPasswordReducer, userReducer, getUserProfileReducer, createSubscriberReducer } from "./reducers/UserReducer";
+import { fetchUserHistoryReducer, forgetPasswordReducer, userReducer, getUserProfileReducer } from "./reducers/UserReducer";
 import {  getAllVideosReducer, videoReducer } from "./reducers/VideoReducer"; 
 import { allCommentReducer, createCommentReducer } from "./reducers/CommentReducer";
+import { createSubscriberReducer } from "./reducers/SubscribeReducer";
 
-
-
-// import {
-//   persistStore,
-//   persistReducer,
-//   FLUSH,
-//   REHYDRATE,
-//   PAUSE,
-//   PERSIST,
-//   PURGE,
-//   REGISTER,
-// } from "redux-persist";
-// import storage from "redux-persist/lib/storage";
-
-// import persistStore from "redux-persist/es/persistStore";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -32,29 +18,6 @@ const rootReducer = combineReducers({
   userProfile : getUserProfileReducer,
   createSubscriber : createSubscriberReducer,
 });
-
-// const persistConfig = {
-//   key: "root",
-//   storage,
-//   version: 1,
-// };
-
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-// const initialState = {};
-// const middleware = [thunk];
-
-// export const store = configureStore({
-//   reducer: persistedReducer,
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware({
-//       serializableCheck: {
-//         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-//       },
-//     }).concat(thunk),
-// });
-
-// export const persistor = persistStore(store);
 
 
 export const store = configureStore({

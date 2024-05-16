@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserProfileTabs } from "../../Components/UserProfileTabs";
-import { Button} from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
 import Title from "../../Title";
+import {Loader} from '../../Components/Loader'
+
+
 export const MyProfile = () => {
-  const {  user } = useSelector((state) => state.user);
+  const { loading, user } = useSelector((state) => state.user);
+
+
 
   console.log(user);
   const [open, setOpen] = useState(false);
@@ -14,10 +19,17 @@ export const MyProfile = () => {
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => setOpen(false);
+  useEffect(() => {}, [user]);
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
-      <Title title={user.fullname} />
+    
+    
+    {loading ? <Loader /> : <>
+
+
+    <Title title={user.fullname} />
       {/* COVER IMAGE */}
+
       <div className="bg-cover  ">
         <img
           src={
@@ -30,6 +42,8 @@ export const MyProfile = () => {
         />
       </div>
       {/* PROFILE CONTAINER */}
+
+
       <div className="-mt-1 bg-grey-lighter">
         <div className="container mx-auto">
           <div className="flex justify-between items-center py-4 px-16">
@@ -64,10 +78,14 @@ export const MyProfile = () => {
               </Link>
             </div>
           </div>
-          <div className="w-[70%]">
-            <UserProfileTabs />
-          </div>
         </div>
+      </div>
+
+
+    </> }
+    
+      <div className="w-[70%]">
+        <UserProfileTabs />
       </div>
 
       {/* <div class="container mx-auto flex"> */}

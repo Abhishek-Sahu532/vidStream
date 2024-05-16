@@ -19,6 +19,7 @@ export const createCommentReducer = (state = { comments: {} }, action) => {
       };
     case NEW_COMMENT_SUCCESS:
       return {
+        ...state,
         loading: false,
         success: true,
         comment: action.payload,

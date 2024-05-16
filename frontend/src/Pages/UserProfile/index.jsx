@@ -5,34 +5,45 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getChannelProfile } from "../../actions/UserAction";
 import { Loader } from "../../Components/Loader";
-import { createASubscriber } from "../../actions/UserAction";
+import { createASubscriber , deleteASubscriber} from "../../actions/SubscriberAction";
 import { toast } from "react-toastify";
+import { CREATE_SUBSCRIBER_RESET } from "../../constaints/SubscriberConstaints"; 
 
 export const UserProfile = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
-  const { loading, error, data, success } = useSelector(
-    (state) => state.userProfile )
-    const {user, isAuthenticated} = useSelector((state)=> state.user)
-//   console.log(loading, error, data, success);
+  const { loading, error, data } = useSelector((state) => state.userProfile);
+  const { isAuthenticated } = useSelector((state) => state.user);
+  const { message } = useSelector((state) => state.createSubscriber);
 
-// console.log(user)
-const handleACreateSubscriber = ()=>{
-    if(!isAuthenticated){
-        return toast.error("Please Login")
+console.log(data)
+
+  const handleASubscriberButton = () => {
+    if (!isAuthenticated) {
+       toast.error("Please Login");
+       return
     }
-    console.log('clieck')
-    console.log(data._id)
-    console.log(user.data._id)
-    dispatch(createASubscriber(data?._id))
-}
 
+    // if(data?.isSubscribedTo){
+    //     dispatch(deleteASubscriber(data._id));
+        
+    // }else{
+    //     dispatch(createASubscriber(data._id));
+    // }
+  
+    dispatch(createASubscriber(data._id));
+  };
   useEffect(() => {
-    if(error){
-        return toast.error(error)
+    if (error) {
+      return toast.error(error);
     }
+    if (message?.success) {
+      toast.success("Subscribed Successfully");
+      dispatch({ type: CREATE_SUBSCRIBER_RESET });
+    }
+
     dispatch(getChannelProfile(username));
-  }, [dispatch, toast, error]);
+  }, [dispatch, toast, error, username, toast, message]);
 
   return (
     <>
@@ -74,7 +85,10 @@ const handleACreateSubscriber = ()=>{
                   </div>
                 </div>
                 <div className="text-grey-dark">
-                  <button onClick={handleACreateSubscriber} className="appearance-none px-3 py-2 bg-grey-light uppercase text-grey-darker text-sm mr-4">
+                  <button
+                    onClick={handleASubscriberButton}
+                    className="appearance-none px-3 py-2 bg-grey-light uppercase text-grey-darker text-sm mr-4"
+                  >
                     {data && data.isSubscribedTo ? "Unsubscribe" : "Subscribe"}
                   </button>
                   <span>

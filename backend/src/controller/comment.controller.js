@@ -31,7 +31,7 @@ export const createComment = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while creating the comment");
   }
 
-  console.log(createdComment);
+  // console.log(createdComment);
   //commnet created till now
 
   return res
@@ -42,7 +42,7 @@ export const createComment = asyncHandler(async (req, res) => {
 export const getVideoComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { page = 1, limit = 10 } = req.query;
-console.log(videoId)
+// console.log(videoId)
   const video = await Video.findById(videoId);
 
   if (!video) {
@@ -110,7 +110,7 @@ console.log(videoId)
 
   const comments = await Comment.aggregatePaginate(commentsAggregate, options);
 
-  console.log('comments' , comments)
+  // console.log('comments' , comments)
   return res
     .status(200)
     .json(new ApiResponse(200, comments, "Comments fetched successfully"));
