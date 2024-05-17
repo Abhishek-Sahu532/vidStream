@@ -13,10 +13,7 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
-  FETCH_USER_HISTORY_REQUEST,
-  FETCH_USER_HISTORY_SUCCESS,
-  FETCH_USER_HISTORY_FAIL,
-  CLEAR_ERRORS,
+  
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
@@ -24,7 +21,12 @@ import {
   GET_USERPROFILE_SUCCESS,
   GET_USERPROFILE_FAIL,
   GET_USERPROFILE_RESET,
-  
+  GET_USER_WATCH_HISTORY_REQUEST,
+  GET_USER_WATCH_HISTORY_SUCCESS,
+  GET_USER_WATCH_HISTORY_FAIL,
+  GET_USER_WATCH_HISTORY_RESET,
+
+  CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
 
 export const userReducer = (state = { user: {} }, action) => {
@@ -130,37 +132,6 @@ export const forgetPasswordReducer = (state = {}, action) => {
   }
 };
 
-export const fetchUserHistoryReducer = (state = [], action) => {
-  switch (action.type) {
-    case FETCH_USER_HISTORY_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
-    case FETCH_USER_HISTORY_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        data: action.payload,
-      };
-    case FETCH_USER_HISTORY_FAIL: {
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    }
-    case CLEAR_ERRORS:
-      return {
-        ...state,
-        error: null,
-      };
-    default:
-      return state;
-  }
-};
-
 
 
 export const getUserProfileReducer = (state = {}, action) => {
@@ -177,7 +148,6 @@ export const getUserProfileReducer = (state = {}, action) => {
         loading: false,
         data: action.payload.data,
         success: true,
-        
       };
     case GET_USERPROFILE_FAIL:
       return {
@@ -185,12 +155,44 @@ export const getUserProfileReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
-      case GET_USERPROFILE_RESET:
-        return {
-          ...state,
-          loading : false,
-          success: false
-        }
+    case GET_USERPROFILE_RESET:
+      return {
+        ...state,
+        loading: false,
+        success: false,
+      };
+    case CLEAR_ERRORS:
+      return {
+        loading: false,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const getUserWatchHistoryReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_USER_WATCH_HISTORY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        success: null,
+      };
+    case GET_USER_WATCH_HISTORY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        history: action.payload.data,
+      };
+    case GET_USER_WATCH_HISTORY_FAIL:
+      return {
+        ...state,
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
     case CLEAR_ERRORS:
       return {
         loading: false,

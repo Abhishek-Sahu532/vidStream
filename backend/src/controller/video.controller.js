@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
+import jwt from "jsonwebtoken";
 
 
 //receive the public id from cloudinary to update or delete the previous file
@@ -100,6 +101,42 @@ const getVideoById = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save();
 
+
+try {
+  let user = null;
+    const token =
+      req.cookies?.accessToken ||
+      req.headers?.authorization?.replace("Bearer ", "");
+
+    if (token) {
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      user = await User.findById(decodedToken?._id).select(
+        "-password -refreshToken"
+      );
+
+      if (!user) {
+        throw new ApiError(401, "Invalid Access Token");
+      }
+    }
+
+    req.user = user;
+
+const loggedInUser = await User.findById(req.user._id) 
+
+if(!loggedInUser){
+  throw new ApiError(404, "User not found");
+}
+
+loggedInUser.watchHistory.push(videoId)
+await loggedInUser.save()
+
+console.log(loggedInUser)
+} catch (error) {
+  console.log('error while saving the history ', error)
+}
+
+await video.save();
+
   return res
     .status(200)
     .json(
@@ -111,7 +148,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     );
 });
 
-// UPDATE A VIDEO BY OBJECT ID 
+// UPDATE A VIDEO BY OBJECT ID
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { title, description } = req.body;
@@ -130,7 +167,7 @@ const updateVideo = asyncHandler(async (req, res) => {
   if (thumbnailLocalPath) {
     // Get the old video data
     const oldVideo = await Video.findById(videoId);
-    console.log('oldvideo', oldVideo)
+    console.log("oldvideo", oldVideo);
     if (!oldVideo) {
       throw new ApiError(404, "Video not found");
     }
@@ -145,8 +182,8 @@ const updateVideo = asyncHandler(async (req, res) => {
     updatedVideoData.thumbnail = ThubmnailOnCloudinary.url;
   }
 
-  console.log( title, description, thumbnailLocalPath )
-  console.log(videoId)
+  console.log(title, description, thumbnailLocalPath);
+  console.log(videoId);
   const video = await Video.findByIdAndUpdate(videoId, updatedVideoData, {
     new: true,
   });
@@ -162,7 +199,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 //DELETE THE VIDEO BY VIDEO ID --TESTED
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  console.log(videoId)
+  console.log(videoId);
   //TODO: delete video
   if (!videoId) {
     throw new ApiError(404, "Id is not valid");

@@ -13,15 +13,14 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
-  FETCH_USER_HISTORY_REQUEST,
-  FETCH_USER_HISTORY_SUCCESS,
-  FETCH_USER_HISTORY_FAIL,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
   GET_USERPROFILE_REQUEST,
   GET_USERPROFILE_SUCCESS,
-  GET_USERPROFILE_FAIL,
+  GET_USERPROFILE_FAIL,GET_USER_WATCH_HISTORY_REQUEST,
+  GET_USER_WATCH_HISTORY_SUCCESS,
+  GET_USER_WATCH_HISTORY_FAIL,
 
 } from "../constaints/UserConstaints";
 import axios from "axios";
@@ -139,19 +138,6 @@ export const resetPassword =
     }
   };
 
-export const fetchHistory = () => async (dispatch) => {
-  try {
-    dispatch({ type: FETCH_USER_HISTORY_REQUEST });
-
-    const { data } = await axios.get("api/v1/users/history");
-    dispatch({ type: FETCH_USER_HISTORY_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: FETCH_USER_HISTORY_FAIL,
-      payload: extractErrorMessage(error.response.data),
-    });
-  }
-};
 
 export const getUserDetails = () => async (dispatch) => {
   try {
@@ -176,3 +162,19 @@ export const getChannelProfile = (username) => async (dispatch) => {
     });
   }
 };
+
+
+export const getUserWatchhistory = ()=> async (dispatch)=>{
+  try {
+    dispatch({type : GET_USER_WATCH_HISTORY_REQUEST })
+    const {config } = {headers : { 'Content-Type' : 'application.json'}}
+    const {data} = await axios.get(`/api/v1/users/history`, config)
+    dispatch({type: GET_USER_WATCH_HISTORY_SUCCESS, payload : data })
+    console.log(data)
+  } catch (error) {
+    dispatch({
+      type: GET_USER_WATCH_HISTORY_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+}

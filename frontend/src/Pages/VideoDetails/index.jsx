@@ -6,7 +6,6 @@ import { getVideosDetails } from "../../actions/VideoAction";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Loader } from "../../Components/Loader";
-import Title from "../../Title";
 
 export const VideoDetails = () => {
   const { id } = useParams();
