@@ -5,9 +5,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getChannelProfile } from "../../actions/UserAction";
 import { Loader } from "../../Components/Loader";
-import { createASubscriber , deleteASubscriber} from "../../actions/SubscriberAction";
+import {
+  createASubscriber,
+  deleteASubscriber,
+} from "../../actions/SubscriberAction";
 import { toast } from "react-toastify";
-import { CREATE_SUBSCRIBER_RESET } from "../../constaints/SubscriberConstaints"; 
+import { CREATE_SUBSCRIBER_RESET } from "../../constaints/SubscriberConstaints";
 
 export const UserProfile = () => {
   const { username } = useParams();
@@ -16,34 +19,37 @@ export const UserProfile = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
   const { message } = useSelector((state) => state.createSubscriber);
 
-console.log(data)
+  // console.log(data)
 
   const handleASubscriberButton = () => {
     if (!isAuthenticated) {
-       toast.error("Please Login");
-       return
+      toast.error("Please Login");
+      return;
     }
 
-    // if(data?.isSubscribedTo){
-    //     dispatch(deleteASubscriber(data._id));
-        
-    // }else{
-    //     dispatch(createASubscriber(data._id));
-    // }
-  
-    dispatch(createASubscriber(data._id));
+    if (data?.isSubscribedTo) {
+      //if subscbribed
+      dispatch(deleteASubscriber(data._id));
+      //watch it , not hitting the backend
+    } else {
+      dispatch(createASubscriber(data._id));
+    }
   };
   useEffect(() => {
     if (error) {
       return toast.error(error);
     }
     if (message?.success) {
-      toast.success("Subscribed Successfully");
+      toast.success(message?.message);
       dispatch({ type: CREATE_SUBSCRIBER_RESET });
+    }
+    if (!isAuthenticated) {
+      toast.error("Please Login");
+      return;
     }
 
     dispatch(getChannelProfile(username));
-  }, [dispatch, toast, error, username, toast, message]);
+  }, [dispatch, toast, isAuthenticated, error, username, toast, message]);
 
   return (
     <>

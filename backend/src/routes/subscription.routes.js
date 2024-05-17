@@ -7,7 +7,7 @@ const router = Router();
 
 router.route('/create-a-subscriber/:channel').post(verifyJWT, createASubscriber )
 
-router.route('/delete-a-subscriber/:channel').post(verifyJWT, deleteASubscriber )
+router.route('/delete-a-subscriber/:channel').delete(verifyJWT, deleteASubscriber )
 
 
 export default router

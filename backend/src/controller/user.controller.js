@@ -226,7 +226,6 @@ export const changeCurrentPassword = asyncHandler(async (req, res) => {
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
-  
   // console.log(req.user)
   return res
     .status(200)
@@ -320,80 +319,99 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Username is missing");
   }
 
-// console.log("req.user",{ req.user._id})
+  try {
+    let user = null;
+    const token =
+      req.cookies?.accessToken ||
+      req.headers?.authorization?.replace("Bearer ", "");
 
-  const channel = await User.aggregate([
-    {
-      $match: {
-        username: username?.toLowerCase(),
-      },
-    },
-    {
-      $lookup: {
-        from: "subscriptions",
-        localField: "_id",
-        foreignField: "channel",
-        as: "subscribers", //my subscriber
-      },
-    },
-    {
-      $lookup: {
-        from: "subscriptions",
-        localField: "_id",
-        foreignField: "subscriber",
-        as: "subscribedTo", //subscriber of any user
-      },
-    },
-    {
-      $addFields: {
-        subscribersCount: {
-          $size: "$subscribers",
+    if (token) {
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      user = await User.findById(decodedToken?._id).select(
+        "-password -refreshToken"
+      );
+
+      if (!user) {
+        throw new ApiError(401, "Invalid Access Token");
+      }
+    }
+
+    req.user = user;
+
+    const channel = await User.aggregate([
+      {
+        $match: {
+          username: username?.toLowerCase(),
         },
-        channelsSubscribedToCount: {
-          $size: "$subscribedTo",
+      },
+      {
+        $lookup: {
+          from: "subscriptions",
+          localField: "_id",
+          foreignField: "channel",
+          as: "subscribers", //my subscriber
         },
-        isSubscribedTo: {
-          $cond: {
-            if: {
-              $and: [
-                { $ifNull: [req?.user, null] }, // Check if req.user exists
-                { $isArray: ["$subscribedTo"] }, // Check if subscribedTo is an array
-                { $in: [{ $ifNull: [req.user?._id, null] }, "$subscribedTo.channel"] } // Check subscription
-              ]
+      },
+      {
+        $lookup: {
+          from: "subscriptions",
+          localField: "_id",
+          foreignField: "subscriber",
+          as: "subscribedTo", //subscriber of any user
+        },
+      },
+      {
+        $addFields: {
+          subscribersCount: {
+            $size: "$subscribers",
+          },
+          channelsSubscribedToCount: {
+            $size: "$subscribedTo",
+          },
+          isSubscribedTo: {
+            $cond: {
+              if: { 
+                $and: [
+                  { $isArray: "$subscribers.subscriber" },
+                  { $in: [req.user._id, "$subscribers.subscriber"] },
+                ],
+              },
+              then: true,
+              else: false,
             },
-            then: true,
-            else: false,
           },
         },
       },
-    },
-    {
-      $project: {
-        fullname: 1,
-        username: 1,
-        subscribersCount: 1,
-        channelsSubscribedToCount: 1,
-        avatar: 1,
-        coverImage: 1,
-        email: 1,
-        isSubscribedTo : 1,
-        subscribers : 1,
-        subscribedTo: 1
+      {
+        $project: {
+          fullname: 1,
+          username: 1,
+          subscribersCount: 1,
+          channelsSubscribedToCount: 1,
+          avatar: 1,
+          coverImage: 1,
+          email: 1,
+          isSubscribedTo: 1,
+          subscribers: 1,
+          subscribedTo: 1,
+        },
       },
-    },
-  ]);
+    ]);
 
-  // console.log("channel :", channel);
+    // console.log("channel :", channel);
 
-  if (!channel?.length) {
-    throw new ApiError(404, "Channel does not exists");
+    if (!channel?.length) {
+      throw new ApiError(404, "Channel does not exists");
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, channel[0], "User channel fetched successfully")
+      );
+  } catch (error) {
+    throw new ApiError(401, error?.message || "Invalid Access Token");
   }
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, channel[0], "User channel fetched successfully")
-    );
 });
 
 export const getWatchHistory = asyncHandler(async (req, res) => {

@@ -30,9 +30,11 @@ export const createASubscriber = (id) => async (dispatch) => {
 
 export const deleteASubscriber = (id) => async (dispatch) => {
   try {
+    // console.log(id)
     dispatch({ type: DELETE_SUBSCRIBER_REQUEST });
+    const {config } = {headers :{ 'Content_Type' : 'application/json'}}
     const { data } = await axios.delete(
-      `/api/v1/subscriber/delete-a-subscriber/${id}`
+      `/api/v1/subscriber/delete-a-subscriber/${id}`, config
     );
     dispatch({ type: DELETE_SUBSCRIBER_SUCCESS, payload: data });
     // console.log(data);
