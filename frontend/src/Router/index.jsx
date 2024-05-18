@@ -10,15 +10,17 @@ import { Signup } from "../Pages/Signup";
 import { VideoDetails } from "../Pages/VideoDetails";
 import { VideoUpload } from "../Pages/VideoUpload";
 import Root from "../Pages/Root";
-
+import { Subscribers } from "../Pages/Subscribers";
+import { History } from "../Pages/History";
 import { UserProfile } from "../Pages/UserProfile";
 import { MyProfile } from "../Pages/MyProfile";
 import { ForgetNewPassword } from "../Components/ForgetNewPassword";
 import { ForgetPassword } from "../Components/ForgetPassword";
 import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
-import { History } from "../Pages/History";
+
 import { CommingSoon } from "../Components/CommingSoon";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,7 +41,7 @@ const router = createBrowserRouter(
 
       <Route path="my-profile" element={<ProtectedRoutes />}>
         <Route index element={<MyProfile />} />
-      </Route>
+      </Route>z
 
       {/* <Route path="channel" element={<ProtectedRoutes />}>
         <Route index element={<UserProfile />} />
@@ -47,8 +49,8 @@ const router = createBrowserRouter(
       <Route path="user/history" element={<ProtectedRoutes />}>
         <Route index element={<History />} />
       </Route>
-      <Route path="subcription" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
+      <Route path="subcription/:username" element={<ProtectedRoutes />}>
+        <Route index element={<Subscribers />} />
       </Route>
       <Route path="playlists" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
@@ -69,7 +71,7 @@ const router = createBrowserRouter(
       <Route path="channel/:username" element={<UserProfile />} />
       <Route path="FAQ" element={<CommingSoon />} />
       <Route path="about-us" element={<CommingSoon />} />
-      <Route path="*" element={<CommingSoon />} />
+      {/* <Route path="*" element={<CommingSoon />} /> */}
     </Route>
   )
 );

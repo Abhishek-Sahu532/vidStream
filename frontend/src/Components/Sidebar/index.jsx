@@ -11,8 +11,7 @@ import {
 import {
   ShoppingBagIcon,
   UserCircleIcon,
-  Cog6ToothIcon,
-  PowerIcon,
+  Cog6ToothIcon
 } from "@heroicons/react/24/solid";
 
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -22,12 +21,17 @@ import { MdWatchLater } from "react-icons/md";
 import { BiSolidLike } from "react-icons/bi";
 import { IoMdHome } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 
 export function Sidebar() {
   // const [open, setOpen] = React.useState(0);
   const [drawerOpen, setdrawerOpen] = React.useState(false);
   const openDrawer = () => setdrawerOpen(true);
   const closeDrawer = () => setdrawerOpen(false);
+  
+  const {  user } = useSelector((state) => state.user);
+
   return (
     <>
       {" "}
@@ -72,7 +76,7 @@ export function Sidebar() {
                 <Typography className="mr-auto font-normal">Home</Typography>
               </ListItem>
             </Link>
-            <Link to="/subscription">
+            <Link to={`/subcription/${user?.username}`}>
               <ListItem className="p-0" selected={open === 2}>
                 <ListItemPrefix className="border-b-0 p-3">
                   <ShoppingBagIcon className="h-5 w-5" />

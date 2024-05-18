@@ -13,7 +13,6 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
-  
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
@@ -24,7 +23,6 @@ import {
   GET_USER_WATCH_HISTORY_REQUEST,
   GET_USER_WATCH_HISTORY_SUCCESS,
   GET_USER_WATCH_HISTORY_FAIL,
-  GET_USER_WATCH_HISTORY_RESET,
 
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
@@ -132,8 +130,6 @@ export const forgetPasswordReducer = (state = {}, action) => {
   }
 };
 
-
-
 export const getUserProfileReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_USERPROFILE_REQUEST:
@@ -202,3 +198,5 @@ export const getUserWatchHistoryReducer = (state = [], action) => {
       return state;
   }
 };
+
+

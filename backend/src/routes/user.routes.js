@@ -12,7 +12,7 @@ import {
   resetPassword,
   updateAccountDetails,
   updateCoverImage,
-  updateUserAvatar,
+  updateUserAvatar
 } from "../controller/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -53,13 +53,13 @@ router
   .route("/cover-image")
   .patch(verifyJWT, upload.single("coverImage"), updateCoverImage);
 
-router.route("/c/:username").get( getUserChannelProfile);
+router.route("/c/:username").get(getUserChannelProfile);
 
 router.route("/history").get(verifyJWT, getWatchHistory);
 
 
-router.route('/forget-password').post(forgetPassword)
+router.route("/forget-password").post(forgetPassword);
 
-router.route('/forget-password/:token').put(resetPassword)
+router.route("/forget-password/:token").put(resetPassword);
 
 export default router;

@@ -5,85 +5,78 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
 import Title from "../../Title";
-import {Loader} from '../../Components/Loader'
-
+import { Loader } from "../../Components/Loader";
 
 export const MyProfile = () => {
   const { loading, user } = useSelector((state) => state.user);
-
-
-
-  console.log(user);
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => setOpen(true);
-
   const handleClose = () => setOpen(false);
   useEffect(() => {}, [user]);
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
-    
-    
-    {loading ? <Loader /> : <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Title title={user.fullname} />
+          {/* COVER IMAGE */}
 
+          <div className="bg-cover  ">
+            <img
+              src={
+                user && user.coverImage
+                  ? user.coverImage
+                  : "https://yt3.ggpht.com/HR5bTyedjHyoOd9h2zty2OAqZ3MFM6T7_R48jhdd2rQE2aSPHOD2B-ibdv-yLSTy4_AAF6XdoCk=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no"
+              }
+              alt="banner"
+              className="w-full h-44"
+            />
+          </div>
+          {/* PROFILE CONTAINER */}
 
-    <Title title={user.fullname} />
-      {/* COVER IMAGE */}
-
-      <div className="bg-cover  ">
-        <img
-          src={
-            user && user.coverImage
-              ? user.coverImage
-              : "https://yt3.ggpht.com/HR5bTyedjHyoOd9h2zty2OAqZ3MFM6T7_R48jhdd2rQE2aSPHOD2B-ibdv-yLSTy4_AAF6XdoCk=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no"
-          }
-          alt="banner"
-          className="w-full h-44"
-        />
-      </div>
-      {/* PROFILE CONTAINER */}
-
-
-      <div className="-mt-1 bg-grey-lighter">
-        <div className="container mx-auto">
-          <div className="flex justify-between items-center py-4 px-16">
-            <div className="flex items-center">
-              <img className="w-24 h-24 rounded-full" src={user.avatar} />
-              <div className="ml-6">
-                <div className="text-2xl font-normal flex items-center">
-                  <span className="mr-2">{user.fullname}</span>
-                  <span className="w-3 h-3 text-white inline-block text-center rounded-full bg-grey-dark text-2xs">
-                    &#10003;
-                  </span>
+          <div className="-mt-1 bg-grey-lighter">
+            <div className="container mx-auto">
+              <div className="flex justify-between items-center py-4 px-16">
+                <div className="flex items-center">
+                  <img className="w-24 h-24 rounded-full" src={user.avatar} />
+                  <div className="ml-6">
+                    <div className="text-2xl font-normal flex items-center">
+                      <span className="mr-2">{user.fullname}</span>
+                      <span className="w-3 h-3 text-white inline-block text-center rounded-full bg-grey-dark text-2xs">
+                        &#10003;
+                      </span>
+                    </div>
+                    <p className="mt-2 font-hairline text-sm">
+                      126,014 subscribers
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 font-hairline text-sm">
-                  126,014 subscribers
-                </p>
+                <div className="text-grey-dark">
+                  <Button
+                    className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4"
+                    onClick={handleOpen}
+                    variant="gradient"
+                  >
+                    Update Profile
+                  </Button>
+                  <UpdateProfileDialogBox
+                    open={open}
+                    handleClose={handleClose}
+                  />
+
+                  <Link to="/user-videos">
+                    <Button className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4">
+                      Manage Videos
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
-            <div className="text-grey-dark">
-              <Button
-                className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4"
-                onClick={handleOpen}
-                variant="gradient"
-              >
-                Update Profile
-              </Button>
-              <UpdateProfileDialogBox open={open} handleClose={handleClose} />
-
-              <Link to="/user-videos">
-                <Button className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-sm font-semibold mr-4">
-                  Manage Videos
-                </Button>
-              </Link>
-            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
-
-    </> }
-    
       <div className="w-[70%]">
         <UserProfileTabs />
       </div>

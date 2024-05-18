@@ -5,9 +5,11 @@ import {
   DELETE_SUBSCRIBER_REQUEST,
   DELETE_SUBSCRIBER_SUCCESS,
   DELETE_SUBSCRIBER_FAIL,
+  GET_USER_SUBSCRIPTION_REQUEST,
+  GET_USER_SUBSCRIPTION_SUCCESS,
+  GET_USER_SUBSCRIPTION_FAIL,
 } from "../constaints/SubscriberConstaints";
 import axios from "axios";
-
 
 export const createASubscriber = (id) => async (dispatch) => {
   try {
@@ -32,9 +34,10 @@ export const deleteASubscriber = (id) => async (dispatch) => {
   try {
     // console.log(id)
     dispatch({ type: DELETE_SUBSCRIBER_REQUEST });
-    const {config } = {headers :{ 'Content_Type' : 'application/json'}}
+    const { config } = { headers: { Content_Type: "application/json" } };
     const { data } = await axios.delete(
-      `/api/v1/subscriber/delete-a-subscriber/${id}`, config
+      `/api/v1/subscriber/delete-a-subscriber/${id}`,
+      config
     );
     dispatch({ type: DELETE_SUBSCRIBER_SUCCESS, payload: data });
     // console.log(data);
@@ -42,6 +45,21 @@ export const deleteASubscriber = (id) => async (dispatch) => {
     console.log(error);
     dispatch({
       type: DELETE_SUBSCRIBER_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const getUserSubscriber = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_USER_SUBSCRIPTION_REQUEST });
+    const { config } = { headers: { "Content-Type": "application.json" } };
+    const { data } = await axios.get(`/api/v1/subscriber/${username}`, config);
+    dispatch({ type: GET_USER_SUBSCRIPTION_SUCCESS, payload: data });
+    console.log(data);
+  } catch (error) {
+    dispatch({
+      type: GET_USER_SUBSCRIPTION_FAIL,
       payload: error.response.data.message,
     });
   }
