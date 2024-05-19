@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import Title from "../../Title";
-
+import { Loader } from "../../Components/Loader";
 
 export function Signin() {
   const {
@@ -26,29 +26,33 @@ export function Signin() {
   } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, isAuthenticated, user } = useSelector(
+  const { error, isAuthenticated, success, loading } = useSelector(
     (state) => state.user
   );
- const onSubmit = (data) => {
-
+  const onSubmit = (data) => {
     dispatch(signin(data.email, data.username, data.password));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
+      const lastVisitedUrl = sessionStorage.getItem("lastVisitedUrl");
+      if (lastVisitedUrl) {
+        navigate(lastVisitedUrl);
+      } else {
+        navigate("/my-profile");
+      }
+    }
+    if (success) {
       navigate("/my-profile");
-      // toast.success(user.message);
     }
     if (error) {
       toast.error(error);
     }
-   
-  }, [isAuthenticated, navigate, error, user]);
+  }, [navigate, success, isAuthenticated, error]);
 
   return (
-    
     <Card className="w-96  mx-auto mt-36">
-    <Title  title="Sign in" />
+      <Title title="Sign in" />
       <CardHeader
         variant="gradient"
         color="gray"
@@ -91,14 +95,15 @@ export function Signin() {
             <p className="my-2 text-red-600">{errors.password.message}</p>
           )}
           <div className="flex justify-between">
-          <div className="-ml-2.5">
-            <Checkbox label="Remember Me" />
+            <div className="-ml-2.5">
+              <Checkbox label="Remember Me" />
+            </div>
+            <div className="-ml-2.5 ">
+              <Link to="/forget-password">
+                <p>Forget Password ?</p>
+              </Link>
+            </div>
           </div>
-          <div className="-ml-2.5 ">
-          <Link to='/forget-password' >
-           <p >Forget Password ?</p></Link>
-          </div>
-</div>
         </CardBody>
         <CardFooter className="pt-0">
           <Button variant="gradient" type="submit" fullWidth>
@@ -120,9 +125,9 @@ export function Signin() {
           </Button>
           <Typography variant="small" className="mt-6 flex justify-center">
             Don&apos;t have an account?
-           
-              <Link to="/signup" className="ml-1 font-bold">Sign up</Link>
-          
+            <Link to="/signup" className="ml-1 font-bold">
+              Sign up
+            </Link>
           </Typography>
         </CardFooter>
       </form>

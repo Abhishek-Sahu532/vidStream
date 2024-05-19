@@ -10,6 +10,9 @@ import {
   GET_USER_SUBSCRIPTION_REQUEST,
   GET_USER_SUBSCRIPTION_SUCCESS,
   GET_USER_SUBSCRIPTION_FAIL,
+  GET_USER_SUBSCRIBED_CHANNEL_REQUEST,
+  GET_USER_SUBSCRIBED_CHANNEL_SUCCESS,
+  GET_USER_SUBSCRIBED_CHANNEL_FAIL,
   CLEAR_ERRORS,
 } from "../constaints/SubscriberConstaints";
 
@@ -69,9 +72,41 @@ export const getUserSubscriberReducer = (state = [], action) => {
       return {
         ...state,
         loading: false,
-        subscriber: action.payload,
+        subscriber: action.payload.data,
       };
     case GET_USER_SUBSCRIPTION_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+ 
+};
+
+
+export const getUserSubscribedChannelReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_USER_SUBSCRIBED_CHANNEL_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case GET_USER_SUBSCRIBED_CHANNEL_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        subscriber: action.payload.data,
+      };
+    case GET_USER_SUBSCRIBED_CHANNEL_FAIL:
       return {
         ...state,
         loading: false,

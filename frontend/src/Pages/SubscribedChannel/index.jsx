@@ -1,38 +1,33 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserSubscriber } from "../../actions/SubscriberAction";
-import { useParams } from "react-router-dom";
-import { SubscriberCard } from "../../Components/SubscriberCard";
+import { getUserSubscribedChannel } from "../../actions/SubscriberAction";
 import Title from "../../Title";
 import "@splidejs/react-splide/css";
 
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import {toast} from 'react-toastify'
+import { SubscribedChannelCard } from "../../Components/SubscribedChannelCard";
 
-
-export const Subscribers = () => {
+export const SubscribedChannel = () => {
   const { loading, error, subscriber } = useSelector(
-    (state) => state.userSubscriber
+    (state) => state.userSubscribedChannel
   );
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  const { username } = useParams();
-
   const dispatch = useDispatch();
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(getUserSubscriber(username));
+      dispatch(getUserSubscribedChannel());
     }
-    if(error){
-      toast.error(error)
+    if (error) {
+      toast.error(error);
     }
   }, [isAuthenticated, user, dispatch]);
+
   return (
     <div className="p-10 mt-20 ">
-      <Title title="Subscriber" />
+      <Title title="Subscribed Channels" />
       {loading ? (
-        <p className="mt-4 md:mt-0 text-center">
-        Please subscriber any
-        </p>
+        <p className="mt-4 md:mt-0 text-center">Please subscriber any</p>
       ) : (
         <section tag="section">
           <Splide
@@ -47,7 +42,7 @@ export const Subscribers = () => {
             {subscriber &&
               subscriber.subscribers.map((sub, index) => (
                 <SplideSlide key={index}>
-                  <SubscriberCard sub={sub} />
+                  <SubscribedChannelCard sub={sub} />
                 </SplideSlide>
               ))}
           </Splide>

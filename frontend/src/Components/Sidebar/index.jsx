@@ -76,13 +76,23 @@ export function Sidebar() {
                 <Typography className="mr-auto font-normal">Home</Typography>
               </ListItem>
             </Link>
-            <Link to={`/subcription/${user?.username}`}>
+            <Link to={`/subscriber/${user?.username}`}>
               <ListItem className="p-0" selected={open === 2}>
                 <ListItemPrefix className="border-b-0 p-3">
                   <ShoppingBagIcon className="h-5 w-5" />
                 </ListItemPrefix>
                 <Typography className="mr-auto font-normal">
-                  Subscription
+                  Subscriber
+                </Typography>
+              </ListItem>
+            </Link>
+            <Link to={`/subscribed-channel/${user?.username}`}>
+              <ListItem className="p-0" selected={open === 2}>
+                <ListItemPrefix className="border-b-0 p-3">
+                  <ShoppingBagIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                <Typography className="mr-auto font-normal">
+                  Subscribed Channels
                 </Typography>
               </ListItem>
             </Link>

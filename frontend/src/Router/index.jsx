@@ -20,6 +20,7 @@ import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
 
 import { CommingSoon } from "../Components/CommingSoon";
+import { SubscribedChannel } from "../Pages/SubscribedChannel";
 
 
 const router = createBrowserRouter(
@@ -41,16 +42,17 @@ const router = createBrowserRouter(
 
       <Route path="my-profile" element={<ProtectedRoutes />}>
         <Route index element={<MyProfile />} />
-      </Route>z
+      </Route>
 
-      {/* <Route path="channel" element={<ProtectedRoutes />}>
-        <Route index element={<UserProfile />} />
-      </Route> */}
+     
       <Route path="user/history" element={<ProtectedRoutes />}>
         <Route index element={<History />} />
       </Route>
-      <Route path="subcription/:username" element={<ProtectedRoutes />}>
+      <Route path="subscriber/:username" element={<ProtectedRoutes />}>
         <Route index element={<Subscribers />} />
+      </Route>
+      <Route path="subscribed-channel/:username" element={<ProtectedRoutes />}>
+        <Route index element={<SubscribedChannel />} />
       </Route>
       <Route path="playlists" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
@@ -71,7 +73,7 @@ const router = createBrowserRouter(
       <Route path="channel/:username" element={<UserProfile />} />
       <Route path="FAQ" element={<CommingSoon />} />
       <Route path="about-us" element={<CommingSoon />} />
-      {/* <Route path="*" element={<CommingSoon />} /> */}
+      <Route path="*" element={<CommingSoon />} />
     </Route>
   )
 );

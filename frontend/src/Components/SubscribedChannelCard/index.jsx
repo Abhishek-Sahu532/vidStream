@@ -8,7 +8,7 @@ import {
   } from "@material-tailwind/react";
   import { Link } from "react-router-dom";
   
-  export function SubscriberCard({ sub }) {
+  export function SubscribedChannelCard({ sub }) {
     console.log(sub)
     const date = new Date(sub.createdAt);
     const formattedDate = date.toLocaleDateString("en-US", {

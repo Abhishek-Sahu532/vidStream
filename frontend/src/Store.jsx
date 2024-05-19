@@ -15,6 +15,7 @@ import {
 import {
   createSubscriberReducer,
   getUserSubscriberReducer,
+  getUserSubscribedChannelReducer,
 } from "./reducers/SubscribeReducer";
 
 const rootReducer = combineReducers({
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   createSubscriber: createSubscriberReducer,
   userHistory: getUserWatchHistoryReducer,
   userSubscriber: getUserSubscriberReducer,
+  userSubscribedChannel: getUserSubscribedChannelReducer,
 });
 
 export const store = configureStore({
