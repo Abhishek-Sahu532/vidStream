@@ -71,6 +71,7 @@ export const deleteASubscriber = asyncHandler(async (req, res) => {
 
 // controller to return subscriber list of a channel
 export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
+
 	const subscribers = await Subscription.aggregate([
 		{
 		  $match: {
@@ -85,9 +86,6 @@ export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 			as: "subscriberDetails",
 		  },
 		},
-		// {
-		//   $unwind: "$subscriberDetails",
-		// },
 		{
 		  $lookup: {
 			from: "subscriptions",
@@ -126,9 +124,6 @@ export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 	  ]);
 	  
 
-    
-	//   const { subscribers, totalSubscribers } = subscribers[0];
-  // console.log(subscribers[0])
   return res
     .status(200)
     .json(
@@ -145,126 +140,69 @@ export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 // controller to return channel list to which user has subscribed
 export const getSubscribedChannels = asyncHandler(async (req, res) => {
-  const { subscriberId } = req.params;
 
-  // const subscribedChannels = await Subscription.aggregate([
-  //   {
-  //     $match: {
-  //       subscriber: new mongoose.Types.ObjectId(subscriberId),
-  //     },
-  //   },
-  //   {
-  //     $lookup: {
-  //       from: "users",
-  //       localField: "channel",
-  //       foreignField: "_id",
-  //       as: "subscribedChannel",
-  //       pipeline: [
-  //         {
-  //           $lookup: {
-  //             from: "videos",
-  //             localField: "_id",
-  //             foreignField: "owner",
-  //             as: "videos",
-  //           },
-  //         },
-  //         {
-  //           $addFields: {
-  //             latestVideo: {
-  //               $last: "$videos",
-  //             },
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   },
-  //   {
-  //     $unwind: "$subscribedChannel",
-  //   },
-  //   {
-  //     $project: {
-  //       _id: 0,
-  //       subscribedChannel: {
-  //         _id: 1,
-  //         username: 1,
-  //         fullname: 1,
-  //         avatar: 1,
-  //         // latestVideo: {
-  //         // 	_id: 1,
-  //         // 	'videoFile': 1,
-  //         // 	'thumbnail': 1,
-  //         // 	owner: 1,
-  //         // 	title: 1,
-  //         // 	description: 1,
-  //         // 	duration: 1,
-  //         // 	createdAt: 1,
-  //         // },
-  //       },
-  //     },
-  //   },
-  // ]);
-
-
-  const subscribers = await Subscription.aggregate([
-		{
-		  $match: {
-			channel: req.user._id,
-		  },
-		},
-		{
-		  $lookup: {
-			from: "users",
-			localField: "subscriber",
-			foreignField: "_id",
-			as: "subscriberDetails",
-		  },
-		},
-		// {
-		//   $unwind: "$subscriberDetails",
-		// },
-		{
-		  $lookup: {
-			from: "subscriptions",
-			localField: "subscriberDetails._id",
-			foreignField: "subscriber",
-			as: "subscriberSubscriptions",
-		  },
-		},
+  // console.log('1111111111111111111')
+  
+  const subscribedChannels = await Subscription.aggregate([
     {
       $match: {
-        "subscriberSubscriptions.subscriber": { $ne: req.user._id }
-      }
+        subscriber: req.user._id,
+      },
     },
-		{
-		  $project: {
-			_id: 0,
-			subscriberId: "$subscriberDetails._id",
-			username: "$subscriberDetails.username",
-			fullname: "$subscriberDetails.fullname",
-			avatar: "$subscriberDetails.avatar",
-			subscriberSubscriptionsCount: { $size: "$subscriberSubscriptions" },
-		  }, //watch it - for subscriberSubscriptionsCount value, might getting wrong
-		},
-		{
-		  $group: {
-			_id: null,
-			subscribers: { $push: "$$ROOT" },
-			totalSubscribers: { $sum: 1 },
-		  },
-		},
-		{
-		  $addFields: {
-			subscribers: "$subscribers",
-		  },
-		},
-	  ]);
+    {
+      $lookup: {
+        from: "users",
+        localField: "channel",
+        foreignField: "_id",
+        as: "channelDetails",
+      },
+    },
+    {
+      $unwind: "$channelDetails",
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "channelDetails._id",
+        foreignField: "channel",
+        as: "channelSubscribers",
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        channelId: "$channelDetails._id",
+        username: "$channelDetails.username",
+        fullname: "$channelDetails.fullname",
+        avatar: "$channelDetails.avatar",
+        subscribersCount: { $size: "$channelSubscribers" },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        channels: {
+          $push: "$$ROOT",
+        },
+        totalChannels: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $addFields: {
+        channels: "$channels",
+      },
+    },
+  ]);
+
+  // console.log(subscribedChannels)
+
   return res
     .status(200)
     .json(
-      new ApiResponse(
-        200,
-        subscribedChannels,
-        "subscribed channels fetched successfully"
-      )
+      new ApiResponse(200, subscribedChannels[0], "subscribedChannels fetched successfully")
     );
-});
+
+}
+);

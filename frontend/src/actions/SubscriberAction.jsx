@@ -69,20 +69,21 @@ export const getUserSubscriber = (username) => async (dispatch) => {
 };
 
 
-export const getUserSubscribedChannel = () => async (dispatch) => {
+export const getUserSubscribedChannel = (channelId) => async (dispatch) => {
   try {
     dispatch({ type: GET_USER_SUBSCRIBED_CHANNEL_REQUEST });
+    console.log('entered 1')
     const { config } = { headers: { "Content-Type": "application.json" } };
     const { data } = await axios.get(
-      `/api/v1/subscriber/subscribed-channels`,
+      `/api/v1/subscriber/subscribed-channels/${channelId}`,
       config
     );
     dispatch({ type: GET_USER_SUBSCRIBED_CHANNEL_SUCCESS, payload: data });
-    console.log(data);
+    console.log('datfddddddddddddda', data);
   } catch (error) {
     dispatch({
       type: GET_USER_SUBSCRIBED_CHANNEL_FAIL,
-      payload: error.response.data.message,
+      payload: error.response.receivedData.message,
     });
   }
 };

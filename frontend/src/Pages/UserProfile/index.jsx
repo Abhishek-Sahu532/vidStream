@@ -30,7 +30,7 @@ export const UserProfile = () => {
     if (data?.isSubscribedTo) {
       //if subscbribed
       dispatch(deleteASubscriber(data._id));
-      //watch it , not hitting the backend
+   
     } else {
       dispatch(createASubscriber(data._id));
     }

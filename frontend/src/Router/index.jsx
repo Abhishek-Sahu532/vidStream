@@ -20,7 +20,7 @@ import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
 
 import { CommingSoon } from "../Components/CommingSoon";
-import { SubscribedChannel } from "../Pages/SubscribedChannel";
+import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
 
 
 const router = createBrowserRouter(
@@ -52,7 +52,7 @@ const router = createBrowserRouter(
         <Route index element={<Subscribers />} />
       </Route>
       <Route path="subscribed-channel/:username" element={<ProtectedRoutes />}>
-        <Route index element={<SubscribedChannel />} />
+        <Route index element={<SubscribedChannelPage />} />
       </Route>
       <Route path="playlists" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />

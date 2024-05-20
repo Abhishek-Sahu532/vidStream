@@ -3,21 +3,20 @@ import {
   Avatar,
   ButtonGroup,
   Button,
-  IconButton,
   Accordion,
   AccordionHeader,
   AccordionBody,
   Typography,
   Tooltip,
 } from "@material-tailwind/react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { CommentSection } from "../CommentSection";
 import Title from "../../Title";
 import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
 // import { Loader } from "../Loader";
-
-
 
 function Icon({ id, open }) {
   return (
@@ -38,7 +37,7 @@ function Icon({ id, open }) {
   );
 }
 
-export const VideoPlayer = ({video}) => {
+export const VideoPlayer = ({ video }) => {
   const dateString = video.createdAt;
   const date = new Date(dateString);
 
@@ -47,38 +46,48 @@ export const VideoPlayer = ({video}) => {
     month: "short",
     day: "2-digit",
   });
-
+  const { isAuthenticated } = useSelector((state) => state.user);
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
-  return (
 
-     <div >
-     <Title title={video.title} />
+  // const handleASubscriberButton = () => {
+  //   if (!isAuthenticated) {
+  //     toast.error("Please Login");
+  //     return;
+  //   }
+
+  //   if (data?.isSubscribedTo) {
+  //     //if subscbribed
+  //     dispatch(deleteASubscriber(data._id));
+  //   } else {
+  //     dispatch(createASubscriber(data._id));
+  //   }
+  // };
+  return (
+    <div>
+      <Title title={video.title} />
       <div>
         <video className="h-full w-full rounded-lg" controls muted>
-          <source
-            src={video.videoFile}
-           
-          />
+          <source src={video.videoFile} />
           Your browser does not support the video tag.
         </video>
       </div>
       {/* description area */}
       <div className="p-3 flex gap-2 bg-blue-gray-400">
         <div>
-          {" "} <Link to={`/channel/${video?.uploader?.username}`}>
-          <Tooltip content={video?.uploader?.fullname}>
-         
-          <Avatar
-            src={video.uploader?.avatar}
-            alt="avatar"
-            size="md"
-          />  </Tooltip></Link> 
+          {" "}
+          <Link to={`/channel/${video?.uploader?.username}`}>
+            {/* <Tooltip content={video?.uploader?.fullname}> */}
+            <Avatar src={video.uploader?.avatar} alt="avatar" size="md" />{" "}
+            {/* </Tooltip> */}
+          </Link>
         </div>
-       
+
         <div className="pl-4">
-          <p className=" text-xl ">{video?.uploader?.fullname}</p>
-          <p>subscriber number</p>
+          <Link to={`/channel/${video?.uploader?.username}`}>
+            <p className=" text-xl ">{video?.uploader?.fullname}</p>
+          </Link>
+          {/* <p>subscriber number</p> */}
         </div>
 
         <div className="ml-12 flex gap-2 ">
@@ -130,42 +139,40 @@ export const VideoPlayer = ({video}) => {
 
           <div className="pl-4 w-max">
             <Button variant="outlined" className="size-fit p-3 py-1 px-6">
-            <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
-                  />
-                </svg>
-            
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
+                />
+              </svg>
               Share
             </Button>
           </div>
 
           <div className="pl-9">
             <Button variant="outlined" className="p-3 py-0">
-            <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                  />
-                </svg>
-              
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                />
+              </svg>
               Download
             </Button>
           </div>
@@ -174,25 +181,22 @@ export const VideoPlayer = ({video}) => {
 
       <div className="pt-4 p-4 flex flex-col gap-2">
         <div className="flex gap-4 ">
-          <Typography className="font-semibold ">{video.views} Views</Typography>
+          <Typography className="font-semibold ">
+            {video.views} Views
+          </Typography>
           <Typography className="font-semibold ">{formattedDate}</Typography>
-         
         </div>
 
         <div className="mb-6">
           <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
             <AccordionHeader onClick={() => handleOpen(1)} className="text-sm">
-          Video Description
+              Video Description
             </AccordionHeader>
-            <AccordionBody children=''>
-             {video.description}
-            </AccordionBody>
+            <AccordionBody children="">{video.description}</AccordionBody>
           </Accordion>
         </div>
       </div>
-      <CommentSection videoId={video._id}  />
+      <CommentSection videoId={video._id} />
     </div>
- 
-
   );
 };

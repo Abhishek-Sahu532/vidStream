@@ -88,9 +88,7 @@ export const getUserSubscriberReducer = (state = [], action) => {
     default:
       return state;
   }
- 
 };
-
 
 export const getUserSubscribedChannelReducer = (state = [], action) => {
   switch (action.type) {
@@ -98,18 +96,21 @@ export const getUserSubscribedChannelReducer = (state = [], action) => {
       return {
         ...state,
         loading: true,
+        success: null,
         error: null,
       };
     case GET_USER_SUBSCRIBED_CHANNEL_SUCCESS:
       return {
         ...state,
         loading: false,
-        subscriber: action.payload.data,
+        success: true,
+        subscribedChannels: action.payload.data,
       };
     case GET_USER_SUBSCRIBED_CHANNEL_FAIL:
       return {
         ...state,
         loading: false,
+        success: false,
         error: action.payload,
       };
     case CLEAR_ERRORS:
