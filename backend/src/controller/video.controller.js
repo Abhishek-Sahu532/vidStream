@@ -8,7 +8,6 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 import jwt from "jsonwebtoken";
 
-
 //receive the public id from cloudinary to update or delete the previous file
 function getPublicIdFromUrl(url) {
   const parts = url.split("/");
@@ -101,9 +100,8 @@ const getVideoById = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save();
 
-
-try {
-  let user = null;
+  try {
+    let user = null;
     const token =
       req.cookies?.accessToken ||
       req.headers?.authorization?.replace("Bearer ", "");
@@ -121,21 +119,21 @@ try {
 
     req.user = user;
 
-const loggedInUser = await User.findById(req.user._id) 
+    const loggedInUser = await User.findById(req.user._id);
 
-if(!loggedInUser){
-  throw new ApiError(404, "User not found");
-}
+    if (!loggedInUser) {
+      throw new ApiError(404, "User not found");
+    }
 
-loggedInUser.watchHistory.push(videoId)
-await loggedInUser.save()
+    loggedInUser.watchHistory.push(videoId);
+    await loggedInUser.save();
 
-console.log(loggedInUser)
-} catch (error) {
-  console.log('error while saving the history ', error)
-}
+    // console.log(loggedInUser)
+  } catch (error) {
+    console.log("error while saving the history ", error);
+  }
 
-await video.save();
+  await video.save();
 
   return res
     .status(200)
@@ -167,7 +165,7 @@ const updateVideo = asyncHandler(async (req, res) => {
   if (thumbnailLocalPath) {
     // Get the old video data
     const oldVideo = await Video.findById(videoId);
-    console.log("oldvideo", oldVideo);
+    // console.log("oldvideo", oldVideo);
     if (!oldVideo) {
       throw new ApiError(404, "Video not found");
     }
@@ -181,9 +179,8 @@ const updateVideo = asyncHandler(async (req, res) => {
     }
     updatedVideoData.thumbnail = ThubmnailOnCloudinary.url;
   }
-
   console.log(title, description, thumbnailLocalPath);
-  console.log(videoId);
+  // console.log(videoId);
   const video = await Video.findByIdAndUpdate(videoId, updatedVideoData, {
     new: true,
   });
@@ -199,12 +196,11 @@ const updateVideo = asyncHandler(async (req, res) => {
 //DELETE THE VIDEO BY VIDEO ID --TESTED
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  console.log(videoId);
+  // console.log(videoId);
   //TODO: delete video
   if (!videoId) {
     throw new ApiError(404, "Id is not valid");
   }
-
   const video = await Video.findById(videoId);
   if (!video) {
     throw new ApiError(404, "Video is not found");

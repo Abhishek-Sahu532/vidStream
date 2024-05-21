@@ -159,7 +159,7 @@ export const getChannelProfile = (username) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_USERPROFILE_FAIL,
-      payload: error.response.data.message,
+      payload:  extractErrorMessage(error.response.data),
     });
   }
 };
@@ -171,11 +171,11 @@ export const getUserWatchhistory = ()=> async (dispatch)=>{
     const {config } = {headers : { 'Content-Type' : 'application.json'}}
     const {data} = await axios.get(`/api/v1/users/history`, config)
     dispatch({type: GET_USER_WATCH_HISTORY_SUCCESS, payload : data })
-    console.log(data)
+    // console.log(data)
   } catch (error) {
     dispatch({
       type: GET_USER_WATCH_HISTORY_FAIL,
-      payload: error.response.data.message,
+      payload:  extractErrorMessage(error.response.data),
     });
   }
 }

@@ -43,13 +43,23 @@ export const Subscribers = () => {
                 You have {subscriber?.totalSubscribers} subscribers{" "}
               </p>
               <Splide
-                options={{
-                  rewind: true,
-                  gap: "1rem",
-                }}
+                 options={{
+              rewind: true,
+              lazyLoad: "nearby",
+              gap: "2rem",
+              breakpoints: {
+                640: {
+                  perPage: 2,
+                  gap: "7rem",
+                },
+                480: {
+                  perPage: 1,
+                  gap: ".7rem",
+                },
+              },
+            }}
                 class="splide"
-                data-splide='{"perPage":2}'
-                aria-label="My Favorite Images"
+                data-splide='{"perPage":3}'
               >
                 {subscriber &&
                   subscriber.subscribers.map((sub, index) => (

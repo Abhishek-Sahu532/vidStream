@@ -21,30 +21,21 @@ import App from "../App";
 
 import { CommingSoon } from "../Components/CommingSoon";
 import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
-
+import { AboutUs } from "../Pages/AboutUs";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="" element={<Root />} />
-
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
-
       <Route path="video/:id" element={<VideoDetails />} />
-
-      <Route path="forget-password" element={<ForgetPassword />} />
-      <Route path="forget-password/:token" element={<ForgetNewPassword />} />
-
       <Route path="upload-a-video" element={<ProtectedRoutes />}>
         <Route index element={<VideoUpload />} />
       </Route>
-
       <Route path="my-profile" element={<ProtectedRoutes />}>
         <Route index element={<MyProfile />} />
       </Route>
-
-     
       <Route path="user/history" element={<ProtectedRoutes />}>
         <Route index element={<History />} />
       </Route>
@@ -54,6 +45,12 @@ const router = createBrowserRouter(
       <Route path="subscribed-channel/:username" element={<ProtectedRoutes />}>
         <Route index element={<SubscribedChannelPage />} />
       </Route>
+      <Route path="channel/:username" element={<UserProfile />} />
+      <Route path="forget-password" element={<ForgetPassword />} />
+      <Route path="forget-password/:token" element={<ForgetNewPassword />} />
+
+      {/* will look into this */}
+
       <Route path="playlists" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
@@ -69,10 +66,8 @@ const router = createBrowserRouter(
       <Route path="help" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
-
-      <Route path="channel/:username" element={<UserProfile />} />
       <Route path="FAQ" element={<CommingSoon />} />
-      <Route path="about-us" element={<CommingSoon />} />
+      <Route path="about-us" element={<AboutUs />} />
       <Route path="*" element={<CommingSoon />} />
     </Route>
   )

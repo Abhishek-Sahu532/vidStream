@@ -8,21 +8,33 @@ import { mongoose } from "mongoose";
 //creating a subscriber
 export const createASubscriber = asyncHandler(async (req, res) => {
   const subscriber = await User.findById(req.user._id);
+  // Retrieve the subscriber (the current user)
   if (!subscriber) {
     throw new ApiError(400, "Subscriber not found");
   }
   //channel details, i am sending objectid instead of params
+  // Extract channel from request parameters
   const { channel } = req.params;
   //   console.log("channel", channel)
   if (!channel) {
     throw new ApiError(400, "Channel name is missing");
   }
 
-  //watch it
-  // if(Subscription.findById(channel)){
-  //   throw new ApiError(400, "Channel already subscribed");
-  // }
-  // console.log(subscriber, channel)
+  // Check if the user is trying to subscribe to themselves
+  if (req.user._id.toString() === channel) {
+    throw new ApiError(400, "You can't subscribe to yourself");
+  }
+
+  // Check if the subscription already exists
+  const existingSubscription = await Subscription.findOne({
+    subscriber: req.user._id,
+    channel,
+  });
+  if (existingSubscription) {
+    throw new ApiError(400, "You are already subscribed to this channel");
+  }
+
+  //IF NOT, CREATE THE SUBSCRIBER
   const createdSubscriber = await Subscription.create({
     subscriber: req.user._id,
     channel,
@@ -71,58 +83,56 @@ export const deleteASubscriber = asyncHandler(async (req, res) => {
 
 // controller to return subscriber list of a channel
 export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-
-	const subscribers = await Subscription.aggregate([
-		{
-		  $match: {
-			channel: req.user._id,
-		  },
-		},
-		{
-		  $lookup: {
-			from: "users",
-			localField: "subscriber",
-			foreignField: "_id",
-			as: "subscriberDetails",
-		  },
-		},
-		{
-		  $lookup: {
-			from: "subscriptions",
-			localField: "subscriberDetails._id",
-			foreignField: "subscriber",
-			as: "subscriberSubscriptions",
-		  },
-		},
+  const subscribers = await Subscription.aggregate([
     {
       $match: {
-        "subscriberSubscriptions.subscriber": { $ne: req.user._id }
-      }
+        channel: req.user._id,
+      },
     },
-		{
-		  $project: {
-			_id: 0,
-			subscriberId: "$subscriberDetails._id",
-			username: "$subscriberDetails.username",
-			fullname: "$subscriberDetails.fullname",
-			avatar: "$subscriberDetails.avatar",
-			subscriberSubscriptionsCount: { $size: "$subscriberSubscriptions" },
-		  }, //watch it - for subscriberSubscriptionsCount value, might getting wrong
-		},
-		{
-		  $group: {
-			_id: null,
-			subscribers: { $push: "$$ROOT" },
-			totalSubscribers: { $sum: 1 },
-		  },
-		},
-		{
-		  $addFields: {
-			subscribers: "$subscribers",
-		  },
-		},
-	  ]);
-	  
+    {
+      $lookup: {
+        from: "users",
+        localField: "subscriber",
+        foreignField: "_id",
+        as: "subscriberDetails",
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "subscriberDetails._id",
+        foreignField: "subscriber",
+        as: "subscriberSubscriptions",
+      },
+    },
+    {
+      $match: {
+        "subscriberSubscriptions.subscriber": { $ne: req.user._id },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        subscriberId: "$subscriberDetails._id",
+        username: "$subscriberDetails.username",
+        fullname: "$subscriberDetails.fullname",
+        avatar: "$subscriberDetails.avatar",
+        subscriberSubscriptionsCount: { $size: "$subscriberSubscriptions" },
+      }, //watch it - for subscriberSubscriptionsCount value, might getting wrong
+    },
+    {
+      $group: {
+        _id: null,
+        subscribers: { $push: "$$ROOT" },
+        totalSubscribers: { $sum: 1 },
+      },
+    },
+    {
+      $addFields: {
+        subscribers: "$subscribers",
+      },
+    },
+  ]);
 
   return res
     .status(200)
@@ -131,18 +141,10 @@ export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     );
 });
 
-
-
-
-
-
-
-
 // controller to return channel list to which user has subscribed
 export const getSubscribedChannels = asyncHandler(async (req, res) => {
-
   // console.log('1111111111111111111')
-  
+
   const subscribedChannels = await Subscription.aggregate([
     {
       $match: {
@@ -201,8 +203,10 @@ export const getSubscribedChannels = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, subscribedChannels[0], "subscribedChannels fetched successfully")
+      new ApiResponse(
+        200,
+        subscribedChannels[0],
+        "subscribedChannels fetched successfully"
+      )
     );
-
-}
-);
+});

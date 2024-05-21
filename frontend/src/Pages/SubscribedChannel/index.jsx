@@ -15,12 +15,9 @@ export const SubscribedChannelPage = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
-  const { loading, success, error, subscribedChannels } = useSelector(
+  const { loading,  error, subscribedChannels } = useSelector(
     (state) => state.userSubscribedChannel
   );
-
-  console.log(loading, success, error, subscribedChannels);
-
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(getUserSubscribedChannel(username));
@@ -29,7 +26,6 @@ export const SubscribedChannelPage = () => {
       toast.error(error);
     }
   }, [dispatch, isAuthenticated, error]);
-
   return (
     <div className="p-10 mt-20 ">
       <Title title="Subscribed Channels" />
@@ -48,13 +44,23 @@ export const SubscribedChannelPage = () => {
                 }  Channels{" "}
               </p>
               <Splide
-                options={{
-                  rewind: true,
-                  gap: "1rem",
-                }}
+               options={{
+              rewind: true,
+              lazyLoad: "nearby",
+              gap: "2rem",
+              breakpoints: {
+                640: {
+                  perPage: 2,
+                  gap: "7rem",
+                },
+                480: {
+                  perPage: 1,
+                  gap: ".7rem",
+                },
+              },
+            }}
                 class="splide"
-                data-splide='{"perPage":2}'
-                aria-label="My Favorite Images"
+                data-splide='{"perPage":3}'
               >
                 {subscribedChannels &&
                   subscribedChannels.channels.map((sub, index) => (

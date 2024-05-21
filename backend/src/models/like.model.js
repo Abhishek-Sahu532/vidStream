@@ -6,13 +6,17 @@ const likeShema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Video",
     },
-    comment: {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-    },
-    likeBy: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    likesCount: {
+      type: Number,
+      default : 0
+    },
+    dislikesCount: {
+      type: Number,
+      default : 0
     },
   },
   { timestamps: true }
