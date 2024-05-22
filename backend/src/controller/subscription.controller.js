@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Subscription } from "../models/subscription.model.js";
 import { User } from "../models/user.model.js";
-import { mongoose } from "mongoose";
+
 
 //creating a subscriber
 export const createASubscriber = asyncHandler(async (req, res) => {
@@ -143,7 +143,7 @@ export const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 // controller to return channel list to which user has subscribed
 export const getSubscribedChannels = asyncHandler(async (req, res) => {
-  // console.log('1111111111111111111')
+
 
   const subscribedChannels = await Subscription.aggregate([
     {

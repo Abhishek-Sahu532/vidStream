@@ -4,7 +4,6 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-
 import { Signin } from "../Pages/Signin";
 import { Signup } from "../Pages/Signup";
 import { VideoDetails } from "../Pages/VideoDetails";
@@ -18,10 +17,12 @@ import { ForgetNewPassword } from "../Components/ForgetNewPassword";
 import { ForgetPassword } from "../Components/ForgetPassword";
 import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
-
 import { CommingSoon } from "../Components/CommingSoon";
 import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
 import { AboutUs } from "../Pages/AboutUs";
+import { FaqPage } from "../Pages/FAQ";
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,8 +50,12 @@ const router = createBrowserRouter(
       <Route path="forget-password" element={<ForgetPassword />} />
       <Route path="forget-password/:token" element={<ForgetNewPassword />} />
 
-      {/* will look into this */}
+      <Route path="FAQ" element={<FaqPage />} />
+      <Route path="about-us" element={<AboutUs />} />
 
+
+
+      {/* will look into this */}
       <Route path="playlists" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
@@ -66,8 +71,7 @@ const router = createBrowserRouter(
       <Route path="help" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
       </Route>
-      <Route path="FAQ" element={<CommingSoon />} />
-      <Route path="about-us" element={<AboutUs />} />
+
       <Route path="*" element={<CommingSoon />} />
     </Route>
   )

@@ -7,17 +7,14 @@ import {
   AccordionHeader,
   AccordionBody,
   Typography,
-  Tooltip,
 } from "@material-tailwind/react";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
+import { useSelector } from "react-redux";
 import { CommentSection } from "../CommentSection";
 import Title from "../../Title";
 import { Link } from "react-router-dom";
 import { ShareComponent } from "../ShareComponent";
-// import { useSelector } from "react-redux";
-// import { Loader } from "../Loader";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Icon({ id, open }) {
   return (
@@ -47,7 +44,8 @@ export const VideoPlayer = ({ video }) => {
     month: "short",
     day: "2-digit",
   });
-
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.user);
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
@@ -55,6 +53,14 @@ export const VideoPlayer = ({ video }) => {
   const handleShareComOpen = () => setShareComOpen(true);
   const handleShareComClose = () => setShareComOpen(false);
 
+  const handleSubscriber = () => {
+    if (isAuthenticated) {
+      navigate(`/channel/${video?.uploader?.username}`);
+    } else {
+      toast.error("Please Login");
+      navigate("/signin");
+    }
+  };
   return (
     <div>
       <Title title={video.title} />
@@ -81,14 +87,13 @@ export const VideoPlayer = ({ video }) => {
 
         <div className="flex items-center justify-between mt-2 sm:mt-0 sm:ml-auto">
           <div className="mr-8  ">
-            <Link to={`/channel/${video?.uploader?.username}`}>
-              <Button
-                variant="outlined"
-                className="size-fit p-3 py-3 px-3  sm:px-6"
-              >
-                Subscribe
-              </Button>
-            </Link>
+            <Button
+              variant="outlined"
+              className="size-fit p-3 py-3 px-3  sm:px-6"
+              onClick={handleSubscriber}
+            >
+              Subscribe
+            </Button>
           </div>
 
           <div className="flex gap-2">
@@ -110,16 +115,6 @@ export const VideoPlayer = ({ video }) => {
                       d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
                     />
                   </svg>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    {/* ... */}
-                  </svg>
                 </Button>
                 <Button className="p-3">
                   {/* Dislike Icon */}
@@ -140,11 +135,11 @@ export const VideoPlayer = ({ video }) => {
                 </Button>
               </ButtonGroup>
             </div>
-
             <div className="flex gap-2">
               <Button
                 variant="outlined"
-                className="size-fit p-3 py-3 px-3  sm:px-6 flex items-center justify-center"  onClick={handleShareComOpen}
+                className="size-fit p-3 py-3 px-3  sm:px-6 flex items-center justify-center"
+                onClick={handleShareComOpen}
               >
                 <span className="hidden sm:inline-block">Share</span>
                 <svg
@@ -162,7 +157,10 @@ export const VideoPlayer = ({ video }) => {
                   />
                 </svg>
               </Button>
-              <ShareComponent open={shareComOpen} handleClose={handleShareComClose} />
+              <ShareComponent
+                open={shareComOpen}
+                handleClose={handleShareComClose}
+              />
               <Button
                 variant="outlined"
                 className="size-fit p-5 py-3 px-3 sm:px-6 flex items-center justify-center"

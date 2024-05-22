@@ -311,6 +311,8 @@ export const updateCoverImage = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Cover Image updated successfully"));
 });
 
+
+//my profile in client
 export const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
   if (!username.trim()) {
