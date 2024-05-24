@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Avatar,
   ButtonGroup,
@@ -8,13 +8,14 @@ import {
   AccordionBody,
   Typography,
 } from "@material-tailwind/react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { CommentSection } from "../CommentSection";
 import Title from "../../Title";
 import { Link } from "react-router-dom";
 import { ShareComponent } from "../ShareComponent";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { addAVideoLikeDislike } from "../../actions/Like.Action";
 
 function Icon({ id, open }) {
   return (
@@ -38,7 +39,7 @@ function Icon({ id, open }) {
 export const VideoPlayer = ({ video }) => {
   const dateString = video.createdAt;
   const date = new Date(dateString);
-
+  const dispatch = useDispatch();
   const formattedDate = date.toLocaleDateString("en-US", {
     year: "2-digit",
     month: "short",
@@ -46,6 +47,7 @@ export const VideoPlayer = ({ video }) => {
   });
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.user);
+
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
@@ -53,14 +55,26 @@ export const VideoPlayer = ({ video }) => {
   const handleShareComOpen = () => setShareComOpen(true);
   const handleShareComClose = () => setShareComOpen(false);
 
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+
   const handleSubscriber = () => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       navigate(`/channel/${video?.uploader?.username}`);
     } else {
       toast.error("Please Login");
       navigate("/signin");
     }
   };
+
+  const handleLikeBtn = () => {
+    dispatch(addAVideoLikeDislike(video._id, "like"));
+  };
+
+  const handleDislikeBtn = () => {
+    dispatch(addAVideoLikeDislike(video._id, "dislike"));
+  };
+
   return (
     <div>
       <Title title={video.title} />
@@ -99,7 +113,7 @@ export const VideoPlayer = ({ video }) => {
           <div className="flex gap-2">
             <div className="flex w-max flex-col gap-4">
               <ButtonGroup variant="text" size="sm">
-                <Button>
+                <Button onClick={handleLikeBtn}>
                   {/* Like Icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +130,7 @@ export const VideoPlayer = ({ video }) => {
                     />
                   </svg>
                 </Button>
-                <Button className="p-3">
+                <Button className="p-3" onClick={handleDislikeBtn}>
                   {/* Dislike Icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

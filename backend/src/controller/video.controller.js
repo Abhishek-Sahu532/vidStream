@@ -98,7 +98,6 @@ const getVideoById = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save();
 
-
   //to save the video in user's history, checking the user is logged in or not
   try {
     let user = null;
@@ -117,47 +116,16 @@ const getVideoById = asyncHandler(async (req, res) => {
       }
     }
 
-    req.user = user;
-
-    const loggedInUser = await User.findById(req.user._id);
-
-    if (!loggedInUser) {
-      throw new ApiError(404, "User not found");
+    if (user) {
+      //if user found
+      req.user = user;
+      const loggedInUser = await User.findById(req.user._id);
+      if (!loggedInUser) {
+        throw new ApiError(404, "User not found");
+      }
+      loggedInUser.watchHistory.push(videoId);
+      await loggedInUser.save();
     }
-
-    loggedInUser.watchHistory.push(videoId);
-    await loggedInUser.save();
-
-    //  watch it - to get the like count or dislike count
-    // const pipeline = [
-    //   {
-    //     $match: {
-    //       video: videoId, // Replace videoId with the actual video ID
-    //     },
-    //   },
-    //   {
-    //     $project: {
-    //       liked: {
-    //         $cond: [
-    //           { $in: [loggedInUser._id, "$like"] }, // Replace loggedUserId with the actual logged-in user ID
-    //           true,
-    //           false,
-    //         ],
-    //       },
-    //       disliked: {
-    //         $cond: [{ $in: [loggedInUser._id, "$dislike"] }, true, false],
-    //       },
-    //       likesCount: { $size: "$like" },
-    //       dislikesCount: { $size: "$dislike" },
-    //     },
-    //   },
-    // ];
-
-    // const result = await Like.aggregate(pipeline);
-
-    // console.log("result", result);
-
-    // console.log(loggedInUser)
   } catch (error) {
     console.log("error while saving the history ", error);
   }
