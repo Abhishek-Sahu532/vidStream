@@ -6,14 +6,14 @@ const likeShema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Video",
     },
-    like: {
+    like:[ {
       type: Schema.Types.ObjectId,
       ref: "User",
-    },
-    dislike: {
+    }],
+    dislike: [{
       type: Schema.Types.ObjectId,
       ref: "User",
-    },
+    }],
 
 
   },

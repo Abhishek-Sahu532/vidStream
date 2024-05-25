@@ -22,12 +22,10 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
   if (!video) {
     throw new ApiError(400, "Video not found");
   }
-
   const existingLikeDislike = await Like.findOne({
     video: videoId,
     $or: [{ like: user._id }, { dislike: user._id }],
   });
-
   if (existingLikeDislike) {
     // User has already interacted with the video (either liked or disliked)
     if (existingLikeDislike.like) {

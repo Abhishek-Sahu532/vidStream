@@ -15,15 +15,16 @@ const extractErrorMessage = (htmlResponse) => {
 };
 
 export const addAVideoLikeDislike = (videoId, action) => async (dispatch) => {
+  console.log(action)
   try {
     dispatch({ type: ADD_VIDEO_LIKE_DISLIKE_REQUEST });
     const config = { headers: { "Content-Type": "application/json" } };
     const { data } = await axios.post(
       `/api/v1/like/add-a-likeDislike/${videoId}`,
-      config, action
+    {action},  config
     );
     dispatch({ type: ADD_VIDEO_LIKE_DISLIKE_SUCCESS, payload: data });
-    console.log(videoId);
+  
   } catch (error) {
     dispatch({
       type: ADD_VIDEO_LIKE_DISLIKE_FAIL,

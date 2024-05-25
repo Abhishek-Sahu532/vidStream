@@ -6,6 +6,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 import jwt from "jsonwebtoken";
+import { Like } from "../models/like.model.js";
+
 
 //receive the public id from cloudinary to update or delete the previous file
 function getPublicIdFromUrl(url) {
@@ -98,6 +100,28 @@ const getVideoById = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save();
 
+
+
+ // Initialize response data
+    const response = {
+      video,
+      likesCount: 0,
+      dislikesCount: 0,
+      userLiked: false,
+      userDisliked: false,
+    };
+
+
+
+    // Get likes and dislikes counts
+    const likeDoc = await Like.findOne({ video: videoId });
+  
+    if (likeDoc) {
+      response.likesCount = likeDoc.like?.length || 0;
+      response.dislikesCount = likeDoc.dislike?.length || 0;
+    }
+
+
   //to save the video in user's history, checking the user is logged in or not
   try {
     let user = null;
@@ -125,19 +149,26 @@ const getVideoById = asyncHandler(async (req, res) => {
       }
       loggedInUser.watchHistory.push(videoId);
       await loggedInUser.save();
+
+       // Check if the logged-in user has liked or disliked the video
+       if (likeDoc) {
+        response.userLiked = likeDoc.like?.includes(user._id) || false;
+        response.userDisliked = likeDoc.dislike?.includes(user._id) || false;
+      }
+
     }
   } catch (error) {
     console.log("error while saving the history ", error);
   }
 
   await video.save();
-
+// console.log(response)
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        video,
+       response,
         "Video fetched & incrementing the view count successfully"
       )
     );
@@ -176,7 +207,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     }
     updatedVideoData.thumbnail = ThubmnailOnCloudinary.url;
   }
-  console.log(title, description, thumbnailLocalPath);
+  // console.log(title, description, thumbnailLocalPath);
   // console.log(videoId);
   const video = await Video.findByIdAndUpdate(videoId, updatedVideoData, {
     new: true,

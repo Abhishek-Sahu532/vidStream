@@ -16,6 +16,7 @@ import { ShareComponent } from "../ShareComponent";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addAVideoLikeDislike } from "../../actions/Like.Action";
+import { ADD_VIDEO_LIKE_DISLIKE_RESET } from "../../constaints/LikeConsttaints";
 
 function Icon({ id, open }) {
   return (
@@ -37,7 +38,8 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({ video }) => {
-  const dateString = video.createdAt;
+
+  const dateString = video?.video?.createdAt;
   const date = new Date(dateString);
   const dispatch = useDispatch();
   const formattedDate = date.toLocaleDateString("en-US", {
@@ -47,6 +49,7 @@ export const VideoPlayer = ({ video }) => {
   });
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.user);
+  const { message } = useSelector((state) => state.addVideoLikeDislike);
 
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
@@ -55,12 +58,9 @@ export const VideoPlayer = ({ video }) => {
   const handleShareComOpen = () => setShareComOpen(true);
   const handleShareComClose = () => setShareComOpen(false);
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
-
   const handleSubscriber = () => {
-    if (!isAuthenticated) {
-      navigate(`/channel/${video?.uploader?.username}`);
+    if (isAuthenticated) {
+      navigate(`/channel/${video?.video?.uploader?.username}`);
     } else {
       toast.error("Please Login");
       navigate("/signin");
@@ -68,19 +68,27 @@ export const VideoPlayer = ({ video }) => {
   };
 
   const handleLikeBtn = () => {
-    dispatch(addAVideoLikeDislike(video._id, "like"));
+    dispatch(addAVideoLikeDislike(video?.video?._id, "like"));
   };
 
   const handleDislikeBtn = () => {
-    dispatch(addAVideoLikeDislike(video._id, "dislike"));
+    dispatch(addAVideoLikeDislike(video?.video?._id,"dislike"));
   };
+
+
+useEffect(()=>{
+if(message?.success){
+  console.log(message)
+  dispatch({type : ADD_VIDEO_LIKE_DISLIKE_RESET })
+}
+}, [message, dispatch])
 
   return (
     <div>
-      <Title title={video.title} />
+      <Title title={video?.video?.title} />
       <div>
         <video className="h-full w-full rounded-lg" controls muted>
-          <source src={video.videoFile} />
+          <source src={video?.video?.videoFile} />
           Your browser does not support the video tag.
         </video>
       </div>
@@ -89,12 +97,12 @@ export const VideoPlayer = ({ video }) => {
 
       <div className="p-3 flex flex-col sm:flex-row gap-2 bg-blue-gray-100">
         <div className="flex sm:items-center">
-          <Link to={`/channel/${video?.uploader?.username}`}>
-            <Avatar src={video.uploader?.avatar} alt="avatar" size="md" />
+          <Link to={`/channel/${video?.video?.uploader?.username}`}>
+            <Avatar src={video?.video?.uploader?.avatar} alt="avatar" size="md" />
           </Link>
           <div className="pl-4">
-            <Link to={`/channel/${video?.uploader?.username}`}>
-              <p className="text-xl">{video?.uploader?.fullname}</p>
+            <Link to={`/channel/${video?.video?.uploader?.username}`}>
+              <p className="text-xl">{video?.video?.uploader?.fullname}</p>
             </Link>
           </div>
         </div>
@@ -113,11 +121,13 @@ export const VideoPlayer = ({ video }) => {
           <div className="flex gap-2">
             <div className="flex w-max flex-col gap-4">
               <ButtonGroup variant="text" size="sm">
-                <Button onClick={handleLikeBtn}>
+                <Button onClick={handleLikeBtn} className="flex items-center gap-3">
                   {/* Like Icon */}
+
+                  {video.likesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
+                    fill={video?.userLiked ? 'black' : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -130,11 +140,14 @@ export const VideoPlayer = ({ video }) => {
                     />
                   </svg>
                 </Button>
-                <Button className="p-3" onClick={handleDislikeBtn}>
+
+
+                <Button className="p-3 flex items-center gap-3" onClick={handleDislikeBtn} >
                   {/* Dislike Icon */}
+                  {video.dislikesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
+                    fill={video?.userDisliked ? 'black' : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -203,18 +216,25 @@ export const VideoPlayer = ({ video }) => {
       <div className="pt-4 p-4 flex flex-col gap-2">
         <div className="flex gap-4 ">
           <Typography className="font-semibold ">
-            {video.views} Views
+            {video?.video?.views} Views
           </Typography>
           <Typography className="font-semibold ">{formattedDate}</Typography>
         </div>
 
         <div className="mb-6">
-          <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
-            <AccordionHeader onClick={() => handleOpen(1)} className="text-sm">
-              Video Description
-            </AccordionHeader>
-            <AccordionBody children="">{video.description}</AccordionBody>
-          </Accordion>
+          {video.video?.description == undefined ? (
+            ""
+          ) : (
+            <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
+              <AccordionHeader
+                onClick={() => handleOpen(1)}
+                className="text-sm"
+              >
+                Video Description
+              </AccordionHeader>
+              <AccordionBody>{video?.video?.description}</AccordionBody>
+            </Accordion>
+          )}
         </div>
       </div>
       <CommentSection videoId={video._id} />
