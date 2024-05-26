@@ -29,4 +29,12 @@ app.use("/api/v1/video", videoRouter);
 app.use("/api/v1/comment", commentRouter);
 app.use("/api/v1/subscriber", subscribeRouter);
 
+
+
+app.use(express.static(path.join(__dirname, "../front_end/dist")));
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, "../front_end/dist/index.html"))
+})
+
 export { app };
