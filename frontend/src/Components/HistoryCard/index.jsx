@@ -15,17 +15,17 @@ export function HistoryCard({ his }) {
     year: "2-digit",
     month: "short",
     day: "2-digit",
-  })
+  });
   return (
-    <Card className="w-96">
-      <CardHeader shadow={false} floated={false} className="h-96">
+    <Card className="w-full sm:w-96">
+      <CardHeader shadow={false} floated={false} className="h-48 sm:h-96">
         <img
           src={his.thumbnail}
           alt={his.title}
           className="h-full w-full object-cover hover:scale-125 transition duration-150 ease-in-out"
         />
       </CardHeader>
-      <CardBody className="h-36 overflow-clip">
+      <CardBody className="h-32 sm:h-36 overflow-clip">
         <div className="mb-2 flex items-center justify-between">
           <Typography color="blue-gray" className="font-medium">
             {his.views} Views

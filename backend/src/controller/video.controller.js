@@ -1,4 +1,3 @@
-import mongoose, { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -7,6 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 import jwt from "jsonwebtoken";
+import { Like } from "../models/like.model.js";
 
 
 //receive the public id from cloudinary to update or delete the previous file
@@ -88,7 +88,6 @@ const getVideoById = asyncHandler(async (req, res) => {
   if (!videoId) {
     new ApiError(404, "Id is not valid");
   }
-
   const video = await Video.findById(videoId).populate({
     path: "uploader",
     select: "fullname avatar username",
@@ -102,8 +101,30 @@ const getVideoById = asyncHandler(async (req, res) => {
   await video.save();
 
 
-try {
-  let user = null;
+
+ // Initialize response data
+    const response = {
+      video,
+      likesCount: 0,
+      dislikesCount: 0,
+      userLiked: false,
+      userDisliked: false,
+    };
+
+
+
+    // Get likes and dislikes counts
+    const likeDoc = await Like.findOne({ video: videoId });
+  
+    if (likeDoc) {
+      response.likesCount = likeDoc.like?.length || 0;
+      response.dislikesCount = likeDoc.dislike?.length || 0;
+    }
+
+
+  //to save the video in user's history, checking the user is logged in or not
+  try {
+    let user = null;
     const token =
       req.cookies?.accessToken ||
       req.headers?.authorization?.replace("Bearer ", "");
@@ -119,30 +140,35 @@ try {
       }
     }
 
-    req.user = user;
+    if (user) {
+      //if user found
+      req.user = user;
+      const loggedInUser = await User.findById(req.user._id);
+      if (!loggedInUser) {
+        throw new ApiError(404, "User not found");
+      }
+      loggedInUser.watchHistory.push(videoId);
+      await loggedInUser.save();
 
-const loggedInUser = await User.findById(req.user._id) 
+       // Check if the logged-in user has liked or disliked the video
+       if (likeDoc) {
+        response.userLiked = likeDoc.like?.includes(user._id) || false;
+        response.userDisliked = likeDoc.dislike?.includes(user._id) || false;
+      }
 
-if(!loggedInUser){
-  throw new ApiError(404, "User not found");
-}
+    }
+  } catch (error) {
+    console.log("error while saving the history ", error);
+  }
 
-loggedInUser.watchHistory.push(videoId)
-await loggedInUser.save()
-
-console.log(loggedInUser)
-} catch (error) {
-  console.log('error while saving the history ', error)
-}
-
-await video.save();
-
+  await video.save();
+// console.log(response)
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        video,
+       response,
         "Video fetched & incrementing the view count successfully"
       )
     );
@@ -167,7 +193,7 @@ const updateVideo = asyncHandler(async (req, res) => {
   if (thumbnailLocalPath) {
     // Get the old video data
     const oldVideo = await Video.findById(videoId);
-    console.log("oldvideo", oldVideo);
+    // console.log("oldvideo", oldVideo);
     if (!oldVideo) {
       throw new ApiError(404, "Video not found");
     }
@@ -181,9 +207,8 @@ const updateVideo = asyncHandler(async (req, res) => {
     }
     updatedVideoData.thumbnail = ThubmnailOnCloudinary.url;
   }
-
-  console.log(title, description, thumbnailLocalPath);
-  console.log(videoId);
+  // console.log(title, description, thumbnailLocalPath);
+  // console.log(videoId);
   const video = await Video.findByIdAndUpdate(videoId, updatedVideoData, {
     new: true,
   });
@@ -199,12 +224,11 @@ const updateVideo = asyncHandler(async (req, res) => {
 //DELETE THE VIDEO BY VIDEO ID --TESTED
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  console.log(videoId);
+  // console.log(videoId);
   //TODO: delete video
   if (!videoId) {
     throw new ApiError(404, "Id is not valid");
   }
-
   const video = await Video.findById(videoId);
   if (!video) {
     throw new ApiError(404, "Video is not found");

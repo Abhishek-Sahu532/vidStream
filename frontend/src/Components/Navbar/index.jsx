@@ -78,7 +78,6 @@ export function NavbarWithSearch() {
   );
 
   return (
-   
     <Navbar className="fixed top-0 left-0 w-full bg-white z-50 rounded-none max-w-screen-3xl">
       <div className=" w-full flex flex-wrap items-center justify-around text-blue-gray-900">
         <Sidebar />
@@ -87,7 +86,7 @@ export function NavbarWithSearch() {
             variant="h4"
             className="mr-4 cursor-pointer py-1.5 font-medium"
           >
-            Youtube
+            VidStream
           </Typography>
         </Link>
         <div className="hidden lg:block">{navList}</div>
@@ -273,6 +272,5 @@ export function NavbarWithSearch() {
         </div>
       </Collapse>
     </Navbar>
-    
   );
 }

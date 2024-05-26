@@ -11,9 +11,10 @@ const extractErrorMessage = (htmlResponse) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlResponse, "text/html");
   const errorMessage = doc.body.innerHTML.match(/Error.*?(?=<br>)/i);
-  console.log("errorMessage", errorMessage);
+  // console.log("errorMessage", errorMessage);
   return errorMessage ? errorMessage[0].trim() : "";
 };
+
 
 export const createAComment = (id, content) => async (dispatch) => {
   try {
@@ -32,7 +33,7 @@ export const createAComment = (id, content) => async (dispatch) => {
     dispatch({ type: NEW_COMMENT_SUCCESS, payload: data });
     // console.log(data)
   } catch (error) {
-    console.log(error);
+
     dispatch({
       type: NEW_COMMENT_FAIL,
       payload: extractErrorMessage(error.response.data),

@@ -11,11 +11,7 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 
 export const History = () => {
   const dispatch = useDispatch();
-  const { error, success, history, loading } = useSelector(
-    (state) => state.userHistory
-  );
-  // console.log(history)
-
+  const { error, history, loading } = useSelector((state) => state.userHistory);
   const { isAuthenticated } = useSelector((state) => state.user);
   const navigate = useNavigate();
   useEffect(() => {
@@ -27,7 +23,6 @@ export const History = () => {
     }
     dispatch(getUserWatchhistory());
   }, [dispatch, getUserWatchhistory, navigate, isAuthenticated, error, toast]);
-
   return (
     <div className="p-10 mt-20 ">
       <Title title="History" />
@@ -37,21 +32,24 @@ export const History = () => {
         </p>
       ) : (
         <section tag="section">
-          {/* {history && history.map((his, index) => (
-        <div key={index} className="w-[30rem]  rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-        <HistoryCard  his={his} />
-
-        </div>
-      ))} */}
           <Splide
             options={{
               rewind: true,
-              gap: "1rem",
-
+              lazyLoad: "nearby",
+              gap: "2rem",
+              breakpoints: {
+                640: {
+                  perPage: 2,
+                  gap: "7rem",
+                },
+                480: {
+                  perPage: 1,
+                  gap: ".7rem",
+                },
+              },
             }}
             class="splide"
-            data-splide='{"perPage":4}'
-            aria-label="My Favorite Images"
+            data-splide='{"perPage":3}'
           >
             {history &&
               history.map((his, index) => (
