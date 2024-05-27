@@ -5,8 +5,6 @@ import { User } from "../models/user.model.js";
 import { Video } from "../models/video.model.js";
 import { Like } from "../models/like.model.js";
 
-
-
 export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) {
@@ -78,4 +76,81 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Invalid action");
     }
   }
+});
+
+//GET LIKE VIDEOS
+export const getUsersLikedVideo = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  console.log('userId', userId);
+
+  const likedVideos = await User.aggregate([
+    {
+      $match: {
+        _id: userId,
+      },
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "like",
+        as: "likedVideos",
+      },
+    },
+    {
+      $unwind: "$likedVideos",
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "likedVideos.video",
+        foreignField: "_id",
+        as: "videoDetails",
+      },
+    },
+    {
+      $unwind: "$videoDetails",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "videoDetails.uploader",
+        foreignField: "_id",
+        as: "uploaderData",
+      },
+    },
+    {
+      $unwind: "$uploaderData",
+    },
+    {
+      $project: {
+        _id: 1,
+        username: 1,
+        email: 1,
+        fullname: 1,
+        about: 1,
+        avatar: 1,
+        coverImage: 1,
+        "videoDetails._id": 1,
+        "videoDetails.videoFile": 1,
+        "videoDetails.thumbnail": 1,
+        "videoDetails.title": 1,
+        "videoDetails.description": 1,
+        "videoDetails.duration": 1,
+        "videoDetails.views": 1,
+        "videoDetails.isPublished": 1,
+        "uploaderData.username": 1,
+        "uploaderData.fullname": 1,
+        "uploaderData.avatar": 1,
+      },
+    },
+  ]);
+
+  // console.log('likedVideos', likedVideos)
+
+  if (!likedVideos || likedVideos.length === 0) {
+    throw new ApiError(404, "User has not liked any videos");
+  }
+
+  return res.status(200).json(new ApiResponse(200, likedVideos, "Liked videos fetched successfully"));
 });

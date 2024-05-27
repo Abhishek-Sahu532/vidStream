@@ -7,7 +7,6 @@ import {
   CardFooter,
   Button,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
 
 export function HistoryCard({ his }) {
   const date = new Date(his.createdAt);

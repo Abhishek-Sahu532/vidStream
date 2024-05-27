@@ -18,7 +18,7 @@ import {
   getUserSubscribedChannelReducer,
 } from "./reducers/SubscribeReducer";
 import {
- AddLikeDislikeReducerReducer
+ AddLikeDislikeReducerReducer, LikedVideoReducer
 } from "./reducers/LikeReducer";
 
 const rootReducer = combineReducers({
@@ -34,6 +34,7 @@ const rootReducer = combineReducers({
   userSubscriber: getUserSubscriberReducer,
   userSubscribedChannel: getUserSubscribedChannelReducer,
   addVideoLikeDislike: AddLikeDislikeReducerReducer,
+  likedVideo : LikedVideoReducer
   
 });
 

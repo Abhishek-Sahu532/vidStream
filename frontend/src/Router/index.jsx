@@ -21,6 +21,7 @@ import { CommingSoon } from "../Components/CommingSoon";
 import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
 import { AboutUs } from "../Pages/AboutUs";
 import { FaqPage } from "../Pages/FAQ";
+import { LikedPage } from "../Pages/LikedPage";
 
 
 
@@ -63,7 +64,7 @@ const router = createBrowserRouter(
         <Route index element={<CommingSoon />} />
       </Route>
       <Route path="liked-videos" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
+        <Route index element={<LikedPage />} />
       </Route>
       <Route path="user/inbox" element={<ProtectedRoutes />}>
         <Route index element={<CommingSoon />} />
