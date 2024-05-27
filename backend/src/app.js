@@ -42,10 +42,10 @@ app.use("/api/v1/like", likeRouter);
 
 
 
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"))
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"))
 })
 
 export { app };
