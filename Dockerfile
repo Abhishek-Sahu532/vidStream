@@ -1,11 +1,20 @@
+# Use an official Node.js runtime as a parent image
 FROM node:16
 
+# Set the working directory inside the container
+WORKDIR /backend
+
+# Copy package.json and package-lock.json before other files to leverage Docker layer caching
 COPY package*.json ./
 
-WORKDIR /opt/server/backend-test
+# Install dependencies
+RUN npm ci
 
-COPY . .
+# Copy the rest of the application files
+COPY backend ./
 
-RUN npm install
+# Expose the application port
 EXPOSE 8080
-CMD [ "node", "index.js" ]
+
+# Set the command to run the application
+CMD ["node", "/src/index.js"]
