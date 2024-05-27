@@ -11,6 +11,21 @@ export default defineConfig({
         // rewrite: (path) => path.replace(/^\/api\/v1/, ''), // Adjusted rewrite function
       },
     },
+    build: {
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return 'vendor'; // all npm dependencies in one chunk
+            }
+            if (id.includes('src/components')) {
+              return 'components'; // all components in another chunk
+            }
+          }
+        }
+      }
+    }
   },
   plugins: [react()],
 });
