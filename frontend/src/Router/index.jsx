@@ -12,7 +12,6 @@ import Root from "../Pages/Root";
 import { Subscribers } from "../Pages/Subscribers";
 import { History } from "../Pages/History";
 import { UserProfile } from "../Pages/UserProfile";
-import { MyProfile } from "../Pages/MyProfile";
 import { ForgetNewPassword } from "../Components/ForgetNewPassword";
 import { ForgetPassword } from "../Components/ForgetPassword";
 import ProtectedRoutes from "../ProtectedRoutes";
@@ -22,8 +21,6 @@ import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
 import { AboutUs } from "../Pages/AboutUs";
 import { FaqPage } from "../Pages/FAQ";
 import { LikedPage } from "../Pages/LikedPage";
-
-
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,9 +32,7 @@ const router = createBrowserRouter(
       <Route path="upload-a-video" element={<ProtectedRoutes />}>
         <Route index element={<VideoUpload />} />
       </Route>
-      <Route path="my-profile" element={<ProtectedRoutes />}>
-        <Route index element={<MyProfile />} />
-      </Route>
+
       <Route path="user/history" element={<ProtectedRoutes />}>
         <Route index element={<History />} />
       </Route>
@@ -53,8 +48,6 @@ const router = createBrowserRouter(
 
       <Route path="FAQ" element={<FaqPage />} />
       <Route path="about-us" element={<AboutUs />} />
-
-
 
       {/* will look into this */}
       <Route path="playlists" element={<ProtectedRoutes />}>

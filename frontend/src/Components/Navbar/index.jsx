@@ -15,7 +15,17 @@ import { NotificationsMenu } from "../NotificationMenu";
 
 export function NavbarWithSearch() {
   const [openNav, setOpenNav] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+console.log(searchInput)
   const { isAuthenticated } = useSelector((state) => state.user);
+
+
+const searchHandler=(e)=>{
+  console.log('clicked')
+console.log(searchInput(e.target.value))
+}
+
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -104,6 +114,7 @@ export function NavbarWithSearch() {
               labelProps={{
                 className: "before:content-none after:content-none",
               }}
+              onChange={(e)=> setSearchInput(e.target.value)}
             />
             <div className="!absolute left-3 top-[13px]">
               <svg
@@ -127,7 +138,7 @@ export function NavbarWithSearch() {
               </svg>
             </div>
           </div>
-          <Button size="md" className="rounded-lg ">
+          <Button size="md" className="rounded-lg " onClick={searchHandler}>
             Search
           </Button>
           {/* <hr className="bg-blue-gray-800" /> */}

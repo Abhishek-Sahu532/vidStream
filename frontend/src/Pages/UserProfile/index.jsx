@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UserProfileTabs } from "../../Components/UserProfileTabs";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -9,18 +9,25 @@ import {
   createASubscriber,
   deleteASubscriber,
 } from "../../actions/SubscriberAction";
+import { Button } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { CREATE_SUBSCRIBER_RESET } from "../../constaints/SubscriberConstaints";
 import Title from "../../Title";
+import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
+import { Link } from "react-router-dom";
 
 export const UserProfile = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
   const { loading, error, data } = useSelector((state) => state.userProfile);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const { message, error: subscriberError } = useSelector(
     (state) => state.createSubscriber
   );
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleASubscriberButton = () => {
     if (!isAuthenticated) {
@@ -47,10 +54,10 @@ export const UserProfile = () => {
       toast.success(message?.message);
       dispatch({ type: CREATE_SUBSCRIBER_RESET });
     }
-    if (!isAuthenticated) {
-      toast.error("Please Login");
-      return;
-    }
+    // if (!isAuthenticated) {
+    //   toast.error("Please Login");
+    //   return;
+    // }
     dispatch(getChannelProfile(username));
   }, [dispatch, toast, isAuthenticated, error, username, toast, message]);
   return (
@@ -93,17 +100,41 @@ export const UserProfile = () => {
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 sm:mt-0 text-grey-dark">
-                  <button
-                    onClick={handleASubscriberButton}
-                    className="appearance-none px-3 py-2 bg-grey-light uppercase text-grey-darker text-xs sm:text-sm mr-4"
-                  >
-                    {data && data.isSubscribedTo ? "Unsubscribe" : "Subscribe"}
-                  </button>
-                  <span>
-                    <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
-                  </span>
-                </div>
+
+                {isAuthenticated && username == user.username ? (
+                  <div className="text-grey-dark flex flex-col sm:flex-row md:flex-row items-center mt-4 sm:mt-0">
+                    <Button
+                      className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-xs sm:text-sm font-semibold mb-2 sm:mb-0 sm:mr-4"
+                      onClick={handleOpen}
+                      variant="gradient"
+                    >
+                      Update Profile
+                    </Button>
+                    <UpdateProfileDialogBox
+                      open={open}
+                      handleClose={handleClose}
+                    />
+                    <Link to="/user-videos">
+                      <Button className="rounded-md appearance-none px-3 py-2 bg-blue-gray-400 uppercase text-grey-darker text-xs sm:text-sm font-semibold">
+                        Manage Videos
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="mt-4 sm:mt-0 text-grey-dark">
+                    <button
+                      onClick={handleASubscriberButton}
+                      className="appearance-none px-3 py-2 bg-grey-light uppercase text-grey-darker text-xs sm:text-sm mr-4"
+                    >
+                      {data && data.isSubscribedTo
+                        ? "Unsubscribe"
+                        : "Subscribe"}
+                    </button>
+                    <span>
+                      <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="w-full sm:w-[70%] mt-4 sm:mt-0">

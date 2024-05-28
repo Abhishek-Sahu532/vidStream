@@ -9,12 +9,11 @@ import { getUsersLikedVideo } from "../../actions/Like.Action.js";
 
 export const LikedPage = () => {
   const dispatch = useDispatch();
-const {loading, videos} = useSelector((state) => state.likedVideo)
+  const { loading, videos } = useSelector((state) => state.likedVideo);
 
-
-useEffect(()=>{
-dispatch(getUsersLikedVideo())
-}, [])
+  useEffect(() => {
+    dispatch(getUsersLikedVideo());
+  }, []);
   return (
     <div className="p-10 mt-20 ">
       <Title title="History" />
@@ -55,5 +54,3 @@ dispatch(getUsersLikedVideo())
     </div>
   );
 };
-
- 

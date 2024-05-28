@@ -26,9 +26,10 @@ export function Signin() {
   } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, isAuthenticated, success, loading } = useSelector(
+  const { error, isAuthenticated, success, loading, user } = useSelector(
     (state) => state.user
   );
+  console.log(user)
   const onSubmit = (data) => {
     dispatch(signin(data.email, data.username, data.password));
   };
@@ -39,11 +40,11 @@ export function Signin() {
       if (lastVisitedUrl) {
         navigate(lastVisitedUrl);
       } else {
-        navigate("/my-profile");
+        navigate(`/channel/${user?.username}`);
       }
     }
     if (success) {
-      navigate("/my-profile");
+      navigate(`/channel/${user?.username}`);
     }
     if (error) {
       toast.error(error);

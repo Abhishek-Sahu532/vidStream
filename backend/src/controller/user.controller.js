@@ -324,7 +324,6 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     const token =
       req.cookies?.accessToken ||
       req.headers?.authorization?.replace("Bearer ", "");
-
     if (token) {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       user = await User.findById(decodedToken?._id).select(
@@ -337,7 +336,6 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     }
 
     req.user = user;
-
     const channel = await User.aggregate([
       {
         $match: {
@@ -373,7 +371,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
               if: { 
                 $and: [
                   { $isArray: "$subscribers.subscriber" },
-                  { $in: [req.user._id, "$subscribers.subscriber"] },
+                  { $in: [user?._id, "$subscribers.subscriber"] },
                 ],
               },
               then: true,
@@ -410,7 +408,8 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         new ApiResponse(200, channel[0], "User channel fetched successfully")
       );
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid Access Token");
+    console.log(error)
+    // throw new ApiError(401, error?.message || "Invalid Access Token");
   }
 });
 
