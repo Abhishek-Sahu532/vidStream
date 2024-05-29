@@ -12,7 +12,7 @@ import {
   resetPassword,
   updateAccountDetails,
   updateCoverImage,
-  updateUserAvatar
+  updateUserAvatar,
 } from "../controller/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -57,9 +57,22 @@ router.route("/c/:username").get(getUserChannelProfile);
 
 router.route("/history").get(verifyJWT, getWatchHistory);
 
-
 router.route("/forget-password").post(forgetPassword);
 
 router.route("/forget-password/:token").put(resetPassword);
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile"] })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/");
+  }
+);
 
 export default router;
