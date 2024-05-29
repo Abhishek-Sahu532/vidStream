@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   Typography,
@@ -7,24 +7,31 @@ import {
   Input,
   Collapse,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { ProfileMenu } from "../ProfileMemu";
 import { NotificationsMenu } from "../NotificationMenu";
+import { fetchAllVideos } from "../../actions/VideoAction";
+
+
+
 
 export function NavbarWithSearch() {
+
   const [openNav, setOpenNav] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
-console.log(searchInput)
   const { isAuthenticated } = useSelector((state) => state.user);
-
-
-const searchHandler=(e)=>{
-  console.log('clicked')
-console.log(searchInput(e.target.value))
-}
-
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+const dispatch = useDispatch()
+  const handleSearch = (e) => {
+    e.preventDefault()
+    console.log("searchQuery")
+    navigate(`/search?query=${searchQuery}`);
+    console.log(searchQuery)
+    dispatch(fetchAllVideos(searchQuery))
+   
+  };
 
   React.useEffect(() => {
     window.addEventListener(
@@ -32,6 +39,10 @@ console.log(searchInput(e.target.value))
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
+useEffect(()=>{
+dispatch(fetchAllVideos(searchQuery))
+},[])
 
   const navList = (
     <ul className="flex flex-col gap-2 items-center lg:flex-row lg:gap-6">
@@ -114,7 +125,8 @@ console.log(searchInput(e.target.value))
               labelProps={{
                 className: "before:content-none after:content-none",
               }}
-              onChange={(e)=> setSearchInput(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <div className="!absolute left-3 top-[13px]">
               <svg
@@ -138,7 +150,7 @@ console.log(searchInput(e.target.value))
               </svg>
             </div>
           </div>
-          <Button size="md" className="rounded-lg " onClick={searchHandler}>
+          <Button size="md" className="rounded-lg " onClick={handleSearch}>
             Search
           </Button>
           {/* <hr className="bg-blue-gray-800" /> */}
@@ -231,7 +243,10 @@ console.log(searchInput(e.target.value))
                 className=" !border-t-blue-gray-300 pl-9 placeholder:text-blue-gray-300 focus:!border-blue-gray-300"
                 labelProps={{
                   className: "before:content-none after:content-none",
+              
                 }}
+                value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               />
               <div className="!absolute left-3 top-[13px]">
                 <svg
@@ -256,7 +271,7 @@ console.log(searchInput(e.target.value))
               </div>
             </div>
 
-            <Button size="md" className="mt-1 rounded-lg sm:mt-0">
+            <Button size="md" className="mt-1 rounded-lg sm:mt-0" onClick={handleSearch}>
               Search
             </Button>
             {/* login button */}
