@@ -46,10 +46,16 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
 
 //FETCH VIDEOS
 
-export const fetchAllVideos = () => async (dispatch) => {
+export const fetchAllVideos = (searchQuery='') => async (dispatch) => {
   try {
+    // console.log('123', searchQuery)
     dispatch({ type: VIDEO_FETCHED_REQUEST });
-    const { data } = await axios.get("/api/v1/video/all-videos");
+
+    let url = `/api/v1/video/all-videos?query=${searchQuery}`;
+
+    // keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${rating}
+
+    const { data } = await axios.get(url);
     dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
   } catch (error) {
     console.log(error);

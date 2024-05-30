@@ -16,6 +16,7 @@ import {
 } from "../controller/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -68,9 +69,8 @@ router.get(
 
 router.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  function (req, res) {
-    // Successful authentication, redirect home.
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
     res.redirect("/");
   }
 );

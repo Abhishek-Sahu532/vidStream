@@ -23,6 +23,7 @@ import {
   GET_USER_WATCH_HISTORY_REQUEST,
   GET_USER_WATCH_HISTORY_SUCCESS,
   GET_USER_WATCH_HISTORY_FAIL,
+  GOOGLE_AUTH_REQUEST, GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
 
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
@@ -32,6 +33,7 @@ export const userReducer = (state = { user: {} }, action) => {
     case REGISTER_USER_REQUEST:
     case LOGIN_REQUEST:
     case LOAD_USER_REQUEST:
+      case GOOGLE_AUTH_REQUEST:
       return {
         loading: true,
         isAuthenticated: false,
@@ -45,6 +47,7 @@ export const userReducer = (state = { user: {} }, action) => {
       };
     case LOGIN_SUCCESS:
     case LOAD_USER_SUCCESS:
+      case GOOGLE_AUTH_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -62,6 +65,7 @@ export const userReducer = (state = { user: {} }, action) => {
       };
     case REGISTER_USER_FAIL:
     case LOGIN_FAIL:
+    case GOOGLE_AUTH_FAIL:
       return {
         ...state,
         loading: false,

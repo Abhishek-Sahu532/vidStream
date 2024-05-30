@@ -7,7 +7,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 import jwt from "jsonwebtoken";
 import { Like } from "../models/like.model.js";
-
+import { ApiFeature } from "../utils/features.js";
 
 //receive the public id from cloudinary to update or delete the previous file
 function getPublicIdFromUrl(url) {
@@ -18,20 +18,26 @@ function getPublicIdFromUrl(url) {
 }
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
-  const videos = await Video.find({}).populate({
-    path: "uploader",
-    select: "fullname username avatar",
-  });
-  // console.log("videos", videos);
-  if (!videos) {
-    return new ApiError(400, "Videos not fetched");
-  }
+  const { page = 1, query, sortBy, sortType, userId } = req.query;
+  const resultPerPage = 6;
 
+  const apiFeature = new ApiFeature(
+    Video.find({}).populate({
+      path: "uploader",
+      select: "fullname username avatar",
+    }),
+    req.query
+  )
+    .search()
+    .pagination(resultPerPage);
+
+  const videos = await apiFeature.query;
+  if (!videos) {
+    return res.status(400).json(new ApiError(400, "Videos not fetched"));
+  }
   return res
     .status(200)
-    .json(new ApiResponse(200, videos, "Video fetched successfully"));
+    .json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
 
 // UPLOAD A VIDEO - TESTED
@@ -43,10 +49,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
   if (!title || !description) {
     return new ApiError(400, "Please fill the require details");
   }
-
   const videoLocalPath = req.files?.videoFile[0]?.path;
   const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
-
   if (!videoLocalPath) {
     return new ApiError(400, "Video file is required");
   }
@@ -100,27 +104,22 @@ const getVideoById = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save();
 
+  // Initialize response data
+  const response = {
+    video,
+    likesCount: 0,
+    dislikesCount: 0,
+    userLiked: false,
+    userDisliked: false,
+  };
 
+  // Get likes and dislikes counts
+  const likeDoc = await Like.findOne({ video: videoId });
 
- // Initialize response data
-    const response = {
-      video,
-      likesCount: 0,
-      dislikesCount: 0,
-      userLiked: false,
-      userDisliked: false,
-    };
-
-
-
-    // Get likes and dislikes counts
-    const likeDoc = await Like.findOne({ video: videoId });
-  
-    if (likeDoc) {
-      response.likesCount = likeDoc.like?.length || 0;
-      response.dislikesCount = likeDoc.dislike?.length || 0;
-    }
-
+  if (likeDoc) {
+    response.likesCount = likeDoc.like?.length || 0;
+    response.dislikesCount = likeDoc.dislike?.length || 0;
+  }
 
   //to save the video in user's history, checking the user is logged in or not
   try {
@@ -150,25 +149,24 @@ const getVideoById = asyncHandler(async (req, res) => {
       loggedInUser.watchHistory.push(videoId);
       await loggedInUser.save();
 
-       // Check if the logged-in user has liked or disliked the video
-       if (likeDoc) {
+      // Check if the logged-in user has liked or disliked the video
+      if (likeDoc) {
         response.userLiked = likeDoc.like?.includes(user._id) || false;
         response.userDisliked = likeDoc.dislike?.includes(user._id) || false;
       }
-
     }
   } catch (error) {
     console.log("error while saving the history ", error);
   }
 
   await video.save();
-// console.log(response)
+  // console.log(response)
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-       response,
+        response,
         "Video fetched & incrementing the view count successfully"
       )
     );

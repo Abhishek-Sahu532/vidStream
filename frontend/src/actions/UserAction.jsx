@@ -21,7 +21,7 @@ import {
   GET_USERPROFILE_FAIL,GET_USER_WATCH_HISTORY_REQUEST,
   GET_USER_WATCH_HISTORY_SUCCESS,
   GET_USER_WATCH_HISTORY_FAIL,
-
+  GOOGLE_AUTH_REQUEST, GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
 
 } from "../constaints/UserConstaints";
 import axios from "axios";
@@ -181,3 +181,16 @@ export const getUserWatchhistory = ()=> async (dispatch)=>{
 }
 
 
+export const googleAuthentication = ()=> async (dispatch)=>{
+  try {
+    dispatch({type : GOOGLE_AUTH_REQUEST })
+    const {config } = {headers : { 'Content-Type' : 'application.json'}}
+    const {data} = await axios.get(`/api/v1/users/auth/google`, config)
+    dispatch({type: GOOGLE_AUTH_SUCCESS, payload : data })
+  } catch (error) {
+    dispatch({
+      type: GOOGLE_AUTH_FAIL,
+      payload:  extractErrorMessage(error.response.data),
+    });
+  }
+}

@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { signin } from "../../actions/UserAction";
+import { googleAuthentication, signin } from "../../actions/UserAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -29,9 +29,14 @@ export function Signin() {
   const { error, isAuthenticated, success, loading, user } = useSelector(
     (state) => state.user
   );
-  console.log(user)
+  // console.log(user);
   const onSubmit = (data) => {
     dispatch(signin(data.email, data.username, data.password));
+  };
+  const handleLogin = () => {
+    // Redirect the user to the Google OAuth 2.0 endpoint on the backend
+    // window.location.href = 'http://localhost:5173/auth/google';
+    dispatch(googleAuthentication());
   };
 
   useEffect(() => {
@@ -116,6 +121,7 @@ export function Signin() {
             variant="gradient"
             // color="blue-gray"
             className="flex items-center gap-8 mt-2"
+            onClick={handleLogin}
           >
             <img
               src="https://docs.material-tailwind.com/icons/google.svg"
