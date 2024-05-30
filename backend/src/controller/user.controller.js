@@ -482,7 +482,7 @@ export const forgetPassword = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
   // const resetPasswordLink = `${process.env.FRONTEND_URL}/forget-password/${resetToken}`; //TEMP
 
-  const resetPasswordLink = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;
+  const resetPasswordLink = `${req.protocol}://${req.get("host")}/forget-password/${resetToken}`;
 
   const message = `Your password reset token is TEMP :- \n ${resetPasswordLink} \nIf you have not requested this email then please ignore it  `;
 

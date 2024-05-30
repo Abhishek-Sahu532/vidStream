@@ -18,9 +18,9 @@ function getPublicIdFromUrl(url) {
 }
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, query, sortBy, sortType, userId } = req.query;
-  const resultPerPage = 6;
-
+  const { page , query, sortBy, sortType, userId } = req.query;
+  const resultPerPage = 3;
+console.log(page)
   const apiFeature = new ApiFeature(
     Video.find({}).populate({
       path: "uploader",

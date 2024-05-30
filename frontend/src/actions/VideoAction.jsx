@@ -46,12 +46,12 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
 
 //FETCH VIDEOS
 
-export const fetchAllVideos = (searchQuery='') => async (dispatch) => {
+export const fetchAllVideos = ({searchQuery='', page=1}) => async (dispatch) => {
   try {
     // console.log('123', searchQuery)
     dispatch({ type: VIDEO_FETCHED_REQUEST });
-
-    let url = `/api/v1/video/all-videos?query=${searchQuery}`;
+console.log(page)
+    let url = `/api/v1/video/all-videos?query=${searchQuery}&page=${page}`;
 
     // keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${rating}
 

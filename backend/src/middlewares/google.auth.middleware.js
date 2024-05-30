@@ -2,13 +2,12 @@ import passport from "passport";
 import GoogleStrategy from "passport-google-oauth20";
 import { User } from "../models/user.model.js";
 
-
 const { Strategy: GoogleOAuthStrategy } = GoogleStrategy;
 
-console.log(process.env.GOOGLE_CLIENT_ID)
+// console.log(process.env.GOOGLE_CLIENT_ID)
 passport.use(
   new GoogleOAuthStrategy(
-    { 
+    {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
@@ -21,7 +20,10 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        console.log('..................................................................................', error);
+        console.log(
+          "..................................................................................",
+          error
+        );
         return done(error, false);
       }
     }

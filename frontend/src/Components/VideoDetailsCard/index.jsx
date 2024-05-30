@@ -1,5 +1,5 @@
+import React from 'react';
 import HoverVideoPlayer from "react-hover-video-player";
-
 import {
   Card,
   CardHeader,
@@ -10,7 +10,6 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-
 export const VideoDetailsCard = ({ vid }) => {
   const dateString = vid.createdAt;
   const date = new Date(dateString);
@@ -20,8 +19,9 @@ export const VideoDetailsCard = ({ vid }) => {
     month: "short",
     day: "2-digit",
   });
+
   return (
-    <Link to={`/video/${vid._id}`}>
+    <Link  to={`/video/${vid._id}`}>
       <Card className="max-w-[21rem] overflow-hidden">
         <CardHeader
           floated={false}
@@ -37,7 +37,6 @@ export const VideoDetailsCard = ({ vid }) => {
                   src={vid.thumbnail}
                   alt={vid.title}
                   style={{
-                    // Make the image expand to cover the video's dimensions
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
@@ -52,36 +51,31 @@ export const VideoDetailsCard = ({ vid }) => {
             />
           </div>
         </CardHeader>
-        {/* watch it this section, specially avatar and tooltip */}
         <CardBody>
           <Tooltip content={vid.uploader.fullname}>
             <Avatar
               size="sm"
               variant="circular"
-              alt="natali craig"
+              alt={vid.uploader.fullname}
               src={vid.uploader.avatar}
               className="border-2 border-white hover:z-10"
             />
           </Tooltip>
-
           <Typography className="mt-[-30px] pl-12 ">{vid.title}</Typography>
           <Typography className="mt-1 font-extralight text-sm h-10 overflow-hidden">
-            {" "}
             {vid.description}
           </Typography>
         </CardBody>
         <CardFooter className="flex items-center justify-between mt-[-1rem] py-2 px-5">
           <div className="flex items-center">
             <Tooltip content="video owner name">
-                     <Typography
+              <Typography
                 variant="lead"
                 color="gray"
                 className="mt-1 font-extralight text-xs"
               >
-                {" "}
                 {vid.uploader.fullname}
               </Typography>
-  
             </Tooltip>
           </div>
           <Typography className="font-normal text-xs">
@@ -91,4 +85,4 @@ export const VideoDetailsCard = ({ vid }) => {
       </Card>
     </Link>
   );
-};
+}

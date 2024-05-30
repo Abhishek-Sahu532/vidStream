@@ -35,7 +35,7 @@ export function ProfileMenu() {
           />
         </svg>
       ),
-      link: "/my-profile",
+      link:`/channel/${user?.username}`,
       func: "",
     },
     {
