@@ -68,6 +68,8 @@ export const CommentSection = () => {
                 </svg>
               </IconButton>
             </div>
+
+            
             <Textarea
               {...register("content", {
                 required: "Comment is required",

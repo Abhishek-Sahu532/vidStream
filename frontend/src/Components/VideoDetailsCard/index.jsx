@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import {
   Card,
@@ -21,7 +21,7 @@ export const VideoDetailsCard = ({ vid }) => {
   });
 
   return (
-    <Link  to={`/video/${vid._id}`}>
+    <Link to={`/video/${vid._id}`}>
       <Card className="max-w-[21rem] overflow-hidden">
         <CardHeader
           floated={false}
@@ -85,4 +85,4 @@ export const VideoDetailsCard = ({ vid }) => {
       </Card>
     </Link>
   );
-}
+};

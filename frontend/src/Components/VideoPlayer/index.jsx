@@ -38,7 +38,6 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({ video }) => {
-
   const dateString = video?.video?.createdAt;
   const date = new Date(dateString);
   const dispatch = useDispatch();
@@ -66,7 +65,6 @@ export const VideoPlayer = ({ video }) => {
       navigate("/signin");
     }
   };
-
   const handleLikeBtn = () => {
     dispatch(addAVideoLikeDislike(video?.video?._id, "like"));
   };
@@ -95,33 +93,36 @@ if(message?.success){
 
       {/* description area */}
 
-      <div className="p-3 flex flex-col sm:flex-row gap-2 bg-blue-gray-100">
-        <div className="flex sm:items-center">
-          <Link to={`/channel/${video?.video?.uploader?.username}`}>
+      <div className="p-2 flex flex-col sm:flex-row gap-1 sm:gap-2">
+        <div className="flex justify-around items-center sm:items-center sm:gap-5">
+         <div className="pl-2 sm:pl-4">
+         <Link to={`/channel/${video?.video?.uploader?.username}`}>
             <Avatar src={video?.video?.uploader?.avatar} alt="avatar" size="md" />
           </Link>
-          <div className="pl-4">
+         </div>
+          
+          <div className="pl-2 sm:pl-4">
             <Link to={`/channel/${video?.video?.uploader?.username}`}>
               <p className="text-xl">{video?.video?.uploader?.fullname}</p>
             </Link>
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-2 sm:mt-0 sm:ml-auto">
-          <div className="mr-8  ">
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-2 sm:mt-0 sm:ml-auto">
+          <div className="mr-0 sm:mr-8">
             <Button
               variant="outlined"
-              className="size-fit p-3 py-3 px-3  sm:px-6"
+              className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6"
               onClick={handleSubscriber}
             >
               Subscribe
             </Button>
           </div>
 
-          <div className="flex gap-2">
-            <div className="flex w-max flex-col gap-4">
+          <div className="flex gap-1  mt-2 sm:mt-0">
+            <div className="flex w-max flex-col gap-2 sm:gap-4">
               <ButtonGroup variant="text" size="sm">
-                <Button onClick={handleLikeBtn} className="flex items-center gap-3">
+                <Button onClick={handleLikeBtn} className="flex items-center gap-2 sm:gap-3">
                   {/* Like Icon */}
 
                   {video.likesCount}
@@ -142,7 +143,7 @@ if(message?.success){
                 </Button>
 
 
-                <Button className="p-3 flex items-center gap-3" onClick={handleDislikeBtn} >
+                <Button className="p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onClick={handleDislikeBtn} >
                   {/* Dislike Icon */}
                   {video.dislikesCount}
                   <svg
@@ -162,13 +163,13 @@ if(message?.success){
                 </Button>
               </ButtonGroup>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1 sm:gap-2">
               <Button
                 variant="outlined"
-                className="size-fit p-3 py-3 px-3  sm:px-6 flex items-center justify-center"
+                className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6 flex items-center justify-center"
                 onClick={handleShareComOpen}
               >
-                <span className="hidden sm:inline-block">Share</span>
+                <span className="hidden md:inline-block lg:inline-block">Share</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -190,9 +191,9 @@ if(message?.success){
               />
               <Button
                 variant="outlined"
-                className="size-fit p-5 py-3 px-3 sm:px-6 flex items-center justify-center"
+                className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6 flex items-center justify-center"
               >
-                <span className="hidden sm:inline-block ">Download</span>
+                <span className="hidden md:inline-block lg:inline-block">Download</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

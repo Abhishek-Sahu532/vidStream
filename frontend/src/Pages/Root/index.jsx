@@ -20,7 +20,6 @@ const Root = () => {
 
   const fetchMoreData = () => {
     setPage((prevPage) => prevPage + 1);
-    setVideoList((prevVideos) => [...prevVideos, ...videos]);
   };
 
   useEffect(() => {
@@ -36,14 +35,14 @@ const Root = () => {
         <Loader />
       ) : (
         <InfiniteScroll
-          dataLength={videoList.length}
+          dataLength={videos.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<Loader />}
         >
           <div className="flex gap-10 p-8 flex-wrap justify-around">
-            {videoList &&
-              videoList.map((video, index) => (
+            {videos &&
+              videos.map((video, index) => (
                 <VideoDetailsCard vid={video} key={index} />
               ))}
           </div>
