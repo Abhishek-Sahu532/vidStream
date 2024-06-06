@@ -14,7 +14,9 @@ export const VideoDetails = () => {
   const { loading, error, video } = useSelector(
     (state) => state.video
   );
- 
+  const { videos } = useSelector(
+    (state) => state.videos
+  );
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -31,11 +33,14 @@ export const VideoDetails = () => {
             <VideoPlayer video={video} />
           </div>
           <div className="col-span-2 md:col-span-1 ">
+          {videos && videos.map((vid, index)=>(
+            <SuggestionCard vid={vid} key={index} />
+          ))}
+          
+            {/* <SuggestionCard />
             <SuggestionCard />
             <SuggestionCard />
-            <SuggestionCard />
-            <SuggestionCard />
-            <SuggestionCard />
+            <SuggestionCard /> */}
           </div>
         </div>
       )}

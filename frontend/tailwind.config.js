@@ -10,7 +10,18 @@ module.exports = withMT({
       lg: "976px",
       xl: "1440px",
     },
-    extend: {},
+    extend: {
+      colors: {
+        primaryTxt: "#d9dfec",
+        secondary: "#bac8ca",
+        primarybg: "#55567e",
+        secondarybg: "#9197c3",
+      },
+      fontFamily: {
+        sans: ["Helvetica", "Arial", "sans-serif"],
+        quicksand: ["Quicksand", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 });

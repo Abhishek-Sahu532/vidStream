@@ -21,8 +21,8 @@ export const VideoDetailsCard = ({ vid }) => {
   });
 
   return (
-    <Link to={`/video/${vid._id}`}>
-      <Card className="max-w-[21rem] overflow-hidden">
+    <Link to={`/video/${vid._id}`} >
+      <Card className="max-w-[21rem] overflow-hidden border-primaryTxt">
         <CardHeader
           floated={false}
           shadow={false}
@@ -51,7 +51,7 @@ export const VideoDetailsCard = ({ vid }) => {
             />
           </div>
         </CardHeader>
-        <CardBody>
+        <CardBody className="border-primaryTxt">
           <Tooltip content={vid.uploader.fullname}>
             <Avatar
               size="sm"

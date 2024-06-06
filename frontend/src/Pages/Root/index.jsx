@@ -1,52 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Advertisement } from "../../Components/Events";
 import { VideoDetailsCard } from "../../Components/VideoDetailsCard";
 import { fetchAllVideos } from "../../actions/VideoAction";
 import { Loader } from "../../Components/Loader";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const Root = () => {
   const { loading, videos } = useSelector((state) => state.videos);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
-  const [videoList, setVideoList] = useState(videos);
   const [hasMore, setHasMore] = useState(true);
+  const observer = useRef();
+  const pageSize = 3; // Adjust this value based on the number of videos fetched per page
 
   useEffect(() => {
-    dispatch(fetchAllVideos(page));
+    dispatch(fetchAllVideos({ page,pageSize  }));
   }, [dispatch, page]);
 
-
-  const fetchMoreData = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
+  const lastVideoElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+          console.log(page);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   useEffect(() => {
-    if (!loading && videos.length === 0) {
+    if (videos.length < pageSize) {
       setHasMore(false);
     }
-  }, [loading, videos]);
+  }, [videos, pageSize]);
 
   return (
     <div>
       <Advertisement />
-      {loading  ? (
+      {loading ? (
         <Loader />
       ) : (
-        <InfiniteScroll
-          dataLength={videos.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<Loader />}
-        >
-          <div className="flex gap-10 p-8 flex-wrap justify-around">
-            {videos &&
-              videos.map((video, index) => (
-                <VideoDetailsCard vid={video} key={index} />
-              ))}
-          </div>
-        </InfiniteScroll>
+        <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
+          {videos &&
+            videos.map((video, index) => {
+              if (videos.length === index + 1) {
+                return (
+                  <div ref={lastVideoElementRef} key={index}>
+                    <VideoDetailsCard vid={video} />
+                  </div>
+                );
+              } else {
+                return <VideoDetailsCard vid={video} key={index} />;
+              }
+            })}
+        </div>
       )}
     </div>
   );

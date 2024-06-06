@@ -1,4 +1,4 @@
-import "./App.css";
+
 import "react-toastify/dist/ReactToastify.css";
 
 import { NavbarWithSearch } from "./Components/Navbar";
@@ -7,6 +7,8 @@ import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "./actions/UserAction";
+import "./App.css";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -25,7 +27,6 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-   
     if (isAuthenticated) {
       const lastVisitedUrl = sessionStorage.getItem("lastVisitedUrl");
       if (lastVisitedUrl) {
@@ -38,7 +39,7 @@ function App() {
     }
   }, [navigate]);
   return (
-    <div className="w-screen overflow-auto overflow-x-hidden h-screen">
+    <div className="w-screen overflow-auto overflow-x-hidden h-screen font-quicksand">
       <NavbarWithSearch />
       <Outlet />
 

@@ -14,23 +14,16 @@ import { ProfileMenu } from "../ProfileMemu";
 import { NotificationsMenu } from "../NotificationMenu";
 import { fetchAllVideos } from "../../actions/VideoAction";
 
-
-
-
 export function NavbarWithSearch() {
-
   const [openNav, setOpenNav] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleSearch = (e) => {
-    e.preventDefault()
-    console.log("searchQuery")
+    e.preventDefault();
     navigate(`/search?query=${searchQuery}`);
-    console.log(searchQuery)
-    dispatch(fetchAllVideos(searchQuery))
-   
+    dispatch(fetchAllVideos({ searchQuery }));
   };
 
   React.useEffect(() => {
@@ -40,16 +33,15 @@ const dispatch = useDispatch()
     );
   }, []);
 
-useEffect(()=>{
-dispatch(fetchAllVideos(searchQuery))
-},[])
+  useEffect(() => {
+    dispatch(fetchAllVideos(searchQuery));
+  }, []);
 
   const navList = (
     <ul className="flex flex-col gap-2 items-center lg:flex-row lg:gap-6">
       <Typography
         as="li"
         variant="small"
-        color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium"
       >
         <svg
@@ -74,7 +66,6 @@ dispatch(fetchAllVideos(searchQuery))
       <Typography
         as="li"
         variant="small"
-        color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium"
       >
         <svg
@@ -99,8 +90,8 @@ dispatch(fetchAllVideos(searchQuery))
   );
 
   return (
-    <Navbar className="fixed top-0 left-0 w-full bg-white z-50 rounded-none max-w-screen-3xl">
-      <div className=" w-full flex flex-wrap items-center justify-around text-blue-gray-900">
+    <Navbar className="fixed top-0 left-0 w-full z-50 rounded-none max-w-screen-3xl bg-[#9197c3]  text-white border-none ">
+      <div className=" w-full flex flex-wrap items-center justify-around">
         <Sidebar />
         <Link to="/">
           <Typography
@@ -121,7 +112,7 @@ dispatch(fetchAllVideos(searchQuery))
               containerProps={{
                 className: "min-w-[288px]",
               }}
-              className=" !border-t-blue-gray-300 pl-9 placeholder:text-blue-gray-300 focus:!border-blue-gray-300"
+              className=" !border-t-[##55567e] pl-9 placeholder:text-blue-gray-300 focus:!border-blue-gray-300"
               labelProps={{
                 className: "before:content-none after:content-none",
               }}
@@ -150,7 +141,11 @@ dispatch(fetchAllVideos(searchQuery))
               </svg>
             </div>
           </div>
-          <Button size="md" className="rounded-lg " onClick={handleSearch}>
+          <Button
+            size="md"
+            className="rounded-lg bg-[#55567e] "
+            onClick={handleSearch}
+          >
             Search
           </Button>
           {/* <hr className="bg-blue-gray-800" /> */}
@@ -162,13 +157,12 @@ dispatch(fetchAllVideos(searchQuery))
             </>
           ) : (
             <>
-              <div className="flex items-center gap-x-1">
+              <div className="flex items-center gap-x-1 ">
                 <Link to="/signup">
                   {" "}
                   <Button
-                    variant="gradient"
                     size="sm"
-                    className="hidden lg:inline-block"
+                    className="hidden lg:inline-block bg-[#55567e]"
                   >
                     <span>Sign Up</span>
                   </Button>
@@ -178,9 +172,8 @@ dispatch(fetchAllVideos(searchQuery))
                 <Link to="/signin">
                   {" "}
                   <Button
-                    variant="gradient"
                     size="sm"
-                    className="hidden lg:inline-block"
+                    className="hidden lg:inline-block bg-[#55567e]"
                   >
                     <span>Sign In</span>
                   </Button>
@@ -189,7 +182,7 @@ dispatch(fetchAllVideos(searchQuery))
             </>
           )}
         </div>
-
+        {/* mobile menu */}
         <IconButton
           variant="text"
           className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
@@ -228,7 +221,7 @@ dispatch(fetchAllVideos(searchQuery))
           )}
         </IconButton>
       </div>
-
+      {/* mobile menu */}
       <Collapse open={openNav}>
         <div className="container mx-auto">
           {navList}
@@ -243,10 +236,9 @@ dispatch(fetchAllVideos(searchQuery))
                 className=" !border-t-blue-gray-300 pl-9 placeholder:text-blue-gray-300 focus:!border-blue-gray-300"
                 labelProps={{
                   className: "before:content-none after:content-none",
-              
                 }}
                 value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <div className="!absolute left-3 top-[13px]">
                 <svg
@@ -271,7 +263,11 @@ dispatch(fetchAllVideos(searchQuery))
               </div>
             </div>
 
-            <Button size="md" className="mt-1 rounded-lg sm:mt-0" onClick={handleSearch}>
+            <Button
+              size="md"
+              className="mt-1 rounded-lg sm:mt-0 bg-[#55567e]"
+              onClick={handleSearch}
+            >
               Search
             </Button>
             {/* login button */}
@@ -289,7 +285,11 @@ dispatch(fetchAllVideos(searchQuery))
 
               <Link to="/signin">
                 {" "}
-                <Button fullWidth variant="gradient" size="sm" className="">
+                <Button
+                  fullWidth
+                  variant="text"
+                  size="sm"
+                >
                   <span>Sign In</span>
                 </Button>
               </Link>

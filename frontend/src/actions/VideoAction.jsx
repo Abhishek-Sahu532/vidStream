@@ -46,25 +46,26 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
 
 //FETCH VIDEOS
 
-export const fetchAllVideos = ({searchQuery='', page=1}) => async (dispatch) => {
-  try {
-    // console.log('123', searchQuery)
-    dispatch({ type: VIDEO_FETCHED_REQUEST });
-console.log(page)
-    let url = `/api/v1/video/all-videos?query=${searchQuery}&page=${page}`;
+export const fetchAllVideos =
+  ({ searchQuery = "", page = 1 , pageSize=3 }) =>
+  async (dispatch) => {
+    try {
+      console.log('page from all vidoes', page)
+      dispatch({ type: VIDEO_FETCHED_REQUEST });
+      let url = `/api/v1/video/all-videos?query=${searchQuery}&page=${page}&limit=${pageSize}`;
 
-    // keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${rating}
 
-    const { data } = await axios.get(url);
-    dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
-  } catch (error) {
-    console.log(error);
-    dispatch({
-      type: VIDEO_FETCHED_FAIL,
-      payload: extractErrorMessage(error.response.data),
-    });
-  }
-};
+      // keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${rating}
+      const { data } = await axios.get(url);
+      dispatch({ type: VIDEO_FETCHED_SUCCESS, payload: data });
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: VIDEO_FETCHED_FAIL,
+        payload: extractErrorMessage(error.response.data),
+      });
+    }
+  };
 
 export const getVideosDetails = (id) => async (dispatch) => {
   try {
