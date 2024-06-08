@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+
 export const VideoDetailsCard = ({ vid }) => {
   const dateString = vid.createdAt;
   const date = new Date(dateString);
@@ -21,37 +22,32 @@ export const VideoDetailsCard = ({ vid }) => {
   });
 
   return (
-    <Link to={`/video/${vid._id}`} >
-      <Card className="max-w-[21rem] overflow-hidden border-primaryTxt">
+    <Link to={`/video/${vid._id}`} aria-label={`View details of ${vid.title}`}>
+      <Card className="max-w-[23rem]  overflow-hidden shadow-[1px_5px_10px_5px_#9197c3] hover:shadow-[-1px_5px_15px_10px_#9197c3] ">
         <CardHeader
           floated={false}
           shadow={false}
           color="transparent"
-          className="m-0 rounded-none"
+          className="m-0 rounded-none h-full"
         >
-          <div>
-            <HoverVideoPlayer
-              videoSrc={vid.videoFile}
-              pausedOverlay={
-                <img
-                  src={vid.thumbnail}
-                  alt={vid.title}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              }
-              loadingOverlay={
-                <div className="loading-overlay">
-                  <div className="loading-spinner" />
-                </div>
-              }
-            />
-          </div>
+          <HoverVideoPlayer
+            videoSrc={vid.videoFile}
+            className="w-full h-full "
+            pausedOverlay={
+              <img
+                src={vid.thumbnail}
+                alt={vid.title}
+                className="w-full h-full object-cover"
+              />
+            }
+            loadingOverlay={
+              <div className="loading-overlay">
+                <div className="loading-spinner" />
+              </div>
+            }
+          />
         </CardHeader>
-        <CardBody className="border-primaryTxt">
+        <CardBody className="">
           <Tooltip content={vid.uploader.fullname}>
             <Avatar
               size="sm"
@@ -61,24 +57,22 @@ export const VideoDetailsCard = ({ vid }) => {
               className="border-2 border-white hover:z-10"
             />
           </Tooltip>
-          <Typography className="mt-[-30px] pl-12 ">{vid.title}</Typography>
-          <Typography className="mt-1 font-extralight text-sm h-10 overflow-hidden">
+          <Typography className="mt-[-30px] pl-12">{vid.title}</Typography>
+          <Typography className="mt-1 text-sm h-15 line-clamp-2   overflow-hidden">
             {vid.description}
           </Typography>
         </CardBody>
         <CardFooter className="flex items-center justify-between mt-[-1rem] py-2 px-5">
-          <div className="flex items-center">
-            <Tooltip content="video owner name">
-              <Typography
-                variant="lead"
-                color="gray"
-                className="mt-1 font-extralight text-xs"
-              >
-                {vid.uploader.fullname}
-              </Typography>
-            </Tooltip>
-          </div>
-          <Typography className="font-normal text-xs">
+          <Tooltip content={vid.uploader.fullname}>
+            <Typography
+              variant="lead"
+              color="gray"
+              className="mt-1 font-extralight text-md"
+            >
+              {vid.uploader.fullname}
+            </Typography>
+          </Tooltip>
+          <Typography className="font-normal text-md">
             {formattedDate}
           </Typography>
         </CardFooter>

@@ -11,7 +11,7 @@ import {
 import {
   ShoppingBagIcon,
   UserCircleIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -23,25 +23,22 @@ import { IoMdHome } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-
 export function Sidebar() {
   // const [open, setOpen] = React.useState(0);
   const [drawerOpen, setdrawerOpen] = React.useState(false);
   const openDrawer = () => setdrawerOpen(true);
   const closeDrawer = () => setdrawerOpen(false);
-  
-  const {  user } = useSelector((state) => state.user);
-
+  const { user } = useSelector((state) => state.user);
   return (
     <>
       {" "}
       <Button
-        className="bg-transparent  text-black shadow-none hover:shadow-none"
+        className="bg-transparent text-[#55567e] shadow-none hover:shadow-none"
         onClick={openDrawer}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
+          fill="#55567e"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
@@ -59,21 +56,14 @@ export function Sidebar() {
         onClose={closeDrawer}
         className="mt-20 w-10 shadow-none h-[100vh]"
       >
-        <Card className="h-[100vh]">
-          {/* <div className=" flex items-center gap-1 pb-16">
-        <img src="https://docs.material-tailwind.com/img/logo-ct-dark.png" alt="brand" className="h-8 w-8" />
-        <Typography variant="h5" color="blue-gray">
-          Youtube
-        </Typography>
-      </div> */}
-
-          <List className="bg-black text-white h-full">
+        <Card className="h-[100vh] ">
+          <List className="bg-primarybg text-white h-full">
             <Link to="/">
               <ListItem className="p-0" selected={open === 2}>
                 <ListItemPrefix className="border-b-0 p-3">
                   <IoMdHome className="h-6 w-6" />
                 </ListItemPrefix>
-                <Typography className="mr-auto font-normal">Home</Typography>
+                <Typography className="mr-auto font-quicksand text-md">Home</Typography>
               </ListItem>
             </Link>
             <Link to={`/subscriber/${user?.username}`}>
@@ -81,7 +71,7 @@ export function Sidebar() {
                 <ListItemPrefix className="border-b-0 p-3">
                   <ShoppingBagIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                <Typography className="mr-auto font-normal">
+                <Typography className="mr-auto font-quicksand text-md">
                   Subscriber
                 </Typography>
               </ListItem>
@@ -91,17 +81,17 @@ export function Sidebar() {
                 <ListItemPrefix className="border-b-0 p-3">
                   <ShoppingBagIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                <Typography className="mr-auto font-normal">
+                <Typography className="mr-auto font-quicksand text-md">
                   Subscribed Channels
                 </Typography>
               </ListItem>
             </Link>
-            <hr className="my-1 w-40 border-blue-gray-400" />
+            <hr className="my-1 w-52 border-blue-gray-400" />
             <ListItem>
               You <MdKeyboardArrowRight className="h-6 w-6   " />
             </ListItem>
             <Link to="/channel">
-              <ListItem>
+              <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />
                 </ListItemPrefix>
@@ -109,7 +99,7 @@ export function Sidebar() {
               </ListItem>
             </Link>
             <Link to="/user/history">
-              <ListItem>
+              <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <RiChatHistoryFill className="h-5 w-5" />
                 </ListItemPrefix>
@@ -117,7 +107,7 @@ export function Sidebar() {
               </ListItem>
             </Link>
             <Link to="/playlists">
-              <ListItem>
+              <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <MdPlaylistAddCheckCircle className="h-5 w-5" />
                 </ListItemPrefix>
@@ -125,7 +115,7 @@ export function Sidebar() {
               </ListItem>
             </Link>
             <Link to="/watch-later">
-              <ListItem>
+              <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <MdWatchLater className="h-5 w-5" />
                 </ListItemPrefix>
@@ -133,7 +123,7 @@ export function Sidebar() {
               </ListItem>
             </Link>
             <Link to="/liked-videos">
-              <ListItem>
+              <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <BiSolidLike className="h-5 w-5" />
                 </ListItemPrefix>
@@ -141,7 +131,7 @@ export function Sidebar() {
               </ListItem>
             </Link>
             <Link to="/settings">
-              <ListItem>
+              <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <Cog6ToothIcon className="h-5 w-5" />
                 </ListItemPrefix>

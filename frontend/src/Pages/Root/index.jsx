@@ -49,7 +49,7 @@ const Root = () => {
             videos.map((video, index) => {
               if (videos.length === index + 1) {
                 return (
-                  <div ref={lastVideoElementRef} key={index}>
+                  <div ref={lastVideoElementRef} key={index} >
                     <VideoDetailsCard vid={video} />
                   </div>
                 );
