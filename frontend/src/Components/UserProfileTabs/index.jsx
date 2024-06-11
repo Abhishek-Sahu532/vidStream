@@ -7,6 +7,7 @@ import {
   } from "@material-tailwind/react";
    
   export function UserProfileTabs() {
+    
     const data = [
       {
         label: "Home",

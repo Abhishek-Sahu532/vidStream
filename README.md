@@ -4,7 +4,7 @@
 ## Welcome to VidStream 🎥✨
 VidStream is a next-generation video platform aimed at revolutionizing the way users discover, share, and interact with video content. Built with cutting-edge technology, VidStream offers a seamless video streaming experience coupled with innovative features to enhance user engagement.
 
- [Desktop View]('./frontend/src/assets/Images/vidstream.png)
+ ['./frontend/src/assets/Images/vidstream.png'](Desktop View)
 
 
 ## Features 🚀
@@ -92,7 +92,7 @@ Have questions, suggestions, or feedback? Reach out to us at [asahu532@gmail.com
 ---
 
 Happy Streaming! 🎬
-
+<!-- 
 ![VidStream Banner](https://via.placeholder.com/800x200)
 
 > **Pro Tip:** Use VidStream's custom playlist feature to create a unique viewing experience tailored to your mood and interests!
@@ -100,7 +100,7 @@ Happy Streaming! 🎬
 [![Follow Us on Twitter](https://img.shields.io/twitter/follow/vidstream)](https://twitter.com/vidstream)
 [![Join Our Discord](https://img.shields.io/discord/vidstream)](https://discord.gg/vidstream)
 [![GitHub Stars](https://img.shields.io/github/stars/your-username/vidstream)](https://github.com/your-username/vidstream/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/your-username/vidstream)](https://github.com/your-username/vidstream/network/members)
+[![GitHub Forks](https://img.shields.io/github/forks/your-username/vidstream)](https://github.com/your-username/vidstream/network/members) -->
 
 ---
 
