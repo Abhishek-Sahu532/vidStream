@@ -140,7 +140,7 @@ export const UserProfile = () => {
               </div>
 
               <div className="w-full sm:w-[70%] mt-4 sm:mt-0">
-                <UserProfileTabs />
+                <UserProfileTabs userVideos={data?.videos} />
               </div>
             </div>
           </div>

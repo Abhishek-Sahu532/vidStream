@@ -50,7 +50,7 @@ export const fetchAllVideos =
   ({ searchQuery = "", page = 1 , pageSize=3 }) =>
   async (dispatch) => {
     try {
-      console.log('page from all vidoes', page)
+      // console.log('page from all vidoes', page)
       dispatch({ type: VIDEO_FETCHED_REQUEST });
       let url = `/api/v1/video/all-videos?query=${searchQuery}&page=${page}&limit=${pageSize}`;
 
