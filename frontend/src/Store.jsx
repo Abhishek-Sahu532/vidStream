@@ -6,6 +6,7 @@ import {
   userReducer,
   getUserProfileReducer,
   getUserWatchHistoryReducer,
+  getVideoRecommendationsReducer,
 } from "./reducers/UserReducer";
 import { getAllVideosReducer, videoReducer } from "./reducers/VideoReducer";
 import {
@@ -18,7 +19,8 @@ import {
   getUserSubscribedChannelReducer,
 } from "./reducers/SubscribeReducer";
 import {
- AddLikeDislikeReducerReducer, LikedVideoReducer
+  AddLikeDislikeReducerReducer,
+  LikedVideoReducer,
 } from "./reducers/LikeReducer";
 
 const rootReducer = combineReducers({
@@ -34,8 +36,8 @@ const rootReducer = combineReducers({
   userSubscriber: getUserSubscriberReducer,
   userSubscribedChannel: getUserSubscribedChannelReducer,
   addVideoLikeDislike: AddLikeDislikeReducerReducer,
-  likedVideo : LikedVideoReducer
-  
+  likedVideo: LikedVideoReducer,
+  videoRecommendations: getVideoRecommendationsReducer,
 });
 
 export const store = configureStore({

@@ -38,6 +38,7 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({ video }) => {
+  console.log(video)
   const dateString = video?.video?.createdAt;
   const date = new Date(dateString);
   const dispatch = useDispatch();
@@ -70,16 +71,15 @@ export const VideoPlayer = ({ video }) => {
   };
 
   const handleDislikeBtn = () => {
-    dispatch(addAVideoLikeDislike(video?.video?._id,"dislike"));
+    dispatch(addAVideoLikeDislike(video?.video?._id, "dislike"));
   };
 
-
-useEffect(()=>{
-if(message?.success){
-  console.log(message)
-  dispatch({type : ADD_VIDEO_LIKE_DISLIKE_RESET })
-}
-}, [message, dispatch])
+  useEffect(() => {
+    if (message?.success) {
+      console.log(message);
+      dispatch({ type: ADD_VIDEO_LIKE_DISLIKE_RESET });
+    }
+  }, [message, dispatch]);
 
   return (
     <div>
@@ -95,12 +95,16 @@ if(message?.success){
 
       <div className="p-2 flex flex-col sm:flex-row gap-1 sm:gap-2">
         <div className="flex justify-around items-center sm:items-center sm:gap-5">
-         <div className="pl-2 sm:pl-4">
-         <Link to={`/channel/${video?.video?.uploader?.username}`}>
-            <Avatar src={video?.video?.uploader?.avatar} alt="avatar" size="md" />
-          </Link>
-         </div>
-          
+          <div className="pl-2 sm:pl-4">
+            <Link to={`/channel/${video?.video?.uploader?.username}`}>
+              <Avatar
+                src={video?.video?.uploader?.avatar}
+                alt="avatar"
+                size="md"
+              />
+            </Link>
+          </div>
+
           <div className="pl-2 sm:pl-4">
             <Link to={`/channel/${video?.video?.uploader?.username}`}>
               <p className="text-xl">{video?.video?.uploader?.fullname}</p>
@@ -122,13 +126,16 @@ if(message?.success){
           <div className="flex gap-1  mt-2 sm:mt-0">
             <div className="flex w-max flex-col gap-2 sm:gap-4">
               <ButtonGroup variant="text" size="sm">
-                <Button onClick={handleLikeBtn} className="flex items-center gap-2 sm:gap-3">
+                <Button
+                  onClick={handleLikeBtn}
+                  className="flex items-center gap-2 sm:gap-3"
+                >
                   {/* Like Icon */}
 
                   {video.likesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={video?.userLiked ? 'black' : "none"}
+                    fill={video?.userLiked ? "black" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -142,13 +149,15 @@ if(message?.success){
                   </svg>
                 </Button>
 
-
-                <Button className="p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onClick={handleDislikeBtn} >
+                <Button
+                  className="p-2 sm:p-3 flex items-center gap-2 sm:gap-3"
+                  onClick={handleDislikeBtn}
+                >
                   {/* Dislike Icon */}
                   {video.dislikesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={video?.userDisliked ? 'black' : "none"}
+                    fill={video?.userDisliked ? "black" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -169,7 +178,9 @@ if(message?.success){
                 className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6 flex items-center justify-center"
                 onClick={handleShareComOpen}
               >
-                <span className="hidden md:inline-block lg:inline-block">Share</span>
+                <span className="hidden md:inline-block lg:inline-block">
+                  Share
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -189,7 +200,6 @@ if(message?.success){
                 open={shareComOpen}
                 handleClose={handleShareComClose}
               />
-          
             </div>
           </div>
         </div>

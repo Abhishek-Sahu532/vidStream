@@ -10,18 +10,27 @@ import {
   VIDEO_DETAILS_REQUEST,
   VIDEO_DETAILS_SUCCESS,
   VIDEO_DETAILS_FAIL,
- 
+  VIDEO_DETAILS_RESET,
 } from "../constaints/VideoConstaints";
 
 export const videoReducer = (state = { video: {} }, action) => {
   switch (action.type) {
     case VIDEO_UPLOAD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
     case VIDEO_DETAILS_REQUEST:
       return {
-        loading: true,
         ...state,
+        loading: true,
       };
     case VIDEO_UPLOAD_SUCCESS:
+      return {
+        loading: false,
+        success: action.payload.message,
+        video: action.payload.data,
+      };
     case VIDEO_DETAILS_SUCCESS:
       return {
         loading: false,
@@ -34,6 +43,12 @@ export const videoReducer = (state = { video: {} }, action) => {
         ...state,
         loading: false,
         error: action.payload.error,
+      };
+    case VIDEO_DETAILS_RESET:
+      return {
+        ...state,
+        loading: false,
+        success: false,
       };
     case CLEAR_ERRORS:
       return {
@@ -79,7 +94,3 @@ export const getAllVideosReducer = (state = { videos: [] }, action) => {
       return state;
   }
 };
-
-
-
-

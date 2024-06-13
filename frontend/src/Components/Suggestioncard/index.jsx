@@ -14,7 +14,7 @@ export function SuggestionCard({ vid }) {
     month: "short",
     day: "2-digit",
   });
-  console.log("vid", vid);
+  // console.log("vid", vid);
   return (
     <Link to={`/video/${vid._id}`}>
       <Card className="w-full mb-4 flex-row  bg-blue-gray-100">
@@ -33,13 +33,13 @@ export function SuggestionCard({ vid }) {
           <Typography className="text p-0 mb-1 h-11 text-md font-semibold text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ...">
             {vid.title}
           </Typography>
+          <Typography className="text p-0 mb-1 h-11 text-md font-semibold text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ...">
+            {vid.description}
+          </Typography>
           <hr className="text-blue-gray-800 min-w-fit" />
 
           <Typography className="p-0 mt-1 h-10 text-sm text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ...">
-            <Link to={`/channel/${vid?.uploader?.username}`}>
-              {" "}
               {vid.uploader.username}
-            </Link>
           </Typography>
 
           <div className="flex justify-between">

@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import sendEmail from "../utils/SendEmail.js";
 import crypto from "crypto";
+import passport from "passport";
+import GoogleStrategy from "passport-google-oauth20";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -311,8 +313,8 @@ export const updateCoverImage = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Cover Image updated successfully"));
 });
 
-
 //my profile in client
+
 export const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
   if (!username.trim()) {
@@ -329,7 +331,6 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
       user = await User.findById(decodedToken?._id).select(
         "-password -refreshToken"
       );
-
       if (!user) {
         throw new ApiError(401, "Invalid Access Token");
       }
@@ -359,6 +360,14 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "videos",
+          localField: "_id",
+          foreignField: "uploader",
+          as: "videos", // videos uploaded by the user
+        },
+      },
+      {
         $addFields: {
           subscribersCount: {
             $size: "$subscribers",
@@ -368,7 +377,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
           },
           isSubscribedTo: {
             $cond: {
-              if: { 
+              if: {
                 $and: [
                   { $isArray: "$subscribers.subscriber" },
                   { $in: [user?._id, "$subscribers.subscriber"] },
@@ -392,29 +401,39 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
           isSubscribedTo: 1,
           subscribers: 1,
           subscribedTo: 1,
+          videos: {
+            _id: 1,
+            videoFile: 1,
+            thumbnail: 1,
+            title: 1,
+            description: 1,
+            duration: 1,
+            views: 1,
+            isPublished: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
         },
       },
     ]);
 
-    // console.log("channel :", channel);
-
     if (!channel?.length) {
-      throw new ApiError(404, "Channel does not exists");
+      throw new ApiError(404, "Channel does not exist");
     }
-
+    // console.log( channel[0])
     return res
       .status(200)
       .json(
         new ApiResponse(200, channel[0], "User channel fetched successfully")
       );
   } catch (error) {
-    console.log(error)
-    // throw new ApiError(401, error?.message || "Invalid Access Token");
+    console.log(error);
+    throw new ApiError(401, error?.message || "Invalid Access Token");
   }
 });
 
+//GET USER'S WATCH HISTORY
 export const getWatchHistory = asyncHandler(async (req, res) => {
- 
   const user = await User.aggregate([
     {
       $match: {
@@ -536,26 +555,87 @@ export const resetPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, `Password changed successfully.`));
 });
 
-
-import passport from 'passport'
-import GoogleStrategy from 'passport-google-oauth20';
-
-
 //GOOGLE AUTH
 
-export const googleAuth = () => asyncHandler(async ( req, res)=>{
-  passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://www.example.com/auth/google/callback"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-    //   return cb(err, user);
-    // });
-    console.log(profile)
-  }
-));
+export const googleAuth = asyncHandler(async (req, res) => {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: "http://www.example.com/auth/google/callback",
+      },
+      function (accessToken, refreshToken, profile, cb) {
+        // User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        //   return cb(err, user);
+        // });
+        console.log(profile);
+      }
+    )
+  );
+});
 
-})
+//get recommendations
 
+import { Video } from "../models/video.model.js";
+
+import { fetchUserData } from "../utils/fetchUserData.js";
+import {
+  computeTFIDF,
+  getSimilarVideos,
+} from "../utils/contentBasedFiltering.js";
+import {
+  getSimilarUsers,
+  getRecommendedVideosFromUsers,
+} from "../utils/collaborativeFiltering.js";
+
+export const getRecommendations = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const { watchHistory, likedVideos } = await fetchUserData(userId);
+  const allWatchedVideos = [...watchHistory, ...likedVideos];
+
+  // Compute TF-IDF for all videos in the database
+  const allVideos = await Video.find().exec();
+  await computeTFIDF(allVideos);
+
+  // Get content-based recommendations
+  const contentBasedRecommendations = new Set();
+  allWatchedVideos.forEach((video) => {
+    const similarVideos = getSimilarVideos(video, allVideos);
+    similarVideos.forEach((simVideo) =>
+      contentBasedRecommendations.add(simVideo?._id.toString())
+    );
+  });
+
+  // Get collaborative filtering recommendations
+  const similarUsers = await getSimilarUsers(userId);
+  const collaborativeRecommendations =
+    await getRecommendedVideosFromUsers(similarUsers);
+
+  // Combine recommendations
+  const combinedRecommendations = Array.from(
+    new Set([
+      ...contentBasedRecommendations,
+      ...collaborativeRecommendations.map((video) => video.toString()),
+    ])
+  );
+
+  //  Fetch and return recommended video details
+
+  const recommvideos = await Video.find({
+    _id: { $in: combinedRecommendations },
+  }).populate({
+    path: "uploader",
+    select: "fullname username avatar",
+  }).exec()
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { recommvideos },
+        `Video Recommendations successfully.`
+      )
+    );
+});

@@ -18,11 +18,16 @@ import {
   LOAD_USER_FAIL,
   GET_USERPROFILE_REQUEST,
   GET_USERPROFILE_SUCCESS,
-  GET_USERPROFILE_FAIL,GET_USER_WATCH_HISTORY_REQUEST,
+  GET_USERPROFILE_FAIL,
+  GET_USER_WATCH_HISTORY_REQUEST,
   GET_USER_WATCH_HISTORY_SUCCESS,
   GET_USER_WATCH_HISTORY_FAIL,
-  GOOGLE_AUTH_REQUEST, GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
-
+  GOOGLE_AUTH_REQUEST,
+  GOOGLE_AUTH_SUCCESS,
+  GOOGLE_AUTH_FAIL,
+  GET_USER_VIDEO_RECOMMENDATIONS_REQUEST,
+  GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS,
+  GET_USER_VIDEO_RECOMMENDATIONS_FAIL,
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -139,7 +144,6 @@ export const resetPassword =
     }
   };
 
-
 export const getUserDetails = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
@@ -159,38 +163,49 @@ export const getChannelProfile = (username) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_USERPROFILE_FAIL,
-      payload:  extractErrorMessage(error.response.data),
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
+export const getUserWatchhistory = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_USER_WATCH_HISTORY_REQUEST });
+    const { config } = { headers: { "Content-Type": "application.json" } };
+    const { data } = await axios.get(`/api/v1/users/history`, config);
+    dispatch({ type: GET_USER_WATCH_HISTORY_SUCCESS, payload: data });
+    // console.log(data)
+  } catch (error) {
+    dispatch({
+      type: GET_USER_WATCH_HISTORY_FAIL,
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
+export const googleAuthentication = () => async (dispatch) => {
+  try {
+    dispatch({ type: GOOGLE_AUTH_REQUEST });
+    const { config } = { headers: { "Content-Type": "application.json" } };
+    const { data } = await axios.get(`/api/v1/users/auth/google`, config);
+    dispatch({ type: GOOGLE_AUTH_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GOOGLE_AUTH_FAIL,
+      payload: extractErrorMessage(error.response.data),
     });
   }
 };
 
 
-export const getUserWatchhistory = ()=> async (dispatch)=>{
+export const getVideoRecommendations = () => async (dispatch) => {
   try {
-    dispatch({type : GET_USER_WATCH_HISTORY_REQUEST })
-    const {config } = {headers : { 'Content-Type' : 'application.json'}}
-    const {data} = await axios.get(`/api/v1/users/history`, config)
-    dispatch({type: GET_USER_WATCH_HISTORY_SUCCESS, payload : data })
-    // console.log(data)
+    dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_REQUEST });
+    const { data } = await axios.get("/api/v1/users/video-recommentions");
+    dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS, payload: data });
+    console.log('data', data)
   } catch (error) {
-    dispatch({
-      type: GET_USER_WATCH_HISTORY_FAIL,
-      payload:  extractErrorMessage(error.response.data),
-    });
+    dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_FAIL, payload: error.response.data.message });
   }
-}
+};
 
-
-export const googleAuthentication = ()=> async (dispatch)=>{
-  try {
-    dispatch({type : GOOGLE_AUTH_REQUEST })
-    const {config } = {headers : { 'Content-Type' : 'application.json'}}
-    const {data} = await axios.get(`/api/v1/users/auth/google`, config)
-    dispatch({type: GOOGLE_AUTH_SUCCESS, payload : data })
-  } catch (error) {
-    dispatch({
-      type: GOOGLE_AUTH_FAIL,
-      payload:  extractErrorMessage(error.response.data),
-    });
-  }
-}

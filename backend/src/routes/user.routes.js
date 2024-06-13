@@ -3,6 +3,7 @@ import {
   changeCurrentPassword,
   forgetPassword,
   getCurrentUser,
+  getRecommendations,
   getUserChannelProfile,
   getWatchHistory,
   loginUser,
@@ -61,6 +62,9 @@ router.route("/history").get(verifyJWT, getWatchHistory);
 router.route("/forget-password").post(forgetPassword);
 
 router.route("/forget-password/:token").put(resetPassword);
+
+router.route('/video-recommentions').get(verifyJWT, getRecommendations)
+
 
 router.get(
   "/auth/google",

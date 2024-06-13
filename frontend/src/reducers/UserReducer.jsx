@@ -24,7 +24,8 @@ import {
   GET_USER_WATCH_HISTORY_SUCCESS,
   GET_USER_WATCH_HISTORY_FAIL,
   GOOGLE_AUTH_REQUEST, GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
-
+  GET_USER_VIDEO_RECOMMENDATIONS_REQUEST, GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS,
+  GET_USER_VIDEO_RECOMMENDATIONS_FAIL,GET_USER_VIDEO_RECOMMENDATIONS_RESET,
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
 
@@ -205,3 +206,39 @@ export const getUserWatchHistoryReducer = (state = [], action) => {
 };
 
 
+export const getVideoRecommendationsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_USER_VIDEO_RECOMMENDATIONS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload.data.recommvideos,
+        success: true,
+      };
+    case GET_USER_VIDEO_RECOMMENDATIONS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };  
+    case GET_USER_VIDEO_RECOMMENDATIONS_RESET:
+      return {
+        ...state,
+        loading: false,
+        success: false,
+      };
+    case CLEAR_ERRORS:
+      return {
+        loading: false,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
