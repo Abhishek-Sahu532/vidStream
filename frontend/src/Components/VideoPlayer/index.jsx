@@ -38,7 +38,7 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({ video }) => {
-  console.log(video)
+  // console.log(video)
   const dateString = video?.video?.createdAt;
   const date = new Date(dateString);
   const dispatch = useDispatch();
@@ -47,6 +47,12 @@ export const VideoPlayer = ({ video }) => {
     month: "short",
     day: "2-digit",
   });
+
+  const [likesCount, setLikesCount] = useState(video.likesCount);
+  const [dislikesCount, setDislikesCount] = useState(video.dislikesCount);
+  const [userLiked, setUserLiked] = useState(video.userLiked);
+  const [userDisliked, setUserDisliked] = useState(video.userDisliked);
+
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.user);
   const { message } = useSelector((state) => state.addVideoLikeDislike);
@@ -67,16 +73,37 @@ export const VideoPlayer = ({ video }) => {
     }
   };
   const handleLikeBtn = () => {
-    dispatch(addAVideoLikeDislike(video?.video?._id, "like"));
+    if (!userLiked) {
+      setLikesCount((prev) => prev + 1);
+      if (userDisliked) {
+        setDislikesCount((prev) => prev - 1);
+        setUserDisliked(false);
+      }
+      setUserLiked(true);
+    } else {
+      setLikesCount((prev) => prev - 1);
+      setUserLiked(false);
+    }
+    dispatch(addAVideoLikeDislike(video.video._id, "like"));
   };
 
   const handleDislikeBtn = () => {
-    dispatch(addAVideoLikeDislike(video?.video?._id, "dislike"));
+    if (!userDisliked) {
+      setDislikesCount((prev) => prev + 1);
+      if (userLiked) {
+        setLikesCount((prev) => prev - 1);
+        setUserLiked(false);
+      }
+      setUserDisliked(true);
+    } else {
+      setDislikesCount((prev) => prev - 1);
+      setUserDisliked(false);
+    }
+    dispatch(addAVideoLikeDislike(video.video._id, "dislike"));
   };
 
   useEffect(() => {
     if (message?.success) {
-      console.log(message);
       dispatch({ type: ADD_VIDEO_LIKE_DISLIKE_RESET });
     }
   }, [message, dispatch]);
@@ -132,10 +159,10 @@ export const VideoPlayer = ({ video }) => {
                 >
                   {/* Like Icon */}
 
-                  {video.likesCount}
+                  {likesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={video?.userLiked ? "black" : "none"}
+                    fill={userLiked ? "black" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -154,10 +181,10 @@ export const VideoPlayer = ({ video }) => {
                   onClick={handleDislikeBtn}
                 >
                   {/* Dislike Icon */}
-                  {video.dislikesCount}
+                  {dislikesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={video?.userDisliked ? "black" : "none"}
+                    fill={userDisliked ? "black" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -229,7 +256,7 @@ export const VideoPlayer = ({ video }) => {
           )}
         </div>
       </div>
-      <CommentSection videoId={video._id} />
+      <CommentSection />
     </div>
   );
 };

@@ -2,11 +2,8 @@ import {
   Textarea,
   IconButton,
   Avatar,
-  Typography,
 } from "@material-tailwind/react";
-// import { LinkIcon } from "@heroicons/react/24/outline";
 import "emoji-picker-element";
-
 import { useForm } from "react-hook-form";
 import { createAComment, getVideoComments } from "../../actions/Comment.Action";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,21 +21,31 @@ export const CommentSection = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
+
   const onSubmit = (data) => {
     const myForm = new FormData();
     myForm.append("content", data.content);
 
     if (!isAuthenticated) {
-      toast.error("Login to do a comment");
+      toast.error("Login to comment");
+      return;
     }
-    dispatch(createAComment(id, myForm));
+
+    dispatch(createAComment(id, myForm)).then(() => {
+      if (success) {
+        reset();
+        dispatch(getVideoComments(id));
+      }
+    });
   };
 
   useEffect(() => {
     dispatch(getVideoComments(id));
-  }, [dispatch, getVideoComments, id]);
+  }, [dispatch, id]);
+
   return (
     <>
       <div className="bg-gray-100 p-6">
@@ -69,7 +76,6 @@ export const CommentSection = () => {
               </IconButton>
             </div>
 
-            
             <Textarea
               {...register("content", {
                 required: "Comment is required",
@@ -112,32 +118,27 @@ export const CommentSection = () => {
         )}
       </div>
 
-      {success && success ? (
+      {success && comments && comments.docs.length > 0 ? (
         <div className="flex flex-col space-y-4 mt-4">
-          {comments &&
-            comments?.data.docs.map((com) => (
-              <div key={com._id} className="bg-white p-4 rounded-lg shadow-md ">
-                <div className="flex gap-4">
-                  <Avatar src={com.owner.avatar} alt="avatar" />
-                  <div>
-                    {" "}
-                    <h3 className="text-lg font-bold">{com.owner.fullname}</h3>
-                    <p className="text-gray-700 text-sm mb-2">
-                      Posted on April 17, 2023
-                    </p>
-                  </div>
+          {comments.docs.map((com) => (
+            <div key={com._id} className="bg-white p-4 rounded-lg shadow-md">
+              <div className="flex gap-4">
+                <Avatar src={com.owner.avatar} alt="avatar" />
+                <div>
+                  <h3 className="text-lg font-bold">{com.owner.fullname}</h3>
+                  <p className="text-gray-700 text-sm mb-2">
+                    Posted on April 17, 2023
+                  </p>
                 </div>
-
-                <p className="text-gray-700">{com.content}</p>
               </div>
-            ))}
+              <p className="text-gray-700">{com.content}</p>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <h1 className="text-blue-gray-700">
-            There is nothing to show, Be the first to do a comment
-          </h1>
-        </>
+        <h1 className="text-blue-gray-700">
+          There is nothing to show, be the first to comment
+        </h1>
       )}
     </>
   );

@@ -1,16 +1,14 @@
 import {
   NEW_COMMENT_FAIL,
   NEW_COMMENT_REQUEST,
-  NEW_COMMENT_RESET,
   NEW_COMMENT_SUCCESS,
   GET_COMMENT_REQUEST,
   GET_COMMENT_SUCCESS,
   GET_COMMENT_FAIL,
-  GET_COMMENT_RESET,
   CLEAR_ERRORS,
 } from "../constaints/CommentConstaints";
 
-export const createCommentReducer = (state = { comments: {} }, action) => {
+export const createCommentReducer = (state = {}, action) => {
   switch (action.type) {
     case NEW_COMMENT_REQUEST:
       return {
@@ -30,13 +28,7 @@ export const createCommentReducer = (state = { comments: {} }, action) => {
         loading: false,
         error: action.payload.error,
       };
-    case NEW_COMMENT_RESET:
-      return {
-        ...state,
-        loading: false,
-        success: false,
-        error: null,
-      };
+
     case CLEAR_ERRORS:
       return {
         ...state,
@@ -47,7 +39,7 @@ export const createCommentReducer = (state = { comments: {} }, action) => {
   }
 };
 
-export const allCommentReducer = (state = { comments: [] }, action) => {
+export const allCommentReducer = (state = [], action) => {
   switch (action.type) {
     case GET_COMMENT_REQUEST:
       return {
@@ -58,7 +50,7 @@ export const allCommentReducer = (state = { comments: [] }, action) => {
       return {
         ...state,
         loading: false,
-        comments: action.payload,
+        comments: action.payload.data,
         success: true,
       };
     case GET_COMMENT_FAIL:
@@ -66,13 +58,6 @@ export const allCommentReducer = (state = { comments: [] }, action) => {
         ...state,
         loading: false,
         error: action.payload,
-      };
-    case GET_COMMENT_RESET:
-      return {
-        ...state,
-        loading: false,
-        success: false,
-        error: null,
       };
     case CLEAR_ERRORS:
       return {

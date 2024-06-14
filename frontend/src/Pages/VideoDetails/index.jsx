@@ -23,8 +23,6 @@ export const VideoDetails = () => {
     if (error) {
       toast.error(error);
     }
-
-    console.log("Dispatching getVideosDetails and getVideoRecommendations");
     dispatch(getVideosDetails(id));
     dispatch(getVideoRecommendations());
 
@@ -33,34 +31,29 @@ export const VideoDetails = () => {
       dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_RESET });
     };
   }, [dispatch, id, error]);
-
-  console.log("Loading:", loading);
-  console.log("Video:", video);
-  console.log("Error:", error);
-
   return (
-    <div className="mt-32">
-      {loading ? (
-        <div className="min-h-screen justify-center items-center">
-        <Loader />
-        </div>
-      ) : (
-        <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="col-span-2">
-            <VideoPlayer video={video} />
-          </div>
-          <div className="col-span-2 md:col-span-1">
-            {recommLoading ? (
+    <div className="mt-20">
+      <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="col-span-2">
+          {loading ? (
+            <div className="min-h-screen justify-center items-center">
               <Loader />
-            ) : (
-              recommendations &&
-              recommendations.map((vid, index) => (
-                <SuggestionCard vid={vid} key={index} />
-              ))
-            )}
-          </div>
+            </div>
+          ) : (
+            <VideoPlayer video={video} />
+          )}
         </div>
-      )}
+        <div className="col-span-2 md:col-span-1">
+          {recommLoading ? (
+            <Loader />
+          ) : (
+            recommendations &&
+            recommendations.map((vid, index) => (
+              <SuggestionCard vid={vid} key={index} />
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };

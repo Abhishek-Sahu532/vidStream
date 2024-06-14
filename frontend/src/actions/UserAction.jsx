@@ -124,8 +124,6 @@ export const resetPassword =
   ({ token }, myForm) =>
   async (dispatch) => {
     try {
-      // console.log(token);
-
       dispatch({ type: RESET_PASSWORD_REQUEST });
       const config = { headers: { "Content-Type": "application/json" } };
       const { data } = await axios.put(
@@ -203,7 +201,6 @@ export const getVideoRecommendations = () => async (dispatch) => {
     dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_REQUEST });
     const { data } = await axios.get("/api/v1/users/video-recommentions");
     dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS, payload: data });
-    console.log('data', data)
   } catch (error) {
     dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_FAIL, payload: error.response.data.message });
   }

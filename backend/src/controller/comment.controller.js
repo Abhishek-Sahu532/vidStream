@@ -104,7 +104,7 @@ export const getVideoComments = asyncHandler(async (req, res) => {
   ]);
 
   const options = {
-    page: parseInt(page, 10),
+    page: parseInt(page, 1),
     limit: parseInt(limit, 10),
   };
 
