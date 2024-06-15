@@ -47,7 +47,7 @@ export const uploadAVideo = (formdata) => async (dispatch) => {
 //FETCH VIDEOS
 
 export const fetchAllVideos =
-  ({ searchQuery = "", page = 1 , pageSize=3 }) =>
+  ({ searchQuery = "", page = 1 , pageSize=6 }) =>
   async (dispatch) => {
     try {
       // console.log('page from all vidoes', page)

@@ -19,6 +19,9 @@ export const VideoDetails = () => {
     (state) => state.videoRecommendations
   );
 
+  const filteredRecommendations = recommendations?.filter((vid) => vid._id !== id);
+
+
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -47,8 +50,8 @@ export const VideoDetails = () => {
           {recommLoading ? (
             <Loader />
           ) : (
-            recommendations &&
-            recommendations.map((vid, index) => (
+            filteredRecommendations &&
+            filteredRecommendations.map((vid, index) => (
               <SuggestionCard vid={vid} key={index} />
             ))
           )}

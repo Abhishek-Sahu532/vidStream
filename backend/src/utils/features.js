@@ -3,7 +3,6 @@ export class ApiFeature {
     this.query = query;
     this.queryStr = queryStr;
   }
-
   search() {
     const keyword = this.queryStr.query
       ? {

@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 export function VideoUpload() {
 
 const { success, loading, error} = useSelector((state)=> state.video )
+const { user} = useSelector((state)=> state.user )
 console.log( success, loading, error)
   const {
     register,
@@ -70,7 +71,7 @@ const navigate = useNavigate();
   useEffect(() => {
 if(success){
   toast.success(success)
- navigate('/my-profile')
+ navigate(`/channel/${user?.username}`)
 }
 if(error){
   toast.error(error)
@@ -259,7 +260,7 @@ if(error){
           <p className="my-2 text-red-600">{errors.checkbox.message}</p>
         )}
         <Button className="mt-6" fullWidth type="submit">
-          Upload
+         { loading ? 'Uploading...' : 'Upload'}
         </Button>
       </form>
     </Card>
