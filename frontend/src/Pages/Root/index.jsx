@@ -1,56 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { Advertisement } from "../../Components/Events";
 import { VideoDetailsCard } from "../../Components/VideoDetailsCard";
 import { fetchAllVideos } from "../../actions/VideoAction";
 import { Loader } from "../../Components/Loader";
+import { Button } from "@material-tailwind/react";
 
 const Root = () => {
-  const { loading, videos } = useSelector((state) => state.videos);
- 
+  const { loading, videos, error } = useSelector((state) => state.videos);
+
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
+  const [videoList, setVideoList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const prevPageRef = useRef(page);
+  const [isFetching, setIsFetching] = useState(false);
+  // console.log(videos);
 
   useEffect(() => {
     dispatch(fetchAllVideos({ page }));
-  }, [dispatch, page]);
+    console.log(page, hasMore, isFetching);
+  }, [ page]);
 
   const fetchMoreData = () => {
-    console.log(1)
-    if (loading) return;
-    const nextPage = page + 1;
-    dispatch(fetchAllVideos({ page: nextPage })).then((response) => {
-      if (response.payload.length === 0) {
-        setHasMore(false);
-      } else {
-        setPage(nextPage);
-      }
-    });
+    setIsFetching(true);
+    console.log(isFetching, "1");
+    setPage((prev) => prev + 1);
+    setIsFetching(false);
   };
 
   return (
     <div>
       <Advertisement />
-      <InfiniteScroll
-        dataLength={videos.length}
-        next={fetchMoreData}
-        hasMore={hasMore}
-        loader={<Loader />}
-        endMessage={<p style={{ textAlign: "center" }}>Yay! You have seen it all</p>}
-      >
-        <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
-          {videos &&
-            videos.map((video, index) => {
-              return (
-                <div key={index}>
-                  <VideoDetailsCard vid={video} />
-                </div>
-              );
-            })}
-        </div>
-      </InfiniteScroll>
+      <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
+        {videos.map((video, index) => (
+          <div key={index}>
+            <VideoDetailsCard vid={video} />
+          </div>
+        ))}
+      </div>
+      {loading && <Loader />}
+      {/* {!isFetching && !hasMore && ( */}
+      <Button onClick={fetchMoreData} className="my-auto" disabled={isFetching}>
+        {isFetching ? "Loading..." : "Load More"}
+      </Button>
+      {/* )} */}
+      {/* {!isFetching && hasMore && (
+        <p style={{ textAlign: "center" }}>Yay! You have seen it all</p>
+      )} */}
     </div>
   );
 };

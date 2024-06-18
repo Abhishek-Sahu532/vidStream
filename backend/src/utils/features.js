@@ -6,22 +6,22 @@ export class ApiFeature {
   search() {
     const keyword = this.queryStr.query
       ? {
-        $or: [
-          {
-            title: {
-              $regex: String(this.queryStr.query), // Ensure query is a string
-              $options: "i", // Case-insensitive search
+          $or: [
+            {
+              title: {
+                $regex: String(this.queryStr.query), // Ensure query is a string
+                $options: "i", // Case-insensitive search
+              },
             },
-          },
-          {
-            description: {
-              $regex: String(this.queryStr.query), // Ensure query is a string
-              $options: "i", // Case-insensitive search
+            {
+              description: {
+                $regex: String(this.queryStr.query), // Ensure query is a string
+                $options: "i", // Case-insensitive search
+              },
             },
-          },
-        ],
-      }
-      : {}; 
+          ],
+        }
+      : {};
     this.query = this.query.find({ ...keyword });
 
     return this;
@@ -43,16 +43,19 @@ export class ApiFeature {
   sort() {
     if (this.queryStr.sortBy) {
       const sortBy = this.queryStr.sortBy;
-      const sortType = this.queryStr.sortType === 'desc' ? -1 : 1;
+      const sortType = this.queryStr.sortType === "desc" ? -1 : 1;
       this.query = this.query.sort({ [sortBy]: sortType });
     }
     return this;
   }
 
-  pagination(resultPerPage) {
+    pagination(resultPerPage) {
     const currentPage = Number(this.queryStr.page) || 1;
-    const skip = resultPerPage * (currentPage - 1);
-    this.query = this.query.limit(resultPerPage).skip(skip);
+    const skip = currentPage === 1 ? 0 : resultPerPage * (currentPage - 2) + 6;
+    const limit = currentPage === 1 ? 6 : resultPerPage;
+
+    this.query = this.query.limit(limit).skip(skip);
+
     return this;
   }
 }

@@ -73,6 +73,10 @@ export const VideoPlayer = ({ video }) => {
     }
   };
   const handleLikeBtn = () => {
+    if (!isAuthenticated) {
+      toast.error("Please Login");
+      return
+    } 
     if (!userLiked) {
       setLikesCount((prev) => prev + 1);
       if (userDisliked) {
@@ -88,6 +92,10 @@ export const VideoPlayer = ({ video }) => {
   };
 
   const handleDislikeBtn = () => {
+    if (!isAuthenticated) {
+      toast.error("Please Login");
+      return
+    } 
     if (!userDisliked) {
       setDislikesCount((prev) => prev + 1);
       if (userLiked) {
