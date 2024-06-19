@@ -28,6 +28,12 @@ const generateAccessAndRefreshToken = async (userId) => {
   }
 };
 
+function getPublicIdFromUrl(url) {
+  const parts = url.split("/");
+  const publicIdWithExtension = parts[parts.length - 1];
+  const publicId = publicIdWithExtension.split(".")[0];
+  return publicId;
+}
 //registering the user -- TESTED
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullname, email, username, password } = req.body;
@@ -233,9 +239,9 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 export const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { fullname, email } = req.body;
+  const { fullname, email , username } = req.body;
 
-  if (!fullname || !email) {
+  if (!fullname || !email || !username) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -243,7 +249,7 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
     req.user?._id,
 
     {
-      $set: { fullname, email },
+      $set: { fullname, email, username },
     },
     { new: true }
   ).select("-password");
@@ -256,17 +262,27 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
 //todo - old image to be delete
 
 export const updateUserAvatar = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(400, "User does not exist");
+  }
+  //deleting the previous image
+  const publicIdForAvatar = await getPublicIdFromUrl(user.avatar);
+  await deleteFromCloudinary(publicIdForAvatar);
+
   const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is missing");
   }
-
+//uploading the new image
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   if (!avatar) {
     throw new ApiError(400, "Error while upload on avatar");
   }
 
-  const user = await User.findByIdAndUpdate(
+  //updating the user object
+  await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
@@ -280,13 +296,24 @@ export const updateUserAvatar = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "Avatar changed successfully"));
+    .json(new ApiResponse(200, {}, "Avatar changed successfully"));
 });
 
-//todo - old image to be delete
-
+//update cover image
 export const updateCoverImage = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(400, "User does not exist");
+  }
+
+  if (user.coverImage !== "") {
+    const publicIdForCoverImage = await getPublicIdFromUrl(user.coverImage);
+    await deleteFromCloudinary(publicIdForCoverImage);
+  }
+
   const coverLocalPath = req.file?.path;
+  // console.log('path', coverLocalPath)
   if (!coverLocalPath) {
     throw new ApiError(400, "Cover Image file is missing");
   }
@@ -296,7 +323,7 @@ export const updateCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while upload on cover image");
   }
 
-  const user = await User.findByIdAndUpdate(
+  const updatedUser = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
@@ -310,7 +337,7 @@ export const updateCoverImage = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "Cover Image updated successfully"));
+    .json(new ApiResponse(200, {}, "Cover Image updated successfully"));
 });
 
 //my profile in client
@@ -555,6 +582,32 @@ export const resetPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, `Password changed successfully.`));
 });
 
+//reset password for logged user
+export const resetPasswordForLoggedUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+  if (!user) {
+    throw new ApiError(404, "User does not exist");
+  }
+  const oldPassword = req.body.oldPassword;
+  const isPasswordValid = await user.isPasswordCorrect(oldPassword);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Old Password is incorrect");
+  }
+  if (req.body.oldPassword === req.body.newPassword) {
+    throw new ApiError(404, "Old and New password must be diffrent");
+  }
+  if (req.body.newPassword !== req.body.confirmNewPassword) {
+    throw new ApiError(404, "Password and Confirm Password does not match");
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, `Password changed successfully.`));
+});
+
+//update coverimage
+
 //GOOGLE AUTH
 
 export const googleAuth = asyncHandler(async (req, res) => {
@@ -588,6 +641,7 @@ import {
   getSimilarUsers,
   getRecommendedVideosFromUsers,
 } from "../utils/collaborativeFiltering.js";
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
 export const getRecommendations = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -625,10 +679,12 @@ export const getRecommendations = asyncHandler(async (req, res) => {
 
   const recommvideos = await Video.find({
     _id: { $in: combinedRecommendations },
-  }).populate({
-    path: "uploader",
-    select: "fullname username avatar",
-  }).exec()
+  })
+    .populate({
+      path: "uploader",
+      select: "fullname username avatar",
+    })
+    .exec();
   return res
     .status(200)
     .json(

@@ -21,12 +21,16 @@ import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
 import { AboutUs } from "../Pages/AboutUs";
 import { FaqPage } from "../Pages/FAQ";
 import { LikedPage } from "../Pages/LikedPage";
+import { ResetPassword } from "../Components/ResetPassword";
+import { UpdateCoverImage } from "../Components/UpdateCoveImage";
+import { UpdateAvatar } from "../Components/UpdateAvatar";
+import { UpdateUserDetails } from "../Components/UpdateUserDetails";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="" element={<Root />} />
-      <Route path='search' element={<Root />} />
+      <Route path="search" element={<Root />} />
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path="video/:id" element={<VideoDetails />} />
@@ -46,6 +50,21 @@ const router = createBrowserRouter(
       <Route path="channel/:username" element={<UserProfile />} />
       <Route path="forget-password" element={<ForgetPassword />} />
       <Route path="forget-password/:token" element={<ForgetNewPassword />} />
+      {/* <Route path="reset-password" element={<ResetPassword />} /> */}
+
+      <Route path="reset-password" element={<ProtectedRoutes />}>
+        <Route index element={<ResetPassword />} />
+      </Route>
+      <Route path="update-cover-image" element={<ProtectedRoutes />}>
+        <Route index element={<UpdateCoverImage />} />
+      </Route>
+      <Route path="update-avatar" element={<ProtectedRoutes />}>
+        <Route index element={<UpdateAvatar />} />
+      </Route>
+
+      <Route path="update-userprofile" element={<ProtectedRoutes />}>
+        <Route index element={<UpdateUserDetails />} />
+      </Route>
 
       <Route path="FAQ" element={<FaqPage />} />
       <Route path="about-us" element={<AboutUs />} />

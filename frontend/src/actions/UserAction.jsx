@@ -28,6 +28,16 @@ import {
   GET_USER_VIDEO_RECOMMENDATIONS_REQUEST,
   GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS,
   GET_USER_VIDEO_RECOMMENDATIONS_FAIL,
+  RESET_PASSWORD_FOR_LOGGEDUSER_REQUEST,
+  RESET_PASSWORD_FOR_LOGGEDUSER_SUCCESS,
+  RESET_PASSWORD_FOR_LOGGEDUSER_FAIL,
+  UPDATE_COVER_IMAGE_REQUEST,
+  UPDATE_COVER_IMAGE_SUCCESS,
+  UPDATE_COVER_IMAGE_FAIL,
+  UPDATE_AVATAR_IMAGE_REQUEST,
+  UPDATE_AVATAR_IMAGE_SUCCESS,
+  UPDATE_AVATAR_IMAGE_FAIL,
+
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -142,6 +152,78 @@ export const resetPassword =
     }
   };
 
+//RESET PASSWORD FOR LOGGED USER
+export const resetPasswordForLoggedUser = (myForm) => async (dispatch) => {
+  try {
+    dispatch({ type: RESET_PASSWORD_FOR_LOGGEDUSER_REQUEST });
+    const config = { headers: { "Content-Type": "application/json" } };
+    const { data } = await axios.put(
+      `/api/v1/users/reset-password`,
+      myForm,
+      config
+    );
+
+    dispatch({
+      type: RESET_PASSWORD_FOR_LOGGEDUSER_SUCCESS,
+      payload: data.success,
+    });
+    // console.log("data from reset password", data);
+  } catch (error) {
+    dispatch({
+      type: RESET_PASSWORD_FOR_LOGGEDUSER_FAIL,
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
+//update cover image
+export const updateCoverImage = (myForm) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_COVER_IMAGE_REQUEST });
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const { data } = await axios.patch(
+      `/api/v1/users/cover-image`,
+      myForm,
+      config
+    );
+
+    dispatch({
+      type: UPDATE_COVER_IMAGE_SUCCESS,
+      payload: data.success,
+    });
+    // console.log("data from reset password", data);
+  } catch (error) {
+    dispatch({
+      type: UPDATE_COVER_IMAGE_FAIL,
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
+//update avatar image
+export const updateAvatarImage = (myForm) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_AVATAR_IMAGE_REQUEST });
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const { data } = await axios.patch(
+      `/api/v1/users/update-avatar`,
+      myForm,
+      config
+    );
+
+    dispatch({
+      type: UPDATE_AVATAR_IMAGE_SUCCESS,
+      payload: data.success,
+    });
+    // console.log("data from reset password", data);
+  } catch (error) {
+    dispatch({
+      type: UPDATE_AVATAR_IMAGE_FAIL,
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
 export const getUserDetails = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
@@ -195,14 +277,15 @@ export const googleAuthentication = () => async (dispatch) => {
   }
 };
 
-
 export const getVideoRecommendations = () => async (dispatch) => {
   try {
     dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_REQUEST });
     const { data } = await axios.get("/api/v1/users/video-recommentions");
     dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_FAIL, payload: error.response.data.message });
+    dispatch({
+      type: GET_USER_VIDEO_RECOMMENDATIONS_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
-

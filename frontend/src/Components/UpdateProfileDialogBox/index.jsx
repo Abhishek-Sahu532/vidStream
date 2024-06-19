@@ -35,11 +35,11 @@ export const UpdateProfileDialogBox = ({ open, handleClose }) => {
 
         <Link to="/update-cover-image">
           <Button fullWidth variant="outlined">
-            Update CoveImage
+            Update Cover Image
           </Button>
         </Link>
 
-        <Link to="/update-cover-image">
+        <Link to="/reset-password">
           <Button fullWidth variant="outlined">
             Update Password
           </Button>

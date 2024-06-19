@@ -7,6 +7,10 @@ import { registerUser } from "../../actions/UserAction";
 import { useEffect } from "react";
 import Title from "../../Title";
 import { toast } from "react-toastify";
+
+
+
+
 export const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,21 +34,23 @@ export const Signup = () => {
     myForm.set("avatar", data.avatar[0]);
     myForm.set("coverImage", data.coverImage[0]);
     dispatch(registerUser(myForm));
-    toast.success('User Successfully Singed In')
   };
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/signin");
     }
-    if(error){
-      toast.error(error)
+    if (error) {
+      toast.error(error);
+    }
+    if (success) {
+      toast.success("User Successfully Singed In");
     }
   }, [success, navigate, isAuthenticated, error]);
 
   return (
     <div className="mt-28 flex flex-col text-primarybg  bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
-     <Title  title="Sign up" />
+      <Title title="Sign up" />
       <h4 className="block  text-2xl antialiased font-semibold leading-snug tracking-normal text-primarybg font-quicksand">
         Sign Up
       </h4>
@@ -72,7 +78,6 @@ export const Signup = () => {
             {errors.fullname && (
               <p className="my-2 text-red-600">{errors.fullname.message}</p>
             )}
-          
           </div>
           <h6 className="block -mb-3  text-base antialiased font-semibold leading-relaxed tracking-normal text-primarybg">
             Username*
@@ -90,7 +95,6 @@ export const Signup = () => {
             {errors.username && (
               <p className="my-2 text-red-600">{errors.username.message}</p>
             )}
-          
           </div>
 
           <h6 className="block -mb-3  text-base antialiased font-semibold leading-relaxed tracking-normal text-primarybg">
@@ -108,7 +112,6 @@ export const Signup = () => {
             {errors.email && (
               <p className="my-2 text-red-600">{errors.email.message}</p>
             )}
-          
           </div>
           <h6 className="block -mb-3  text-base antialiased font-semibold leading-relaxed tracking-normal text-primarybg">
             Password*
@@ -127,7 +130,6 @@ export const Signup = () => {
             {errors.password && (
               <p className="my-2 text-red-600">{errors.password.message}</p>
             )}
-          
           </div>
 
           <h6 className="block -mb-3  text-base antialiased font-semibold leading-relaxed tracking-normal text-primarybg">
@@ -139,6 +141,7 @@ export const Signup = () => {
               {...register("avatar", {
                 required: "Avatar is required",
               })}
+              accept="image/*"
               className="block w-full border peer border-secondarybg  shadow-sm rounded-lg text-sm focus:border-2 focus:border-secondarybg focus:border-t-transparent focus:!border-t-secondarybg focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 disabled:opacity-50 disabled:pointer-events-none  file:border-0 file:me-4 file:py-3 file:px-4  dark:file:bg-neutral-700 dark:file:text-neutral-400"
             />
             {errors.avatar && (
@@ -152,9 +155,10 @@ export const Signup = () => {
           <div className="relative h-11 w-full min-w-[200px] mb-6">
             <input
               type="file"
-              {...register("coverImage" ,{
-                required : false
+              {...register("coverImage", {
+                required: false,
               })}
+              accept="image/*"
               className="block w-full border peer border-secondarybg  shadow-sm rounded-lg text-sm focus:border-2 focus:border-secondarybg focus:border-t-transparent focus:!border-t-secondarybg focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 disabled:opacity-50 disabled:pointer-events-none  file:border-0 file:me-4 file:py-3 file:px-4  dark:file:bg-neutral-700 dark:file:text-neutral-400"
             />
           </div>

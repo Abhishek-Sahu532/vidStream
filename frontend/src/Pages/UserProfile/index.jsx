@@ -56,12 +56,9 @@ export const UserProfile = () => {
       toast.success(message?.message);
       dispatch({ type: CREATE_SUBSCRIBER_RESET });
     }
-    // if (!isAuthenticated) {
-    //   toast.error("Please Login");
-    //   return;
-    // }
+   
     dispatch(getChannelProfile(username));
-  }, [dispatch, toast, isAuthenticated, error, username, toast, message]);
+  }, [dispatch, toast, error, username, toast, message]);
   return (
     <>
       {loading && loading ? (
@@ -70,7 +67,7 @@ export const UserProfile = () => {
         <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
           <Title title={`${data?.fullname}`} />
           {/* COVER IMAGE */}
-          <div className="bg-cover h-112">
+          <div className="bg-cover w-full h-112">
             <img
               src={
                 data && data.coverImage

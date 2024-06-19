@@ -90,7 +90,7 @@ export function NavbarWithSearch() {
   );
 
   return (
-    <Navbar className="fixed top-0 left-0 w-full z-50 rounded-none max-w-screen-3xl bg-[#9197c3]  text-white border-none ">
+    <Navbar className="fixed top-0 left-0 w-full z-30 rounded-none max-w-screen-3xl bg-[#9197c3]  text-white border-none ">
       <div className=" w-full flex flex-wrap items-center justify-around">
         <Sidebar />
         <Link to="/">

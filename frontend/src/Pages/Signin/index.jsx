@@ -50,6 +50,10 @@ export function Signin() {
     if (success) {
       navigate(`/channel/${user?.username}`);
     }
+    if (error == "Error: User does not exist") {
+      toast.error("Error : Invalid credentials");
+      return;
+    }
     if (error) {
       toast.error(error);
     }
@@ -66,12 +70,11 @@ export function Signin() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardBody className="flex flex-col gap-4">
           <Input
-          color="blue-gray"
-            label="Email" 
+            color="blue-gray"
+            label="Email"
             {...register("email", {
               required: "Email is required",
             })}
-         
           />{" "}
           {errors.email && (
             <p className="my-2 text-red-600">{errors.email.message}</p>
@@ -97,7 +100,6 @@ export function Signin() {
           />
           <Typography
             variant="small"
-           
             className="mt-2 flex items-center gap-1 font-normal text-primarybg"
           >
             <svg
@@ -120,7 +122,10 @@ export function Signin() {
           )}
           <div className="flex justify-between ">
             <div className="-ml-2.5">
-              <Checkbox label="Remember Me" className="checked:border-primarybg text-primarybg checked:bg-primarybg" />
+              <Checkbox
+                label="Remember Me"
+                className="checked:border-primarybg text-primarybg checked:bg-primarybg"
+              />
             </div>
             <div className="-ml-2.5 text-primarybg ">
               <Link to="/forget-password">
@@ -130,13 +135,16 @@ export function Signin() {
           </div>
         </CardBody>
         <CardFooter className="pt-0">
-          <Button className="bg-primarybg font-quicksand text-xl" type="submit" fullWidth>
+          <Button
+            className="bg-primarybg font-quicksand text-xl"
+            type="submit"
+            fullWidth
+          >
             Sign In
           </Button>
           <Button
             fullWidth
             size="lg"
-         
             className="flex items-center gap-8 mt-2 bg-primarybg font-quicksand text-md"
             onClick={handleLogin}
           >
@@ -147,7 +155,10 @@ export function Signin() {
             />
             Continue with Google
           </Button>
-          <Typography variant="small" className="mt-6 flex justify-center text-primarybg">
+          <Typography
+            variant="small"
+            className="mt-6 flex justify-center text-primarybg"
+          >
             Don&apos;t have an account?
             <Link to="/signup" className="ml-1 font-bold">
               Sign up

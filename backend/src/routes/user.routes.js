@@ -13,7 +13,7 @@ import {
   resetPassword,
   updateAccountDetails,
   updateCoverImage,
-  updateUserAvatar,
+  updateUserAvatar,resetPasswordForLoggedUser,
 } from "../controller/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -62,6 +62,7 @@ router.route("/history").get(verifyJWT, getWatchHistory);
 router.route("/forget-password").post(forgetPassword);
 
 router.route("/forget-password/:token").put(resetPassword);
+router.route("/reset-password").put(verifyJWT, resetPasswordForLoggedUser);
 
 router.route('/video-recommentions').get(verifyJWT, getRecommendations)
 

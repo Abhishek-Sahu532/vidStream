@@ -23,9 +23,22 @@ import {
   GET_USER_WATCH_HISTORY_REQUEST,
   GET_USER_WATCH_HISTORY_SUCCESS,
   GET_USER_WATCH_HISTORY_FAIL,
-  GOOGLE_AUTH_REQUEST, GOOGLE_AUTH_SUCCESS, GOOGLE_AUTH_FAIL,
-  GET_USER_VIDEO_RECOMMENDATIONS_REQUEST, GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS,
-  GET_USER_VIDEO_RECOMMENDATIONS_FAIL,GET_USER_VIDEO_RECOMMENDATIONS_RESET,
+  GOOGLE_AUTH_REQUEST,
+  GOOGLE_AUTH_SUCCESS,
+  GOOGLE_AUTH_FAIL,
+  GET_USER_VIDEO_RECOMMENDATIONS_REQUEST,
+  GET_USER_VIDEO_RECOMMENDATIONS_SUCCESS,
+  GET_USER_VIDEO_RECOMMENDATIONS_FAIL,
+  GET_USER_VIDEO_RECOMMENDATIONS_RESET,
+  RESET_PASSWORD_FOR_LOGGEDUSER_REQUEST,
+  RESET_PASSWORD_FOR_LOGGEDUSER_SUCCESS,
+  RESET_PASSWORD_FOR_LOGGEDUSER_FAIL,
+  UPDATE_COVER_IMAGE_REQUEST,
+  UPDATE_COVER_IMAGE_SUCCESS,
+  UPDATE_COVER_IMAGE_FAIL,
+  UPDATE_AVATAR_IMAGE_REQUEST,
+  UPDATE_AVATAR_IMAGE_SUCCESS,
+  UPDATE_AVATAR_IMAGE_FAIL,
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
 
@@ -34,7 +47,7 @@ export const userReducer = (state = { user: {} }, action) => {
     case REGISTER_USER_REQUEST:
     case LOGIN_REQUEST:
     case LOAD_USER_REQUEST:
-      case GOOGLE_AUTH_REQUEST:
+    case GOOGLE_AUTH_REQUEST:
       return {
         loading: true,
         isAuthenticated: false,
@@ -48,7 +61,7 @@ export const userReducer = (state = { user: {} }, action) => {
       };
     case LOGIN_SUCCESS:
     case LOAD_USER_SUCCESS:
-      case GOOGLE_AUTH_SUCCESS:
+    case GOOGLE_AUTH_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -100,19 +113,20 @@ export const forgetPasswordReducer = (state = {}, action) => {
   switch (action.type) {
     case FORGET_PASSWORD_REQUEST:
     case RESET_PASSWORD_REQUEST:
+    case RESET_PASSWORD_FOR_LOGGEDUSER_REQUEST:
       return {
         ...state,
         loading: true,
         error: null,
       };
     case FORGET_PASSWORD_SUCCESS:
+    case RESET_PASSWORD_FOR_LOGGEDUSER_SUCCESS:
       return {
         ...state,
         loading: false,
         message: action.payload,
         success: true,
       };
-
     case RESET_PASSWORD_SUCCESS:
       return {
         ...state,
@@ -121,6 +135,7 @@ export const forgetPasswordReducer = (state = {}, action) => {
       };
     case FORGET_PASSWORD_FAIL:
     case RESET_PASSWORD_FAIL:
+    case RESET_PASSWORD_FOR_LOGGEDUSER_FAIL:
       return {
         ...state,
         loading: false,
@@ -205,7 +220,6 @@ export const getUserWatchHistoryReducer = (state = [], action) => {
   }
 };
 
-
 export const getVideoRecommendationsReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_USER_VIDEO_RECOMMENDATIONS_REQUEST:
@@ -226,7 +240,7 @@ export const getVideoRecommendationsReducer = (state = {}, action) => {
         ...state,
         loading: false,
         error: action.payload,
-      };  
+      };
     case GET_USER_VIDEO_RECOMMENDATIONS_RESET:
       return {
         ...state,
@@ -236,6 +250,68 @@ export const getVideoRecommendationsReducer = (state = {}, action) => {
     case CLEAR_ERRORS:
       return {
         loading: false,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+
+
+export const updateACoverImage = (state = { }, action) => {
+  switch (action.type) {
+    case UPDATE_COVER_IMAGE_REQUEST:
+      return {
+        loading: true,
+       
+      };
+    case UPDATE_COVER_IMAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        message: action.payload
+      };
+    case UPDATE_COVER_IMAGE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const updateAvatarImage = (state = { }, action) => {
+  switch (action.type) {
+    case UPDATE_AVATAR_IMAGE_REQUEST:
+      return {
+        loading: true,
+       
+      };
+    case UPDATE_AVATAR_IMAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        message: action.payload
+      };
+    case UPDATE_AVATAR_IMAGE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
         error: null,
       };
     default:
