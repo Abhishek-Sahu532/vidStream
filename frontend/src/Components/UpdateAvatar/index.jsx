@@ -12,7 +12,7 @@ export const UpdateAvatar = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.user);
-  const { error, success } = useSelector((state) => state.updateAvatar);
+  const { error, success, loading } = useSelector((state) => state.updateAvatar);
   const {
     register,
     handleSubmit,
@@ -71,8 +71,8 @@ export const UpdateAvatar = () => {
           <Button
             type="submit"
             className="w-full bg-primarybg font-quicksand text-md font-bold"
-          >
-            Update Avatar Image{" "}
+          > {loading ? 'Updating...' : ' Update Avatar Image'}
+           
           </Button>
         </form>
       </div>

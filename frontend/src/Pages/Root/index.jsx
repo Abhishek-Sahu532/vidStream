@@ -4,7 +4,8 @@ import { Advertisement } from "../../Components/Events";
 import { VideoDetailsCard } from "../../Components/VideoDetailsCard";
 import { fetchAllVideos } from "../../actions/VideoAction";
 import { Loader } from "../../Components/Loader";
-import { Button } from "@material-tailwind/react";
+import { Avatar, Button, Typography } from "@material-tailwind/react";
+import { LoadingSkeleton } from "../../Components/LoadingSkeletion";
 
 const Root = () => {
   const { loading, videos, error } = useSelector((state) => state.videos);
@@ -20,7 +21,7 @@ const Root = () => {
   useEffect(() => {
     dispatch(fetchAllVideos({ page }));
     console.log(page, hasMore, isFetching);
-  }, [ page]);
+  }, [page]);
 
   const fetchMoreData = () => {
     setIsFetching(true);
@@ -32,22 +33,34 @@ const Root = () => {
   return (
     <div>
       <Advertisement />
-      <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
-        {videos.map((video, index) => (
-          <div key={index}>
-            <VideoDetailsCard vid={video} />
+
+      <div>
+        {loading ? (
+          <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
+            {Array(6)
+              .fill()
+              .map((_, index) => (
+                <LoadingSkeleton key={index} />
+              ))}
           </div>
-        ))}
+        ) : (
+          <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
+            {videos.map((video, index) => (
+              <div key={index}>
+                <VideoDetailsCard vid={video} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      {loading && <Loader />}
-      {/* {!isFetching && !hasMore && ( */}
-      <Button onClick={fetchMoreData} className="my-auto" disabled={isFetching}>
+
+      <button
+        onClick={fetchMoreData}
+        className="mx-auto bg-primarybg p-3 text-white font-bold mb-4 font-quicksand rounded-2xl  flex items-center hover:shadow-[-1px_5px_15px_10px_#9197c3]"
+        disabled={isFetching}
+      >
         {isFetching ? "Loading..." : "Load More"}
-      </Button>
-      {/* )} */}
-      {/* {!isFetching && hasMore && (
-        <p style={{ textAlign: "center" }}>Yay! You have seen it all</p>
-      )} */}
+      </button>
     </div>
   );
 };

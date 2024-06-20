@@ -64,16 +64,16 @@ export const UserProfile = () => {
       {loading && loading ? (
         <Loader />
       ) : (
-        <section className="w-full overflow-hidden dark:bg-gray-900 mt-20">
+        <section className="w-full overflow-hidden  mt-20">
           <Title title={`${data?.fullname}`} />
           {/* COVER IMAGE */}
-          <div className="bg-cover w-full h-112">
+          <div className="bg-cover ">
             <img
               src={
                 data && data.coverImage
                   ? data.coverImage
                   : bannerImage
-              }
+              } className="w-full h-56"
               alt="banner"
             />
           </div>

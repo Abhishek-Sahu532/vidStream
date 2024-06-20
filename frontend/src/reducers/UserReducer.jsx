@@ -39,6 +39,9 @@ import {
   UPDATE_AVATAR_IMAGE_REQUEST,
   UPDATE_AVATAR_IMAGE_SUCCESS,
   UPDATE_AVATAR_IMAGE_FAIL,
+  UPDATE_USER_DETAILS_REQUEST,
+  UPDATE_USER_DETAILS_SUCCESS,
+  UPDATE_USER_DETAILS_FAIL,
   CLEAR_ERRORS,
 } from "../constaints/UserConstaints";
 
@@ -304,6 +307,35 @@ export const updateAvatarImage = (state = { }, action) => {
         message: action.payload
       };
     case UPDATE_AVATAR_IMAGE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+export const updateUserDetailsReducer = (state = { }, action) => {
+  switch (action.type) {
+    case UPDATE_USER_DETAILS_REQUEST:
+      return {
+        loading: true,
+       
+      };
+    case UPDATE_USER_DETAILS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        message: action.payload
+      };
+    case UPDATE_USER_DETAILS_FAIL:
       return {
         ...state,
         loading: false,

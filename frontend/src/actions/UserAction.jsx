@@ -37,7 +37,9 @@ import {
   UPDATE_AVATAR_IMAGE_REQUEST,
   UPDATE_AVATAR_IMAGE_SUCCESS,
   UPDATE_AVATAR_IMAGE_FAIL,
-
+  UPDATE_USER_DETAILS_REQUEST,
+  UPDATE_USER_DETAILS_SUCCESS,
+  UPDATE_USER_DETAILS_FAIL,
 } from "../constaints/UserConstaints";
 import axios from "axios";
 
@@ -223,6 +225,33 @@ export const updateAvatarImage = (myForm) => async (dispatch) => {
     });
   }
 };
+
+
+//update avatar image
+export const updateUserDetails = ({username, fullname, email}) => async (dispatch) => {
+  try {
+    console.log({username, fullname, email})
+    dispatch({ type: UPDATE_USER_DETAILS_REQUEST });
+    const config = { headers: { "Content-Type": 'application/json' } };
+    const { data } = await axios.patch(
+      `/api/v1/users/update-account`,
+      {username, fullname, email},
+      config
+    );
+
+    dispatch({
+      type: UPDATE_USER_DETAILS_SUCCESS,
+      payload: data.success,
+    });
+    // console.log("data from reset password", data);
+  } catch (error) {
+    dispatch({
+      type: UPDATE_USER_DETAILS_FAIL,
+      payload: extractErrorMessage(error.response.data),
+    });
+  }
+};
+
 
 export const getUserDetails = () => async (dispatch) => {
   try {

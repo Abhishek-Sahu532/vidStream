@@ -7,7 +7,7 @@ import {
   getUserProfileReducer,
   getUserWatchHistoryReducer,
   getVideoRecommendationsReducer,
-  updateACoverImage,updateAvatarImage
+  updateACoverImage,updateAvatarImage, updateUserDetailsReducer
 } from "./reducers/UserReducer";
 import { getAllVideosReducer, videoReducer } from "./reducers/VideoReducer";
 import {
@@ -40,7 +40,8 @@ const rootReducer = combineReducers({
   likedVideo: LikedVideoReducer,
   videoRecommendations: getVideoRecommendationsReducer,
   updateCoverImage: updateACoverImage,
-  updateAvatar: updateAvatarImage
+  updateAvatar: updateAvatarImage,
+  updateUserDetails: updateUserDetailsReducer
 });
 
 export const store = configureStore({

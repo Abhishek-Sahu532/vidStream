@@ -10,9 +10,8 @@ import {  updateCoverImage } from "../../actions/UserAction";
 export const UpdateCoverImage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { user } = useSelector((state)=> state.user)
-  const { error, success } = useSelector((state)=> state.updateCoverImage)
+  const { error, success, loading } = useSelector((state)=> state.updateCoverImage)
   const {
     register,
     handleSubmit,
@@ -72,8 +71,8 @@ export const UpdateCoverImage = () => {
               )}
             </div>
           </div>
-          <Button type="submit" className="w-full bg-primarybg font-quicksand text-md font-bold">
-            Update Cover Image          </Button>
+          <Button type="submit" className="w-full bg-primarybg font-quicksand text-md font-bold"> {loading ? 'Updating...' : 'Update Cover Image'}
+                   </Button>
         </form>
       </div>
     </Card>

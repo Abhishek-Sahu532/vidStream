@@ -23,24 +23,40 @@ export const UpdateProfileDialogBox = ({ open, handleClose }) => {
       </DialogHeader>
       <DialogBody className="flex flex-col gap-4">
         <Link to="/update-userprofile">
-          <Button fullWidth variant="outlined">
+          <Button
+            fullWidth
+            variant="outlined"
+            className="font-quicksand text-primarybg font-bold text-sm border border-primarybg"
+          >
             Update Name and Email
           </Button>
         </Link>
         <Link to="/update-avatar">
-          <Button fullWidth variant="outlined">
+          <Button
+            fullWidth
+            variant="outlined"
+            className="font-quicksand text-primarybg font-bold text-sm border border-primarybg"
+          >
             Update Avatar
           </Button>
         </Link>
 
         <Link to="/update-cover-image">
-          <Button fullWidth variant="outlined">
+          <Button
+            fullWidth
+            variant="outlined"
+            className="font-quicksand text-primarybg font-bold text-sm border border-primarybg"
+          >
             Update Cover Image
           </Button>
         </Link>
 
         <Link to="/reset-password">
-          <Button fullWidth variant="outlined">
+          <Button
+            fullWidth
+            variant="outlined"
+            className="font-quicksand text-primarybg font-bold text-sm border border-primarybg"
+          >
             Update Password
           </Button>
         </Link>
