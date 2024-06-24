@@ -13,7 +13,7 @@ import {
   resetPassword,
   updateAccountDetails,
   updateCoverImage,
-  updateUserAvatar,resetPasswordForLoggedUser,
+  updateUserAvatar,resetPasswordForLoggedUser,googleAuth
 } from "../controller/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -68,15 +68,15 @@ router.route('/video-recommentions').get(verifyJWT, getRecommendations)
 
 
 router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile"] })
+  "/auth/google", googleAuth,
+  passport.authenticate("google", { scope: ['profile', 'email'] })
 );
 
 router.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect("/");
+    res.redirect("/c/:username");
   }
 );
 

@@ -1,12 +1,7 @@
 import * as React from "react";
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { Signin } from "../Pages/Signin";
 import { Signup } from "../Pages/Signup";
-import { VideoDetails } from "../Pages/VideoDetails";
 import { VideoUpload } from "../Pages/VideoUpload";
 import Root from "../Pages/Root";
 import { Subscribers } from "../Pages/Subscribers";
@@ -26,69 +21,88 @@ import { UpdateCoverImage } from "../Components/UpdateCoveImage";
 import { UpdateAvatar } from "../Components/UpdateAvatar";
 import { UpdateUserDetails } from "../Components/UpdateUserDetails";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="" element={<Root />} />
-      <Route path="search" element={<Root />} />
-      <Route path="signin" element={<Signin />} />
-      <Route path="signup" element={<Signup />} />
-      <Route path="video/:id" element={<VideoDetails />} />
-      <Route path="upload-a-video" element={<ProtectedRoutes />}>
-        <Route index element={<VideoUpload />} />
-      </Route>
-
-      <Route path="user/history" element={<ProtectedRoutes />}>
-        <Route index element={<History />} />
-      </Route>
-      <Route path="subscriber/:username" element={<ProtectedRoutes />}>
-        <Route index element={<Subscribers />} />
-      </Route>
-      <Route path="subscribed-channel/:username" element={<ProtectedRoutes />}>
-        <Route index element={<SubscribedChannelPage />} />
-      </Route>
-      <Route path="channel/:username" element={<UserProfile />} />
-      <Route path="forget-password" element={<ForgetPassword />} />
-      <Route path="forget-password/:token" element={<ForgetNewPassword />} />
-      {/* <Route path="reset-password" element={<ResetPassword />} /> */}
-
-      <Route path="reset-password" element={<ProtectedRoutes />}>
-        <Route index element={<ResetPassword />} />
-      </Route>
-      <Route path="update-cover-image" element={<ProtectedRoutes />}>
-        <Route index element={<UpdateCoverImage />} />
-      </Route>
-      <Route path="update-avatar" element={<ProtectedRoutes />}>
-        <Route index element={<UpdateAvatar />} />
-      </Route>
-
-      <Route path="update-userprofile" element={<ProtectedRoutes />}>
-        <Route index element={<UpdateUserDetails />} />
-      </Route>
-
-      <Route path="FAQ" element={<FaqPage />} />
-      <Route path="about-us" element={<AboutUs />} />
-
-      {/* will look into this */}
-      <Route path="playlists" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
-      </Route>
-      <Route path="watch-later" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
-      </Route>
-      <Route path="liked-videos" element={<ProtectedRoutes />}>
-        <Route index element={<LikedPage />} />
-      </Route>
-      <Route path="user/inbox" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
-      </Route>
-      <Route path="help" element={<ProtectedRoutes />}>
-        <Route index element={<CommingSoon />} />
-      </Route>
-
-      <Route path="*" element={<CommingSoon />} />
-    </Route>
-  )
-);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "", element: <Root /> },
+      { path: "search", element: <Root /> },
+      { path: "signin", element: <Signin /> },
+      { path: "signup", element: <Signup /> },
+      {
+        path: "upload-a-video",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <VideoUpload /> }],
+      },
+      {
+        path: "user/history",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <History /> }],
+      },
+      {
+        path: "subscriber/:username",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <Subscribers /> }],
+      },
+      {
+        path: "subscribed-channel/:username",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <SubscribedChannelPage /> }],
+      },
+      { path: "channel/:username", element: <UserProfile /> },
+      { path: "forget-password", element: <ForgetPassword /> },
+      { path: "forget-password/:token", element: <ForgetNewPassword /> },
+      {
+        path: "reset-password",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <ResetPassword /> }],
+      },
+      {
+        path: "update-cover-image",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <UpdateCoverImage /> }],
+      },
+      {
+        path: "update-avatar",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <UpdateAvatar /> }],
+      },
+      {
+        path: "update-userprofile",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <UpdateUserDetails /> }],
+      },
+      { path: "FAQ", element: <FaqPage /> },
+      { path: "about-us", element: <AboutUs /> },
+      {
+        path: "playlists",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <CommingSoon /> }],
+      },
+      {
+        path: "watch-later",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <CommingSoon /> }],
+      },
+      {
+        path: "liked-videos",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <LikedPage /> }],
+      },
+      {
+        path: "user/inbox",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <CommingSoon /> }],
+      },
+      {
+        path: "help",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <CommingSoon /> }],
+      },
+      { path: "*", element: <CommingSoon /> },
+    ],
+  },
+]);
 
 export default router;

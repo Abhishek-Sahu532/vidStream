@@ -90,7 +90,7 @@ export function Sidebar() {
             <ListItem>
               You <MdKeyboardArrowRight className="h-6 w-6   " />
             </ListItem>
-            <Link to="/channel">
+            <Link to={`channel/${user?.username}`}>
               <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />

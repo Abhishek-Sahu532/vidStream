@@ -17,6 +17,10 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import Title from "../../Title";
 
+// export const initiateGoogleAuth = () => () => {
+//   window.location.href = 'http://localhost:8000/api/v1/users/auth/google';
+// };
+
 export function Signin() {
   const {
     register,
@@ -35,7 +39,7 @@ export function Signin() {
   const handleLogin = () => {
     // Redirect the user to the Google OAuth 2.0 endpoint on the backend
     // window.location.href = 'http://localhost:5173/auth/google';
-    dispatch(googleAuthentication());
+    dispatch(initiateGoogleAuth());
   };
 
   useEffect(() => {

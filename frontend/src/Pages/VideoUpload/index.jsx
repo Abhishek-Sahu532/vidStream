@@ -19,19 +19,18 @@ import Title from "../../Title";
 import { useSelector } from "react-redux";
 
 export function VideoUpload() {
-
-const { success, loading, error} = useSelector((state)=> state.video )
-const { user} = useSelector((state)=> state.user )
-console.log( success, loading, error)
+  const { success, loading, error } = useSelector((state) => state.video);
+  const { user } = useSelector((state) => state.user);
+  console.log(success, loading, error);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [video, setVideo] = useState("");
-  const [thumbanail, setThumbnail] = useState("");
+  const [thumbanail, setThumbnail] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -56,32 +55,31 @@ const navigate = useNavigate();
     }
   };
 
-  const onSubmit =  (data) => {
+  const onSubmit = (data) => {
     const myForm = new FormData();
     myForm.set("videoFile", data.video[0]);
     myForm.set("thumbnail", data.thumbnail[0]);
     myForm.set("title", data.title);
     myForm.set("description", data.description);
 
-     dispatch(uploadAVideo(myForm));
+    dispatch(uploadAVideo(myForm));
     // navigate('/my-profile')
-    // console.log(myForm); 
+    // console.log(myForm);
   };
 
   useEffect(() => {
-if(success){
-  toast.success(success)
- navigate(`/channel/${user?.username}`)
-}
-if(error){
-  toast.error(error)
-}
-
+    if (success) {
+      toast.success(success);
+      navigate(`/channel/${user?.username}`);
+    }
+    if (error) {
+      toast.error(error);
+    }
   }, [success, toast, navigate, error]);
 
   return (
     <Card color="transparent" shadow={false} className="mt-28 px-16 b">
-    <Title title='Upload A Video' />
+      <Title title="Upload A Video" />
       <Typography variant="h4" color="blue-gray">
         Upload a Video
       </Typography>
@@ -93,12 +91,12 @@ if(error){
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-3">
-            Select a Video
+          <Typography variant="h6" className="mb-3 text-primarybg font-quicksand">
+           SELECT A VIDEO
           </Typography>
 
           <div className="flex flex-row gap-6 justify-center align-middle">
-            <div className="!border-blue-gray-200 focus:!border-gray-900 border border-solid w-[300px]">
+            <div className="border-primarybg rounded-lg focus:!border-gray-900 border border-solid w-[300px]">
               <input
                 type="file"
                 name="fileForVideo"
@@ -115,13 +113,13 @@ if(error){
                 className="relative flex min-h-[200px] items-center justify-center rounded-md  p-12 text-center"
               >
                 <div className="  !border-t-blue-gray-200 focus:!border-t-gray-900">
-                  <span className="mb-2 block text-xl font-semibold text-[#07074D]">
+                  <span className="mb-2 block text-xl font-semibold text-primarybg">
                     Drop file here
                   </span>
-                  <span className="mb-2 block text-base font-medium text-[#6B7280]">
+                  <span className="mb-2 block text-base font-medium text-primarybg">
                     Or
                   </span>
-                  <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
+                  <span className="inline-flex rounded-full border border-primarybg py-2 px-7 text-base font-medium text-[#07074D]">
                     Browse
                   </span>
                 </div>
@@ -146,12 +144,12 @@ if(error){
         </div>
 
         <div className="mt-5">
-          <Typography variant="h6" color="blue-gray" className="mb-3">
+          <Typography variant="h6"  className="mb-3 font-quicksand text-primarybg">
             Select a Thumbnail
           </Typography>
 
           <div className="flex flex-row gap-6 justify-center align-middle">
-            <div className="!border-blue-gray-200 focus:!border-gray-900 border border-solid w-[300px]">
+            <div className="!border-primarybg rounded-md focus:!border-gray-900 border border-solid w-[300px]">
               <input
                 type="file"
                 name="fileForThumbnail"
@@ -168,25 +166,28 @@ if(error){
                 className="relative flex min-h-[200px] items-center justify-center rounded-md  p-12 text-center"
               >
                 <div className="  !border-t-blue-gray-200 focus:!border-t-gray-900">
-                  <span className="mb-2 block text-xl font-semibold text-[#07074D]">
+                  <span className="mb-2 block text-xl font-semibold text-primarybg ">
                     Drop file here
                   </span>
                   <span className="mb-2 block text-base font-medium text-[#6B7280]">
                     Or
                   </span>
-                  <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
+                  <span className="inline-flex  border border-primarybg py-2 px-7 text-base font-medium text-primarybg rounded-full">
                     Browse
                   </span>
                 </div>
               </label>
             </div>
-
             <div className="ml-8 w-[50%] rounded-md">
-              <img
-                className="h-60 w-80 border object-cover rounded-sm "
-                src={thumbanail}
-                alt="Selected Thumbnail Photo"
-              />
+              {thumbanail && (
+                <div>
+                  <img
+                    className="h-60 w-80 border object-cover rounded-sm "
+                    src={thumbanail}
+                    alt="Selected Thumbnail Photo"
+                  />
+                </div>
+              )}
             </div>
           </div>
           {errors.thumbnail && (
@@ -195,7 +196,7 @@ if(error){
         </div>
 
         <div className="flex flex-row gap-6 justify-center align-middle mt-5">
-          <Typography variant="h6" color="blue-gray" className="text-center ">
+          <Typography variant="h6" className="text-center text-primarybg">
             Title
           </Typography>
           <Input
@@ -205,7 +206,7 @@ if(error){
             })}
             size="lg"
             placeholder="Title of the video"
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+            className=" !border-t-blue-gray-200 focus:!border-t-primarybg"
             labelProps={{
               className: "before:content-none after:content-none",
             }}
@@ -215,7 +216,7 @@ if(error){
           <p className="my-2 text-red-600">{errors.title.message}</p>
         )}
         <div className="mt-8">
-          <Typography variant="h6" color="blue-gray" className="mb-3">
+          <Typography variant="h6" className="mb-3 text-primarybg">
             Description
           </Typography>
 
@@ -226,7 +227,7 @@ if(error){
             })}
             size="lg"
             placeholder="Description"
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+            className=" !border-t-blue-gray-200 focus:!border-primarybg"
             labelProps={{
               className: "before:content-none after:content-none",
             }}
@@ -236,19 +237,20 @@ if(error){
           <p className="my-2 text-red-600">{errors.description.message}</p>
         )}
         <Checkbox
+          className=""
+          color="primarybg"
           {...register("checkbox", {
             required: "Please check the Terms & Conditions",
           })}
           label={
             <Typography
               variant="small"
-              color="gray"
-              className="flex items-center font-normal"
+              className="flex items-center text-primarybg font-normal"
             >
               I agree the
               <a
                 href="#"
-                className="font-medium transition-colors hover:text-gray-900"
+                className="font-medium transition-colors hover:primarybg"
               >
                 &nbsp;Terms and Conditions
               </a>
@@ -259,8 +261,12 @@ if(error){
         {errors.checkbox && (
           <p className="my-2 text-red-600">{errors.checkbox.message}</p>
         )}
-        <Button className="mt-6" fullWidth type="submit">
-         { loading ? 'Uploading...' : 'Upload'}
+        <Button
+          className="mt-6 bg-primarybg font-quicksand text-lg"
+          fullWidth
+          type="submit"
+        >
+          {loading ? "Uploading..." : "Upload"}
         </Button>
       </form>
     </Card>

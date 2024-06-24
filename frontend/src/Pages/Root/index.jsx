@@ -8,19 +8,16 @@ import { Avatar, Button, Typography } from "@material-tailwind/react";
 import { LoadingSkeleton } from "../../Components/LoadingSkeletion";
 
 const Root = () => {
-  const { loading, videos, error } = useSelector((state) => state.videos);
+  const { loading, videos } = useSelector((state) => state.videos);
 
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
-  const [videoList, setVideoList] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-  const prevPageRef = useRef(page);
   const [isFetching, setIsFetching] = useState(false);
   // console.log(videos);
 
   useEffect(() => {
     dispatch(fetchAllVideos({ page }));
-    console.log(page, hasMore, isFetching);
+    console.log(page, isFetching);
   }, [page]);
 
   const fetchMoreData = () => {

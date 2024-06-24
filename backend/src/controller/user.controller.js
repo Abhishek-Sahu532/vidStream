@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import sendEmail from "../utils/SendEmail.js";
 import crypto from "crypto";
 import passport from "passport";
-import GoogleStrategy from "passport-google-oauth20";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -607,27 +607,56 @@ export const resetPasswordForLoggedUser = asyncHandler(async (req, res) => {
 //GOOGLE AUTH
 
 export const googleAuth = asyncHandler(async (req, res) => {
+  console.log('1111111111111111111')
   passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://www.example.com/auth/google/callback",
+        callbackURL: "http://localhost:8000/users/auth/google/callback",
       },
-      function (accessToken, refreshToken, profile, cb) {
-        // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        //   return cb(err, user);
-        // });
-        console.log(profile);
+      console.log('2222222'),
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          // Find or create user in your database
+          let user = await User.findOne({ username: profile.id });
+          if (!user) {
+            user = await User.create({
+              username: profile.id,
+              fullname: profile.displayName,
+              email: profile.emails[0].value,
+            });
+          }
+          console.log('user', user)
+          return done(null, user);
+        } catch (error) {
+          return done(error, null);
+        }
       }
     )
   );
+
+
+// Serialize user for the session
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+
+// Deserialize user from the session
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
 });
 
 //get recommendations
 
 import { Video } from "../models/video.model.js";
-
 import { fetchUserData } from "../utils/fetchUserData.js";
 import {
   computeTFIDF,
