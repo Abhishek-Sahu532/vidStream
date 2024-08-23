@@ -1,47 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { Card, Typography, Input, Button } from "@material-tailwind/react";
+import React, { useEffect } from "react";
+import { Card, Typography,  Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Title from "../../Title";
 import {
-  updateUserDetailsRequest,
-  updateUserDetailsSuccess,
-  updateUserDetailsFailure,
+  updateCoverImageRequest,
+  updateCoverImageSuccess,
+  updateCoverImageFailure,
 } from "../../Slices/UserSlices";
-import axios from "axios";
 import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
-export const UpdateUserDetails = () => {
+export const UpdateCoverImage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { currentUser, error2, success2 } = useSelector((state) => state.user);
-  const [username, setUsername] = useState(currentUser.username);
-  const [fullname, setFullname] = useState(currentUser.fullname);
-  const [email, setEmail] = useState(currentUser.email);
-
+  const { error2, success2, currentUser } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-  const onSubmit = async () => {
-    // dispatch(updateUserDetails({ username, fullname, email }));
+
+  const onSubmit = async (data) => {
+    const myForm = new FormData();
+    myForm.set("coverImage", data.coverImage[0]);
     try {
-      dispatch(updateUserDetailsRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      dispatch(updateCoverImageRequest());
+      const config = { headers: { "Content-Type": "multipart/form-data" } };
       const res = await axios.patch(
-        `/api/v1/users/update-account`,
-        { username, fullname, email },
+        `/api/v1/users/cover-image`,
+        myForm,
         config
       );
-      dispatch(updateUserDetailsSuccess(res.data));
+      dispatch(updateCoverImageSuccess(res.data));
       // console.log("data from reset password", data);
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
-      dispatch(updateUserDetailsFailure(errorMessage || error.message));
+      dispatch(updateCoverImageFailure(errorMessage || error.message));
     }
   };
 
@@ -50,10 +47,11 @@ export const UpdateUserDetails = () => {
       toast.error(error2);
     }
     if (success2) {
-      toast.success("Details Changed Successfully");
+      toast.success("Cover Image Changed Successfully");
       navigate(`/channel/${currentUser?.username}`);
     }
   }, [toast, error2, success2]);
+
   return (
     <Card className="w-96 mx-auto  mt-24">
       <Title title="Reset Password" />
@@ -67,42 +65,24 @@ export const UpdateUserDetails = () => {
               <div className="flex flex-col items-start justify-start w-full gap-3.5">
                 <div className="flex flex-row justify-between items-center w-full">
                   <Typography className="text-2xl font-quicksand tracking-[-0.72px] text-primarybg font-semibold">
-                    Update Details
+                    Update CoverImage
                   </Typography>
                 </div>
                 <p className=" text-primarybg font-semibold font-quicksand ">
-                  Please fill the details to update
+                  Pleaser select an Image
                 </p>
               </div>
-              <Input
-                color="blue-gray"
-                value={username}
-                label="Username"
-                {...register("username", {
-                  required: false,
+
+              <input
+                type="file"
+                {...register("coverImage", {
+                  required: "File is required",
                 })}
-                onChange={(e) => setUsername(e.target.value)}
-              />{" "}
-              <Input
-                color="blue-gray"
-                label="Name"
-                value={fullname}
-                {...register("fullname", {
-                  required: false,
-                })}
-                onChange={(e) => setFullname(e.target.value)}
-              />{" "}
-              <Input
-                color="blue-gray"
-                label="Email"
-                value={email}
-                {...register("email", {
-                  required: false,
-                })}
-                onChange={(e) => setEmail(e.target.value)}
-              />{" "}
-              {errors.email && (
-                <p className="my-2 text-red-600">{errors.email.message}</p>
+                accept="image/*"
+                className="block w-full border peer border-secondarybg  shadow-sm rounded-lg text-sm focus:border-2 focus:border-secondarybg focus:border-t-transparent focus:!border-t-secondarybg focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 disabled:opacity-50 disabled:pointer-events-none  file:border-0 file:me-4 file:py-3 file:px-4  dark:file:bg-neutral-700 dark:file:text-neutral-400"
+              />
+              {errors.coverImage && (
+                <p className="my-2 text-red-600">{errors.coverImage.message}</p>
               )}
             </div>
           </div>
@@ -111,7 +91,8 @@ export const UpdateUserDetails = () => {
             className="w-full bg-primarybg font-quicksand text-md font-bold"
             disabled={isSubmitting ? true : false}
           >
-            {isSubmitting ? "Updating..." : "Update Details"}
+            {" "}
+            {isSubmitting ? "Updating..." : "Update Cover Image"}
           </Button>
         </form>
       </div>

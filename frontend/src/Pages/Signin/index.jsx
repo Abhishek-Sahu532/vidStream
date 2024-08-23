@@ -10,61 +10,85 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { googleAuthentication, signin } from "../../actions/UserAction";
+// import { googleAuthentication } from "../../actions/UserAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import Title from "../../Title";
+import {
+  signinUserRequest,
+  signinUserSuccess,
+  signinUserFailure,
+} from "../../Slices/UserSlices";
+import axios from "axios";
+import { extractErrorMessage } from "../../extractErrorMessage";
 
-// export const initiateGoogleAuth = () => () => {
-//   window.location.href = 'http://localhost:8000/api/v1/users/auth/google';
-// };
+
+
 
 export function Signin() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors,  isSubmitting },
   } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, isAuthenticated, success, loading, user } = useSelector(
+  const { error, success, currentUser } = useSelector(
     (state) => state.user
   );
-  // console.log(user);
-  const onSubmit = (data) => {
-    dispatch(signin(data.email, data.username, data.password));
+
+  const onSubmit = async (data) => {
+    const userData = {
+      email: data.email,
+      username: data.username,
+      password: data.password,
+    };
+    try {
+      dispatch(signinUserRequest());
+      const config = { headers: { "Content-Type": "application/json" } };
+      const res = await axios.post(`/api/v1/users/login`, userData, config);
+      // console.log('res', res.data?.data?.user)
+      dispatch(signinUserSuccess(res.data.data?.user));
+      if(success){
+        navigate(`/channel/${currentUser?.username}`);
+      }
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(signinUserFailure(errorMessage || error.message));
+    }
   };
+
   const handleLogin = () => {
-    // Redirect the user to the Google OAuth 2.0 endpoint on the backend
-    // window.location.href = 'http://localhost:5173/auth/google';
-    dispatch(initiateGoogleAuth());
+    // dispatch(googleAuthentication()).catch((error) =>
+    //   console.error("Error during Google authentication:", error)
+    // );
   };
+
+
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (success) {
       const lastVisitedUrl = sessionStorage.getItem("lastVisitedUrl");
-      if (lastVisitedUrl) {
+      // console.log(lastVisitedUrl)
+      if (lastVisitedUrl !== '/signin') {
         navigate(lastVisitedUrl);
       } else {
-        navigate(`/channel/${user?.username}`);
+        navigate(`/channel/${currentUser?.username}`);
       }
     }
-    if (success) {
-      navigate(`/channel/${user?.username}`);
-    }
-    if (error == "Error: User does not exist") {
-      toast.error("Error : Invalid credentials");
-      return;
-    }
     if (error) {
-      toast.error(error);
+      toast.error(
+        error.includes("User does not exist")
+          ? "Error: Invalid credentials"
+          : error
+      );
     }
-  }, [navigate, success, isAuthenticated, error]);
+  }, [navigate, toast, success, error]);
 
   return (
-    <Card className="w-96  mx-auto mt-36">
+    <Card className="w-96 mx-auto mt-36">
       <Title title="Sign in" />
       <CardHeader className="mb-4 grid h-28 place-items-center bg-primarybg">
         <Typography variant="h3" color="white" className="font-quicksand">
@@ -76,30 +100,25 @@ export function Signin() {
           <Input
             color="blue-gray"
             label="Email"
-            {...register("email", {
-              required: "Email is required",
-            })}
-          />{" "}
+            {...register("email", { required: "Email is required" })}
+          />
           {errors.email && (
             <p className="my-2 text-red-600">{errors.email.message}</p>
           )}
           <Input
             color="blue-gray"
             label="Username"
-            {...register("username", {
-              required: "Username is required",
-            })}
+            {...register("username", { required: "Username is required" })}
             size="lg"
           />
           {errors.username && (
             <p className="my-2 text-red-600">{errors.username.message}</p>
           )}
           <Input
+            type="password"
             color="blue-gray"
             label="Password"
-            {...register("password", {
-              required: "Password is required",
-            })}
+            {...register("password", { required: "Password is required" })}
             size="lg"
           />
           <Typography
@@ -118,7 +137,7 @@ export function Signin() {
                 clipRule="evenodd"
               />
             </svg>
-            Use at least 8 characters, one uppercase, one lowercase and one
+            Use at least 8 characters, one uppercase, one lowercase, and one
             number.
           </Typography>
           {errors.password && (
@@ -133,7 +152,7 @@ export function Signin() {
             </div>
             <div className="-ml-2.5 text-primarybg ">
               <Link to="/forget-password">
-                <p>Forget Password ?</p>
+                <p>Forget Password?</p>
               </Link>
             </div>
           </div>
@@ -143,18 +162,20 @@ export function Signin() {
             className="bg-primarybg font-quicksand text-xl"
             type="submit"
             fullWidth
+            disabled={isSubmitting ? true : false}
           >
-            Sign In
+            {isSubmitting ? "Signing In..." : "Sign In"}
           </Button>
           <Button
             fullWidth
             size="lg"
             className="flex items-center gap-8 mt-2 bg-primarybg font-quicksand text-md"
             onClick={handleLogin}
+            disabled={isSubmitting ? true : false}
           >
             <img
               src="https://docs.material-tailwind.com/icons/google.svg"
-              alt="metamask"
+              alt="Google"
               className="h-6 w-6"
             />
             Continue with Google

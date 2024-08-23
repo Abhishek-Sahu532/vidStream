@@ -15,8 +15,16 @@ import { Link } from "react-router-dom";
 import { ShareComponent } from "../ShareComponent";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { addAVideoLikeDislike } from "../../actions/Like.Action";
-import { ADD_VIDEO_LIKE_DISLIKE_RESET } from "../../constaints/LikeConsttaints";
+// import { addAVideoLikeDislike } from "../../actions/Like.Action";
+// import { ADD_VIDEO_LIKE_DISLIKE_RESET } from "../../constaints/LikeConsttaints";
+import {
+  addVideoLikeDislikeRequest,
+  addVideoLikeDislikeSuccess,
+  addVideoLikeDislikeFailure,
+  addVideoLikeDislikeReset,
+} from "../../Slices/LikeSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 function Icon({ id, open }) {
   return (
@@ -38,7 +46,6 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({ video }) => {
-  // console.log(video)
   const dateString = video?.video?.createdAt;
   const date = new Date(dateString);
   const dispatch = useDispatch();
@@ -47,39 +54,61 @@ export const VideoPlayer = ({ video }) => {
     month: "short",
     day: "2-digit",
   });
+  const [likesCount, setLikesCount] = useState(video?.likesCount);
 
-  const [likesCount, setLikesCount] = useState(video.likesCount);
-  const [dislikesCount, setDislikesCount] = useState(video.dislikesCount);
-  const [userLiked, setUserLiked] = useState(video.userLiked);
-  const [userDisliked, setUserDisliked] = useState(video.userDisliked);
+  const [dislikesCount, setDislikesCount] = useState(video?.dislikesCount);
+  const [userLiked, setUserLiked] = useState(video?.userLiked);
+  const [userDisliked, setUserDisliked] = useState(video?.userDisliked);
 
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.user);
-  const { message } = useSelector((state) => state.addVideoLikeDislike);
+  const { success } = useSelector((state) => state.user);
+  const { likes } = useSelector((state) => state.likes);
+  // const { message } = useSelector((state) => state.addVideoLikeDislike);
 
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
-
   const [shareComOpen, setShareComOpen] = useState(false);
   const handleShareComOpen = () => setShareComOpen(true);
   const handleShareComClose = () => setShareComOpen(false);
 
   const handleSubscriber = () => {
-    if (isAuthenticated) {
+    if (success) {
       navigate(`/channel/${video?.video?.uploader?.username}`);
     } else {
       toast.error("Please Login");
       navigate("/signin");
     }
   };
+
+//HANDLE LIKES AND DISLIKES
+
+  const addAVideoLikeDislike = async (videoId, action) => {
+    // console.log('videoId', videoId, action)
+    try {
+      dispatch(addVideoLikeDislikeRequest());
+      const config = { headers: { "Content-Type": "application/json" } };
+      const res = await axios.post(
+        `/api/v1/like/add-a-likeDislike/${videoId}`,
+        { action },
+        config
+      );
+      // console.log(res.data);
+      dispatch(addVideoLikeDislikeSuccess(res.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      // console.log(errorMessage);
+      dispatch(addVideoLikeDislikeFailure(errorMessage || error.message));
+    }
+  };
+
   const handleLikeBtn = () => {
-    if (!isAuthenticated) {
+    if (!success) {
       toast.error("Please Login");
-      return
-    } 
+      return;
+    }
     if (!userLiked) {
       setLikesCount((prev) => prev + 1);
-      if (userDisliked) {
+      if(userDisliked) {
         setDislikesCount((prev) => prev - 1);
         setUserDisliked(false);
       }
@@ -88,14 +117,15 @@ export const VideoPlayer = ({ video }) => {
       setLikesCount((prev) => prev - 1);
       setUserLiked(false);
     }
-    dispatch(addAVideoLikeDislike(video.video._id, "like"));
+    // console.log(video?.video?._id);
+    addAVideoLikeDislike(video?.video?._id, "like");
   };
 
   const handleDislikeBtn = () => {
-    if (!isAuthenticated) {
+    if (!success) {
       toast.error("Please Login");
-      return
-    } 
+      return;
+    }
     if (!userDisliked) {
       setDislikesCount((prev) => prev + 1);
       if (userLiked) {
@@ -107,16 +137,19 @@ export const VideoPlayer = ({ video }) => {
       setDislikesCount((prev) => prev - 1);
       setUserDisliked(false);
     }
-    dispatch(addAVideoLikeDislike(video.video._id, "dislike"));
+
+    addAVideoLikeDislike(video?.video?._id, "dislike");
   };
 
+  //WILL LOOK INTO IT
   useEffect(() => {
-    if (message?.success) {
-      dispatch({ type: ADD_VIDEO_LIKE_DISLIKE_RESET });
+    if (likes?.success) {
+      dispatch(addVideoLikeDislikeReset());
     }
-  }, [message, dispatch]);
+  }, [success, dispatch]);
 
   return (
+    // <></>
     <div>
       <Title title={video?.video?.title} />
       <div>
@@ -170,7 +203,7 @@ export const VideoPlayer = ({ video }) => {
                   {likesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={userLiked ? "black" : "none"}
+                    fill={video?.userLiked ? "black" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -192,7 +225,7 @@ export const VideoPlayer = ({ video }) => {
                   {dislikesCount}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={userDisliked ? "black" : "none"}
+                    fill={video?.userDisliked ? "black" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -249,7 +282,7 @@ export const VideoPlayer = ({ video }) => {
         </div>
 
         <div className="mb-6">
-          {video.video?.description == undefined ? (
+          {video?.video?.description == undefined ? (
             ""
           ) : (
             <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>

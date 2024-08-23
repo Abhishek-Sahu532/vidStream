@@ -5,35 +5,57 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Title from "../../Title";
-import { resetPasswordForLoggedUser } from "../../actions/UserAction";
+import {
+  resetPasswordForLoggedInUserRequest,
+  resetPasswordForLoggedInUserSuccess,
+  resetPasswordForLoggedInUserFailure,
+} from "../../Slices/UserSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {error, success, } = useSelector((state)=> state.forgetPassword)
-  const { user } = useSelector((state)=> state.user)
+  const { currentUser, error2, success2 } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-  const onSubmit = (data) => {
+  console.log(error2);
+  const onSubmit = async (data) => {
     const myForm = new FormData();
     myForm.set("oldPassword", data.oldPassword);
     myForm.set("newPassword", data.newPassword);
     myForm.set("confirmNewPassword", data.confirmNewPassword);
-    dispatch(resetPasswordForLoggedUser(myForm))
+
+    try {
+      dispatch(resetPasswordForLoggedInUserRequest());
+      const config = { headers: { "Content-Type": "application/json" } };
+      const res = await axios.put(
+        `/api/v1/users/reset-password`,
+        myForm,
+        config
+      );
+      dispatch(resetPasswordForLoggedInUserSuccess(res.data));
+      console.log(res.data);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(
+        resetPasswordForLoggedInUserFailure(errorMessage || error.message)
+      );
+    }
   };
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (error2) {
+      toast.error(error2);
     }
-    if (success) {
-      toast.success('Password Changed Successfully');
-      navigate(`/channel/${user?.username}`)
+    if (success2) {
+      toast.success("Password Changed Successfully");
+      navigate(`/channel/${currentUser?.username}`);
     }
-  }, [toast, error, success]);
+  }, [toast, error2, success2]);
 
   return (
     <Card className="w-96 mx-auto  mt-24">
@@ -103,8 +125,12 @@ export const ResetPassword = () => {
               )}
             </div>
           </div>
-          <Button type="submit" className="w-full bg-primarybg font-quicksand text-md font-bold">
-            Update Password
+          <Button
+            type="submit"
+            className="w-full bg-primarybg font-quicksand text-md font-bold"
+            disabled={isSubmitting ? true : false}
+          >
+            {isSubmitting ? "Updating..." : "Update Password"}
           </Button>
         </form>
       </div>

@@ -1,23 +1,30 @@
-import {
-  Textarea,
-  IconButton,
-  Avatar,
-} from "@material-tailwind/react";
+import { Textarea, IconButton, Avatar } from "@material-tailwind/react";
 import "emoji-picker-element";
 import { useForm } from "react-hook-form";
-import { createAComment, getVideoComments } from "../../actions/Comment.Action";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import {
+  newCommentRequest,
+  newCommentSuccess,
+  newCommentFailure,
+  getCommentsRequest,
+  getCommentsSuccess,
+  getCommentsFailure,
+} from "../../Slices/CommentSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
+import { Loader } from "../Loader";
 
 export const CommentSection = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const { comments, success } = useSelector((state) => state.comments);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { comments, loading } = useSelector((state) => state.comments);
+  const { success } = useSelector((state) => state.user);
 
+  // console.log(commentSuccess)
   const {
     register,
     handleSubmit,
@@ -25,25 +32,49 @@ export const CommentSection = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  //SUBMIT THE NEW COMMENTS //creating a new comment
+  const onSubmit = async (data) => {
     const myForm = new FormData();
     myForm.append("content", data.content);
-
-    if (!isAuthenticated) {
+    if (!success) {
       toast.error("Login to comment");
       return;
     }
+    try {
+      dispatch(newCommentRequest());
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.post(
+        `/api/v1/comment/create-a-comment/${id}`,
+        myForm,
+        config
+      );
+      dispatch(newCommentSuccess(res.data));
+      reset();
+      getVideoComments(id);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(newCommentFailure(errorMessage || error.message));
+    }
+  };
 
-    dispatch(createAComment(id, myForm)).then(() => {
-      if (success) {
-        reset();
-        dispatch(getVideoComments(id));
-      }
-    });
+  //GET VIDEO COMMENTS
+  const getVideoComments = async (id) => {
+    try {
+      dispatch(getCommentsRequest());
+      const res = await axios.get(`/api/v1/comment/getcomments/${id}`);
+      dispatch(getCommentsSuccess(res.data.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(getCommentsFailure(errorMessage || error.message));
+    }
   };
 
   useEffect(() => {
-    dispatch(getVideoComments(id));
+    getVideoComments(id);
   }, [dispatch, id]);
 
   return (
@@ -118,27 +149,38 @@ export const CommentSection = () => {
         )}
       </div>
 
-      {success && comments && comments.docs.length > 0 ? (
-        <div className="flex flex-col space-y-4 mt-4">
-          {comments.docs.map((com) => (
-            <div key={com._id} className="bg-white p-4 rounded-lg shadow-md">
-              <div className="flex gap-4">
-                <Avatar src={com.owner.avatar} alt="avatar" />
-                <div>
-                  <h3 className="text-lg font-bold">{com.owner.fullname}</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    Posted on April 17, 2023
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-700">{com.content}</p>
-            </div>
-          ))}
-        </div>
+      {loading ? (
+        <Loader />
       ) : (
-        <h1 className="text-blue-gray-700">
-          There is nothing to show, be the first to comment
-        </h1>
+        <>
+          {comments && comments?.docs?.length < 0 ? (
+            <h1 className="text-blue-gray-700">
+              There is nothing to show, be the first to comment
+            </h1>
+          ) : (
+            <div className="flex flex-col space-y-4 mt-4">
+              {comments?.docs?.map((com) => (
+                <div
+                  key={com?._id}
+                  className="bg-white p-4 rounded-lg shadow-md"
+                >
+                  <div className="flex gap-4">
+                    <Avatar src={com?.owner?.avatar} alt="avatar" />
+                    <div>
+                      <h3 className="text-lg font-bold">
+                        {com?.owner?.fullname}
+                      </h3>
+                      <p className="text-gray-700 text-sm mb-2">
+                        Posted on April 17, 2023
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700">{com?.content}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </>
   );

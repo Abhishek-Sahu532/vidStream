@@ -1,52 +1,65 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../actions/UserAction";
 import { useEffect } from "react";
 import Title from "../../Title";
 import { toast } from "react-toastify";
-
-
-
+import {
+  registerUserRequest,
+  registerUserSuccess,
+  registerUserFailure,
+} from "../../Slices/UserSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { error, loading, isAuthenticated, success } = useSelector(
-    (state) => state.user
-  );
-
+  const { error, success } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = (data) => {
+  //handling the submission of the form
+  const onSubmit = async (data) => {
     const myForm = new FormData();
     myForm.set("fullname", data.fullname);
     myForm.set("email", data.email);
     myForm.set("username", data.username);
     myForm.set("password", data.password);
-    myForm.set("avatar", data.avatar[0]);
-    myForm.set("coverImage", data.coverImage[0]);
-    dispatch(registerUser(myForm));
+
+    // Assuming `data.avatar` and `data.coverImage` are FileLists or arrays
+    if (data.avatar && data.avatar[0]) {
+      myForm.set("avatar", data.avatar[0]);
+    }
+    if (data.coverImage && data.coverImage[0]) {
+      myForm.set("coverImage", data.coverImage[0]);
+    }
+
+    try {
+      dispatch(registerUserRequest());
+      const config = { headers: { "Content-Type": "multipart/form-data" } };
+      const res = await axios.post(`/api/v1/users/register`, myForm, config);
+      dispatch(registerUserSuccess(res.data));
+      navigate("/signin");
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(registerUserFailure(errorMessage || error.message));
+    }
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/signin");
-    }
     if (error) {
       toast.error(error);
     }
     if (success) {
       toast.success("User Successfully Singed In");
+      console.log(1234);
+      navigate("/signin");
     }
-  }, [success, navigate, isAuthenticated, error]);
+  }, [success, navigate, error, toast, dispatch]);
 
   return (
     <div className="mt-28 flex flex-col text-primarybg  bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">

@@ -4,19 +4,19 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 const app = express();
 import path from "path";
-import passport from "passport";
+// import passport from "passport";
 import session from "express-session";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import "./middlewares/google.auth.middleware.js";
+// import "./middlewares/google.auth.middleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -32,12 +32,30 @@ app.use(
     secret: process.env.ACCESS_TOKEN_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // use secure cookies in production
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
   })
 );
 
 // Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
+// // Serialize user for the session
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
+
+// // Deserialize user from the session
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     const user = await User.findById(id);
+//     done(null, user);
+//   } catch (error) {
+//     done(error, null);
+//   }
+// });
 
 //routes imports
 import userRouter from "./routes/user.routes.js";

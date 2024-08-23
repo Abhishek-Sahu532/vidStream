@@ -13,22 +13,21 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-
-import { MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowRight, MdWatchLater, MdPlaylistAddCheckCircle } from "react-icons/md";
 import { RiChatHistoryFill } from "react-icons/ri";
-import { MdPlaylistAddCheckCircle } from "react-icons/md";
-import { MdWatchLater } from "react-icons/md";
 import { BiSolidLike } from "react-icons/bi";
 import { IoMdHome } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 
 export function Sidebar() {
-  // const [open, setOpen] = React.useState(0);
+  const [open, setOpen] = React.useState(0);
   const [drawerOpen, setdrawerOpen] = React.useState(false);
   const openDrawer = () => setdrawerOpen(true);
   const closeDrawer = () => setdrawerOpen(false);
-  const { user } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
+// console.log(currentUser.data)
   return (
     <>
       {" "}
@@ -66,7 +65,7 @@ export function Sidebar() {
                 <Typography className="mr-auto font-quicksand text-md">Home</Typography>
               </ListItem>
             </Link>
-            <Link to={`/subscriber/${user?.username}`}>
+            <Link to={`/subscriber/${currentUser?.username}`}>
               <ListItem className="p-0" selected={open === 2}>
                 <ListItemPrefix className="border-b-0 p-3">
                   <ShoppingBagIcon className="h-5 w-5" />
@@ -76,7 +75,7 @@ export function Sidebar() {
                 </Typography>
               </ListItem>
             </Link>
-            <Link to={`/subscribed-channel/${user?.username}`}>
+            <Link to={`/subscribed-channel/${currentUser?.username}`}>
               <ListItem className="p-0" selected={open === 2}>
                 <ListItemPrefix className="border-b-0 p-3">
                   <ShoppingBagIcon className="h-5 w-5" />
@@ -90,7 +89,7 @@ export function Sidebar() {
             <ListItem>
               You <MdKeyboardArrowRight className="h-6 w-6   " />
             </ListItem>
-            <Link to={`channel/${user?.username}`}>
+            <Link to={`channel/${currentUser?.username}`}>
               <ListItem className="font-quicksand text-md">
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />

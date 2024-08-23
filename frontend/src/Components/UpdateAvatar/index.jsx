@@ -1,38 +1,57 @@
 import React, { useEffect } from "react";
-import { Card, Typography, Input, Button } from "@material-tailwind/react";
+import { Card, Typography, Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Title from "../../Title";
-import { updateAvatarImage } from "../../actions/UserAction";
+import {
+  updateAvtarRequest,
+  updateAvtarSuccess,
+  updateAvtarFailure,
+} from "../../Slices/UserSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
+
 
 export const UpdateAvatar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user } = useSelector((state) => state.user);
-  const { error, success, loading } = useSelector((state) => state.updateAvatar);
+  const { error2, success2, currentUser } = useSelector((state) => state.user);
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const myForm = new FormData();
     myForm.set("avatar", data.avatar[0]);
-    dispatch(updateAvatarImage(myForm));
+    try {
+      dispatch(updateAvtarRequest());
+      const config = { headers: { "Content-Type": "multipart/form-data" } };
+      const res = await axios.patch(
+        `/api/v1/users/update-avatar`,
+        myForm,
+        config
+      );
+      dispatch(updateAvtarSuccess(res.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(updateAvtarFailure(errorMessage || error.message));
+    }
   };
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (error2) {
+      toast.error(error2);
     }
-    if (success) {
+    if (success2) {
       toast.success("Avatar Changed Successfully");
-      navigate(`/channel/${user?.username}`);
+      navigate(`/channel/${currentUser?.username}`);
     }
-  }, [success, error]);
+  }, [success2, error2]);
 
   return (
     <Card className="w-96 mx-auto  mt-24">
@@ -71,8 +90,10 @@ export const UpdateAvatar = () => {
           <Button
             type="submit"
             className="w-full bg-primarybg font-quicksand text-md font-bold"
-          > {loading ? 'Updating...' : ' Update Avatar Image'}
-           
+            disabled={isSubmitting ? true : false}
+          >
+            {" "}
+            {isSubmitting ? "Updating..." : " Update Avatar Image"}
           </Button>
         </form>
       </div>

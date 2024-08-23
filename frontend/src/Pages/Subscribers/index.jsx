@@ -1,31 +1,51 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserSubscriber } from "../../actions/SubscriberAction";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SubscriberCard } from "../../Components/SubscriberCard";
 import Title from "../../Title";
 import "@splidejs/react-splide/css";
 import { Loader } from "../../Components/Loader";
-
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { toast } from "react-toastify";
+import {
+  userSubscriptionRequest,
+  userSubscriptionSuccess,
+  userSubscriptionFailure,
+} from "../../Slices/SubscriberSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export const Subscribers = () => {
-  const { loading, error, subscriber } = useSelector(
-    (state) => state.userSubscriber
+  const { loading, error, subscribers } = useSelector(
+    (state) => state.subscribers
   );
-  const { user, isAuthenticated } = useSelector((state) => state.user);
-  const { username } = useParams();
+  const { success } = useSelector((state) => state.user);
 
+  const { username } = useParams();
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(getUserSubscriber(username));
+  const navigate = useNavigate();
+
+  const getUserSubscriber = async () => {
+    try {
+      dispatch(userSubscriptionRequest());
+      const config = { headers: { "Content-Type": "application/json" } };
+      const res = await axios.get(`/api/v1/subscriber/${username}`, config);
+      dispatch(userSubscriptionSuccess(res.data?.data));
+      // console.log("res", res.data.data);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(userSubscriptionFailure(errorMessage || error.message));
     }
+  };
+  useEffect(() => {
+    if (!success) {
+      navigate("/signin");
+    }
+    getUserSubscriber();
     if (error) {
       toast.error(error);
     }
-  }, [isAuthenticated, user, dispatch]);
+  }, [dispatch]);
   return (
     <div className="p-10 mt-20 ">
       <Title title="Subscriber" />
@@ -34,35 +54,35 @@ export const Subscribers = () => {
         <Loader />
       ) : (
         <>
-          {subscriber && subscriber.subscribers.length < 0 ? (
+          {subscribers && subscribers?.subscribers?.length < 0 ? (
             <p className="mt-4 md:mt-0 text-center">Please subscriber any</p>
           ) : (
             <section tag="section">
               <p className="text-center text-xl text-blue-gray-600">
                 {" "}
-                You have {subscriber?.totalSubscribers} subscribers{" "}
+                You have {subscribers?.totalSubscribers} subscribers{" "}
               </p>
               <Splide
-                 options={{
-              rewind: true,
-              lazyLoad: "nearby",
-              gap: "2rem",
-              breakpoints: {
-                640: {
-                  perPage: 2,
-                  gap: "7rem",
-                },
-                480: {
-                  perPage: 1,
-                  gap: ".7rem",
-                },
-              },
-            }}
+                options={{
+                  rewind: true,
+                  lazyLoad: "nearby",
+                  gap: "2rem",
+                  breakpoints: {
+                    640: {
+                      perPage: 2,
+                      gap: "7rem",
+                    },
+                    480: {
+                      perPage: 1,
+                      gap: ".7rem",
+                    },
+                  },
+                }}
                 class="splide"
                 data-splide='{"perPage":3}'
               >
-                {subscriber &&
-                  subscriber.subscribers.map((sub, index) => (
+                {subscribers &&
+                  subscribers?.subscribers?.map((sub, index) => (
                     <SplideSlide key={index}>
                       <SubscriberCard sub={sub} />
                     </SplideSlide>

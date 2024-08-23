@@ -1,48 +1,104 @@
 import React, { useState } from "react";
-import { UserProfileTabs } from "../../Components/UserProfileTabs";
+import {
+  UserProfileTabs,
+  Loader,
+  UpdateProfileDialogBox,
+} from "../../Components";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getChannelProfile } from "../../actions/UserAction";
-import { Loader } from "../../Components/Loader";
-import {
-  createASubscriber,
-  deleteASubscriber,
-} from "../../actions/SubscriberAction";
-import { Button } from "@material-tailwind/react";
-import { toast } from "react-toastify";
-import { CREATE_SUBSCRIBER_RESET } from "../../constaints/SubscriberConstaints";
 import Title from "../../Title";
-import { UpdateProfileDialogBox } from "../../Components/UpdateProfileDialogBox";
+import { toast } from "react-toastify";
+import { Button } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import bannerImage from '../../assets/Images/channels_banner.jpg'
-
+import bannerImage from "../../assets/Images/channels_banner.jpg";
+import {
+  getUserChannelRequest,
+  getUserChannelrSucess,
+  getUserChannelFailure,
+} from "../../Slices/ChannelSlices";
+import {
+  createSubscriberRequest,
+  createSubscriberSuccess,
+  createSubscriberFailure,
+  deleteSubscriberRequest,
+  deleteSubscriberSuccess,
+  deleteSubscriberFailure,
+  userSubscriberReset,
+} from "../../Slices/SubscriberSlices";
+import axios from "axios";
+import { extractErrorMessage } from "../../extractErrorMessage";
 
 export const UserProfile = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
-  const { loading, error, data } = useSelector((state) => state.userProfile);
-  const { isAuthenticated, user } = useSelector((state) => state.user);
-  const { message, error: subscriberError } = useSelector(
-    (state) => state.createSubscriber
-  );
-
+  const { loading, error, channel } = useSelector((state) => state.channel);
+  // console.log(channel);
+  const { success, currentUser } = useSelector((state) => state.user);
+  const {
+    message,
+    success: subscriberSuccess,
+    error: subscriberError,
+  } = useSelector((state) => state.subscribers);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleASubscriberButton = () => {
-    if (!isAuthenticated) {
+  //getting the channel information
+  const getChannelProfile = async () => {
+    try {
+      dispatch(getUserChannelRequest());
+      const res = await axios.get(`/api/v1/users/c/${username}`);
+      dispatch(getUserChannelrSucess(res?.data?.data));
+    } catch (error) {
+      let htmlError = extractErrorMessage(error.response?.data);
+      dispatch(getUserChannelFailure(htmlError || error.message));
+    }
+  };
+  useEffect(() => {
+    getChannelProfile();
+  }, [dispatch]);
+
+  //HANDLE SUBSCRIBER
+  const handleASubscriberButton = async () => {
+    if (!success) {
       toast.error("Please Login");
       return;
     }
-    if (data?.isSubscribedTo) {
+    console.log(channel?.isSubscribedTo);
+    if (channel?.isSubscribedTo) {
       //if subscbribed
-      dispatch(deleteASubscriber(data._id));
+      try {
+        dispatch(deleteSubscriberRequest());
+        const config = { headers: { "Content-Type": "application/json" } };
+        await axios.delete(
+          `/api/v1/subscriber/delete-a-subscriber/${channel?._id}`,
+          config
+        );
+        dispatch(deleteSubscriberSuccess());
+      } catch (error) {
+        let htmlError = extractErrorMessage(error.response?.data);
+        dispatch(deleteSubscriberFailure(htmlError || error.message));
+      }
+
+      // dispatch(deleteASubscriber(data._id));
     } else {
-      dispatch(createASubscriber(data._id));
+      try {
+        dispatch(createSubscriberRequest());
+        const config = { headers: { "Content-Type": "application/json" } };
+        await axios.post(
+          `/api/v1/subscriber/create-a-subscriber/${channel?._id}`,
+          config
+        );
+        dispatch(createSubscriberSuccess());
+      } catch (error) {
+        let htmlError = extractErrorMessage(error.response?.data);
+        dispatch(createSubscriberFailure(htmlError || error.message));
+      }
     }
+    getChannelProfile(); // to update the values
   };
+
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -52,28 +108,27 @@ export const UserProfile = () => {
       toast.error(subscriberError);
       return;
     }
-    if (message?.success) {
-      toast.success(message?.message);
-      dispatch({ type: CREATE_SUBSCRIBER_RESET });
+    if (subscriberSuccess) {
+      // toast.success(message?.message);
+      dispatch(userSubscriberReset());
     }
-   
-    dispatch(getChannelProfile(username));
-  }, [dispatch, toast, error, username, toast, message]);
+  }, [toast, error, username, toast, message]);
   return (
     <>
       {loading && loading ? (
         <Loader />
       ) : (
         <section className="w-full overflow-hidden  mt-20">
-          <Title title={`${data?.fullname}`} />
+          <Title title={`${channel?.fullname}`} />
           {/* COVER IMAGE */}
           <div className="bg-cover ">
             <img
               src={
-                data && data.coverImage
-                  ? data.coverImage
+                channel && channel?.coverImage
+                  ? channel?.coverImage
                   : bannerImage
-              } className="w-full h-56"
+              }
+              className="w-full h-56"
               alt="banner"
             />
           </div>
@@ -84,23 +139,25 @@ export const UserProfile = () => {
                 <div className="flex items-center">
                   <img
                     className="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
-                    src={data?.avatar}
+                    src={channel?.avatar}
                     alt="channel_logo"
                   />
                   <div className="ml-4 sm:ml-6">
                     <div className="text-xl sm:text-2xl  flex items-center">
-                      <span className="mr-2 text-primarybg ">{data?.fullname}</span>
+                      <span className="mr-2 text-primarybg ">
+                        {channel?.fullname}
+                      </span>
                       <span className="w-3 h-3 text-white inline-block text-center rounded-full bg-grey-dark text-2xs">
                         &#10003;
                       </span>
                     </div>
                     <p className="mt-2 text-xs sm:text-sm text-primarybg font-bold ">
-                      {data?.subscribersCount} subscribers
+                      {channel?.subscribersCount} subscribers
                     </p>
                   </div>
                 </div>
 
-                {isAuthenticated && username == user.username ? (
+                {success && username == currentUser?.username ? (
                   <div className="text-grey-dark flex flex-col sm:flex-row md:flex-row items-center mt-4 sm:mt-0">
                     <Button
                       className="rounded-md appearance-none px-3 py-2 bg-primarybg uppercase text-white text-xs sm:text-sm font-semibold mb-2 sm:mb-0 sm:mr-4"
@@ -125,7 +182,7 @@ export const UserProfile = () => {
                       onClick={handleASubscriberButton}
                       className="appearance-none px-3 py-2 bg-grey-light uppercase text-grey-darker text-xs sm:text-sm mr-4"
                     >
-                      {data && data.isSubscribedTo
+                      {channel && channel?.isSubscribedTo
                         ? "Unsubscribe"
                         : "Subscribe"}
                     </button>
@@ -137,7 +194,7 @@ export const UserProfile = () => {
               </div>
 
               <div className="w-full sm:w-[70%] mt-4 sm:mt-0">
-                <UserProfileTabs userVideos={data?.videos} />
+                <UserProfileTabs userVideos={channel?.videos} />
               </div>
             </div>
           </div>

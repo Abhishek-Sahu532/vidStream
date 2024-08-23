@@ -1,28 +1,42 @@
 import React, { useEffect } from "react";
-import { HistoryCard } from "../../Components/HistoryCard";
+import { HistoryCard } from "../../Components";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getUserWatchhistory } from "../../actions/UserAction";
 import Title from "../../Title.jsx";
 import "@splidejs/react-splide/css";
-
 import { Splide, SplideSlide } from "@splidejs/react-splide";
+import {
+  userHistoryRequest,
+  userHistorySuccess,
+  userHistoryFailure,
+} from "../../Slices/UserSlices.js";
+import axios from "axios";
+import { extractErrorMessage } from "../../extractErrorMessage.js";
 
 export const History = () => {
-  const dispatch = useDispatch();
-  const { error, history, loading } = useSelector((state) => state.userHistory);
-  const { isAuthenticated } = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/signin");
+  const dispatch = useDispatch()
+  const { history, success,  error , loading} = useSelector((state) => state.user);
+
+
+  const getUserWatchhistory = async () => {
+    try {
+      dispatch(userHistoryRequest());    
+      const res = await axios.get(`/api/v1/users/history`);
+        dispatch(userHistorySuccess(res.data?.data));
+      // console.log("res", res.data);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(userHistoryFailure(errorMessage || error.message));
+      console.log('error', errorMessage)
     }
+  };
+
+  useEffect(() => {
     if (error) {
       toast.error(error);
     }
-    dispatch(getUserWatchhistory());
-  }, [dispatch, getUserWatchhistory, navigate, isAuthenticated, error, toast]);
+    getUserWatchhistory();
+  }, [dispatch,  error, toast]);
   return (
     <div className="p-10 mt-20 ">
       <Title title="History" />
@@ -48,11 +62,11 @@ export const History = () => {
                 },
               },
             }}
-            class="splide"
+            className="splide"
             data-splide='{"perPage":3}'
           >
             {history &&
-              history.map((his, index) => (
+              history?.map((his, index) => (
                 <SplideSlide key={index}>
                   <HistoryCard his={his} />
                 </SplideSlide>

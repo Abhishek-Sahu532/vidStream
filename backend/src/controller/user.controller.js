@@ -7,8 +7,20 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import sendEmail from "../utils/SendEmail.js";
 import crypto from "crypto";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Video } from "../models/video.model.js";
+import { fetchUserData } from "../utils/fetchUserData.js";
+import {
+  computeTFIDF,
+  getSimilarVideos,
+} from "../utils/contentBasedFiltering.js";
+import {
+  getSimilarUsers,
+  getRecommendedVideosFromUsers,
+} from "../utils/collaborativeFiltering.js";
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
+
+// import passport from "passport";
+// import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -92,15 +104,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 //login user -- TESTED
 export const loginUser = asyncHandler(async (req, res) => {
-  //todos
-  //getting details from user - email and password
-  //check if the user exists in the database or not
-  //if the user is registered in the app, compare the hashed password which stored in the database and receveind from the user
-  //if any value is not matched with the stored value- throw an error
-  // if the given values is correct- generate the accesstoken and refreshToken and share with the client in cookies
-
   const { username, email, password } = req.body;
-
+  // console.log(username, email, password);
   if (!username && !email) {
     throw new ApiError(400, "username or password is required");
   }
@@ -117,9 +122,8 @@ export const loginUser = asyncHandler(async (req, res) => {
   );
 
   const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password -refreshToken -watchHistory"
   );
-
   //sending details in cookies
   const options = {
     httpOnly: true,
@@ -232,7 +236,6 @@ export const changeCurrentPassword = asyncHandler(async (req, res) => {
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
-  // console.log(req.user)
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "Current user fetched successfulyy"));
@@ -521,6 +524,8 @@ export const forgetPassword = asyncHandler(async (req, res) => {
 
   //get resetpassword token
   const resetToken = await user.getResetPasswordToken();
+  console.log("resetToken", resetToken);
+
   await user.save({ validateBeforeSave: false });
   // const resetPasswordLink = `${process.env.FRONTEND_URL}/forget-password/${resetToken}`; //TEMP
 
@@ -560,6 +565,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: resetPasswordTokenByUser,
   });
+  console.log("user", user);
   if (!user) {
     throw new ApiError(404, "Token is expired");
   }
@@ -601,72 +607,6 @@ export const resetPasswordForLoggedUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, `Password changed successfully.`));
 });
-
-//update coverimage
-
-//GOOGLE AUTH
-
-export const googleAuth = asyncHandler(async (req, res) => {
-  console.log('1111111111111111111')
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:8000/users/auth/google/callback",
-      },
-      console.log('2222222'),
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          // Find or create user in your database
-          let user = await User.findOne({ username: profile.id });
-          if (!user) {
-            user = await User.create({
-              username: profile.id,
-              fullname: profile.displayName,
-              email: profile.emails[0].value,
-            });
-          }
-          console.log('user', user)
-          return done(null, user);
-        } catch (error) {
-          return done(error, null);
-        }
-      }
-    )
-  );
-
-
-// Serialize user for the session
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-
-// Deserialize user from the session
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error, null);
-  }
-});
-});
-
-//get recommendations
-
-import { Video } from "../models/video.model.js";
-import { fetchUserData } from "../utils/fetchUserData.js";
-import {
-  computeTFIDF,
-  getSimilarVideos,
-} from "../utils/contentBasedFiltering.js";
-import {
-  getSimilarUsers,
-  getRecommendedVideosFromUsers,
-} from "../utils/collaborativeFiltering.js";
-import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
 export const getRecommendations = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -720,3 +660,53 @@ export const getRecommendations = asyncHandler(async (req, res) => {
       )
     );
 });
+
+//GOOGLE AUTH
+// Configure the Google strategy for use by Passport.
+
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       callbackURL: "http://localhost:5173/users/auth/google/callback",
+//     },
+//     async (accessToken, refreshToken, profile, done) => {
+//       try {
+//         // Find or create user in your database
+//         let user = await User.findOne({ username: profile.id });
+//         if (!user) {
+//           user = await User.create({
+//             username: profile.id,
+//             fullname: profile.displayName,
+//             email: profile.emails[0].value,
+//           });
+//         }
+//         // console.log("created user,", user);
+//         // console.log("user1", user);
+//         return done(null, user);
+//       } catch (error) {
+//         return done(error, null);
+//       }
+//     }
+//   )
+// );
+
+// // Your route handler
+// export const googleAuth = asyncHandler(async (req, res, next) => {
+//   passport.authenticate("google", { scope: ["profile", "email"] })(
+//     req,
+//     res,
+//     next
+//   );
+// });
+
+// // Callback route handler
+// export const googleAuthCallback = asyncHandler(async (req, res, next) => {
+//   passport.authenticate("google", {
+//     successRedirect: "/dashboard", // Redirect to dashboard after successful login
+//     failureRedirect: "/login", // Redirect to login page if authentication fails
+//   })(req, res, next);
+// });
+
+//get recommendations

@@ -1,35 +1,50 @@
 import React, { useEffect } from "react";
 // import { Heading, Button, Input, Img, Text } from "../../components";
 // import { default as ModalProvider } from "react-modal";
-
 import { Card, Typography, Input, Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { resetPassword } from "../../actions/UserAction";
 import { useNavigate, useParams } from "react-router-dom";
 import Title from "../../Title";
+import {
+  resetPasswordRequest,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+} from "../../Slices/UserSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export const ForgetNewPassword = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const {  error, success, message } = useSelector(
-    (state) => state.forgetPassword
-  );
-  const token = useParams()
+  const navigate = useNavigate();
+  const { token } = useParams();
+
+  const { error, success, message } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-  const onSubmit = (data) => {
+
+  const onSubmit = async (data) => {
     const myForm = new FormData();
-    // console.log(data.email)
     myForm.set("password", data.password);
     myForm.set("confirmPassword", data.confirmpassword);
-    // dispatch(forgetPassword(myForm));
-    dispatch(resetPassword(token, myForm))
+    try {
+      dispatch(resetPasswordRequest());
+      const config = { headers: { "Content-Type": "application/json" } };
+      const res = await axios.put(
+        `/api/v1/users/forget-password/${token}`,
+        myForm,
+        config
+      );
+      dispatch(resetPasswordSuccess(res.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(resetPasswordFailure(errorMessage || error.message));
+      console.log(errorMessage);
+    }
   };
 
   useEffect(() => {
@@ -37,14 +52,14 @@ export const ForgetNewPassword = () => {
       toast.error(error);
     }
     if (success) {
-      toast.success('Password Changed Successfully');
-      navigate('/signin')
+      toast.success("Password Changed Successfully");
+      navigate("/signin");
     }
   }, [toast, error, success, message]);
 
   return (
     <Card className="w-96 mx-auto  mt-24">
-    <Title title='Reset Password' />
+      <Title title="Reset Password" />
       <div className="flex flex-col items-center justify-center w-full p-[29px] border-blue_gray-100_01 border border-solid bg-white-A700 rounded-[10px]">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -84,12 +99,18 @@ export const ForgetNewPassword = () => {
                 })}
               />
               {errors.confirmpassword && (
-                <p className="my-2 text-red-600">{errors.confirmpassword.message}</p>
+                <p className="my-2 text-red-600">
+                  {errors.confirmpassword.message}
+                </p>
               )}
             </div>
           </div>
-          <Button type="submit" className="w-full font-bold">
-            Update Password
+          <Button
+            type="submit"
+            className="w-full text-white bg-primarybg font-bold"
+            disabled={isSubmitting ? true : false}
+          >
+            {isSubmitting ? "Updating" : "Update Password"}
           </Button>
         </form>
       </div>

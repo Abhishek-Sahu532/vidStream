@@ -8,6 +8,8 @@ import {
 
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
+
+
 export const UpdateProfileDialogBox = ({ open, handleClose }) => {
   return (
     <Dialog

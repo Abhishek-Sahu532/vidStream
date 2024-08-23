@@ -1,40 +1,57 @@
 import React, { useEffect } from "react";
 import { Card, Typography, Input, Button } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { useDispatch,useSelector } from "react-redux";
-import { forgetPassword } from "../../actions/UserAction";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import Title from "../../Title";
+import {
+  forgetPasswordRequest,
+  forgetPasswordSuccess,
+  forgetPasswordFailure,
+} from "../../Slices/UserSlices";
+import axios from "axios";
+import { extractErrorMessage } from "../../extractErrorMessage";
 
 export const ForgetPassword = () => {
   const dispatch = useDispatch();
-  const {loading, error, success, message} = useSelector((state)=> state.forgetPassword)
+  const { error, success, message} = useSelector((state)=> state.user)
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    reset
   } = useForm();
-  const onSubmit = (data) => {
+  // console.log(isSubmitting)
+  const onSubmit = async (data) => {
     const myForm = new FormData();
-    // console.log(data.email)
-    myForm.set('email', data.email);
-    dispatch(forgetPassword(myForm));
+    myForm.set("email", data.email);
+    try {
+      dispatch(forgetPasswordRequest());
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
+      let res = await axios.post(`api/v1/users/forget-password`, myForm, config);
+      dispatch(forgetPasswordSuccess(res.data));
+      // console.log(res.data)
+      reset()
+    } catch (error) {
+      let errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(forgetPasswordFailure(errorMessage || error.message));
+    }
   };
 
   useEffect(() => {
-
-    if(error){
-      toast.error(error)
+    if (error) {
+      toast.error(error);
     }
-    if(success){
-      toast.success(message)
+    if (success) {
+      toast.success(message);
     }
-    
   }, [toast, error, success, message]);
   return (
     <Card className="w-96 mx-auto  mt-24">
-    <Title title='Forget Password' />
+      <Title title="Forget Password" />
       <div className="flex flex-col items-center justify-center w-full p-[29px] border-blue_gray-100_01 border border-solid bg-white-A700 rounded-[10px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center justify-start w-full gap-[31px] my-[9px]">
@@ -69,8 +86,8 @@ export const ForgetPassword = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-start w-full gap-[18px]">
-              <Button type="submit" className="w-full font-bold">
-                Send
+              <Button type="submit" className="w-full font-bold" disabled={isSubmitting ? true : false}>
+                 {isSubmitting ? 'Sending...' : 'Send'}
               </Button>
               <Link to="/signin">
                 <p

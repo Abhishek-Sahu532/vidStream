@@ -9,7 +9,7 @@ import { useState } from "react";
 import { VideoPlayerForProfilePage } from "../VideoPlayerForProfilePage";
 
 export function UserProfileTabs({ userVideos }) {
-  const [selectedTab, setSelectedTab] = useState("home");
+  // const [selectedTab, setSelectedTab] = useState("home");
   const [videos, setVideos] = useState(userVideos);
 
   // console.log(videos);
@@ -23,7 +23,7 @@ export function UserProfileTabs({ userVideos }) {
         (
           <>
           {videos?.map((video) => (
-            <VideoPlayerForProfilePage vid={video} />
+            <VideoPlayerForProfilePage key={video._id} vid={video} />
           ))}
           </>
         )   : <div>No videos found</div>
@@ -42,13 +42,11 @@ export function UserProfileTabs({ userVideos }) {
         (
           <>
           {videos?.map((video) => (
-            <VideoPlayerForProfilePage vid={video} />
+            <VideoPlayerForProfilePage key={video._id} vid={video} />
           ))}
           </>
         )   : <div>No videos found</div>
         }
-         
-        
         </div>
       ),
     },
@@ -71,11 +69,11 @@ export function UserProfileTabs({ userVideos }) {
         ))}
       </TabsHeader>
       <TabsBody
-        // animate={{
-        //   initial: { y: 250 },
-        //   mount: { y: 0 },
-        //   unmount: { y: 250 },
-        // }}
+        animate={{
+          initial: { y: 250 },
+          mount: { y: 0 },
+          unmount: { y: 250 },
+        }}
       >
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>

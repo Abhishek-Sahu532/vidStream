@@ -7,7 +7,7 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
  
-export function DialogCustomAnimation() {
+export function ManageProfileModal() {
   const [open, setOpen] = React.useState(false);
  
   const handleOpen = () => setOpen(!open);

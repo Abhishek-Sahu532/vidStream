@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   Typography,
@@ -8,22 +8,39 @@ import {
   Collapse,
 } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sidebar } from "../Sidebar";
+import { Sidebar, NotificationsMenu, ProfileMenu} from "../../Components";
 import { useSelector, useDispatch } from "react-redux";
-import { ProfileMenu } from "../ProfileMemu";
-import { NotificationsMenu } from "../NotificationMenu";
-import { fetchAllVideos } from "../../actions/VideoAction";
+import {
+  allVideosRequest,
+  allVideosSuccess,
+  allVideosFailure,
+} from "../../Slices/VideoSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
+
+
 
 export function NavbarWithSearch() {
   const [openNav, setOpenNav] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { success } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  // console.log(currentUser)
   const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
-  const handleSearch = (e) => {
+
+  const handleSearch = async (e) => {
     e.preventDefault();
     navigate(`/search?query=${searchQuery}`);
-    dispatch(fetchAllVideos({ searchQuery }));
+    try {
+      dispatch(allVideosRequest());
+      const res = await axios.get(
+        `/api/v1/video/all-videos?query=${searchQuery}`
+      );
+      dispatch(allVideosSuccess(res?.data?.data || []));
+    } catch (error) {
+      let htmlError = extractErrorMessage(error.response?.data);
+      dispatch(allVideosFailure(htmlError || error.message));
+    }
   };
 
   React.useEffect(() => {
@@ -31,10 +48,6 @@ export function NavbarWithSearch() {
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchAllVideos(searchQuery));
   }, []);
 
   const navList = (
@@ -79,7 +92,7 @@ export function NavbarWithSearch() {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M0 2.5C0 1.96957 0.210714 1.46086 0.585786 1.08579C0.960859 0.710714 1.46957 0.5 2 0.5H14C14.5304 0.5 15.0391 0.710714 15.4142 1.08579C15.7893 1.46086 16 1.96957 16 2.5V12.5C16 13.0304 15.7893 13.5391 15.4142 13.9142C15.0391 14.2893 14.5304 14.5 14 14.5H2C1.46957 14.5 0.960859 14.2893 0.585786 13.9142C0.210714 13.5391 0 13.0304 0 12.5V2.5ZM3.293 3.793C3.48053 3.60553 3.73484 3.50021 4 3.50021C4.26516 3.50021 4.51947 3.60553 4.707 3.793L7.707 6.793C7.89447 6.98053 7.99979 7.23484 7.99979 7.5C7.99979 7.76516 7.89447 8.01947 7.707 8.207L4.707 11.207C4.5184 11.3892 4.2658 11.49 4.0036 11.4877C3.7414 11.4854 3.49059 11.3802 3.30518 11.1948C3.11977 11.0094 3.0146 10.7586 3.01233 10.4964C3.01005 10.2342 3.11084 9.9816 3.293 9.793L5.586 7.5L3.293 5.207C3.10553 5.01947 3.00021 4.76516 3.00021 4.5C3.00021 4.23484 3.10553 3.98053 3.293 3.793ZM9 9.5C8.73478 9.5 8.48043 9.60536 8.29289 9.79289C8.10536 9.98043 8 10.2348 8 10.5C8 10.7652 8.10536 11.0196 8.29289 11.2071C8.48043 11.3946 8.73478 11.5 9 11.5H12C12.2652 11.5 12.5196 11.3946 12.7071 11.2071C12.8946 11.0196 13 10.7652 13 10.5C13 10.2348 12.8946 9.98043 12.7071 9.79289C12.5196 9.60536 12.2652 9.5 12 9.5H9Z"
-             fill="white"
+            fill="white"
           />
         </svg>
         <Link to="/FAQ" className="flex items-center">
@@ -88,7 +101,6 @@ export function NavbarWithSearch() {
       </Typography>
     </ul>
   );
-
   return (
     <Navbar className="fixed top-0 left-0 w-full z-30 rounded-none max-w-screen-3xl bg-[#9197c3]  text-white border-none ">
       <div className=" w-full flex flex-wrap items-center justify-around">
@@ -150,9 +162,8 @@ export function NavbarWithSearch() {
           </Button>
           {/* <hr className="bg-blue-gray-800" /> */}
 
-          {isAuthenticated && isAuthenticated ? (
+          {success ? (
             <>
-              {" "}
               <NotificationsMenu /> <ProfileMenu />
             </>
           ) : (
@@ -273,7 +284,7 @@ export function NavbarWithSearch() {
             {/* login button */}
           </div>
 
-          {isAuthenticated && isAuthenticated ? (
+          {success ? (
             <ProfileMenu />
           ) : (
             <div className="flex ">
@@ -285,11 +296,7 @@ export function NavbarWithSearch() {
 
               <Link to="/signin">
                 {" "}
-                <Button
-                  fullWidth
-                  variant="text"
-                  size="sm"
-                >
+                <Button fullWidth variant="text" size="sm">
                   <span>Sign In</span>
                 </Button>
               </Link>

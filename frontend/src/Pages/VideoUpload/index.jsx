@@ -8,19 +8,22 @@ import {
 } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import HoverVideoPlayer from "react-hover-video-player";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { uploadAVideo } from "../../actions/VideoAction";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Title from "../../Title";
-
-import { useSelector } from "react-redux";
+import {
+  videoUploadRequest,
+  videoUploadSuccess,
+  videoUploadFailure,
+} from "../../Slices/VideoSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export function VideoUpload() {
-  const { success, loading, error } = useSelector((state) => state.video);
-  const { user } = useSelector((state) => state.user);
+  const { success, loading, error } = useSelector((state) => state.videos);
+  const { currentUser } = useSelector((state) => state.user);
   console.log(success, loading, error);
   const {
     register,
@@ -28,10 +31,8 @@ export function VideoUpload() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-
   const [video, setVideo] = useState("");
   const [thumbanail, setThumbnail] = useState(null);
-
   const dispatch = useDispatch();
 
   const changeVideoPreview = () => {
@@ -55,22 +56,42 @@ export function VideoUpload() {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const myForm = new FormData();
-    myForm.set("videoFile", data.video[0]);
-    myForm.set("thumbnail", data.thumbnail[0]);
     myForm.set("title", data.title);
     myForm.set("description", data.description);
 
-    dispatch(uploadAVideo(myForm));
-    // navigate('/my-profile')
-    // console.log(myForm);
+    if (data.video && data.video[0]) {
+      myForm.set("videoFile", data.video[0]);
+    }
+    if (data.thumbnail && data.thumbnail[0]) {
+      myForm.set("thumbnail", data.thumbnail[0]);
+    }
+
+    try {
+      dispatch(videoUploadRequest());
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const res = await axios.post(
+        "/api/v1/video/publish-a-video",
+        myForm,
+        config
+      );
+      // console.log(res);
+      dispatch(videoUploadSuccess(res.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(videoUploadFailure(errorMessage || error.message));
+    }
   };
 
   useEffect(() => {
     if (success) {
       toast.success(success);
-      navigate(`/channel/${user?.username}`);
+      navigate(`/channel/${currentUser?.data?.username}`);
     }
     if (error) {
       toast.error(error);
@@ -91,8 +112,11 @@ export function VideoUpload() {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
-          <Typography variant="h6" className="mb-3 text-primarybg font-quicksand">
-           SELECT A VIDEO
+          <Typography
+            variant="h6"
+            className="mb-3 text-primarybg font-quicksand"
+          >
+            SELECT A VIDEO
           </Typography>
 
           <div className="flex flex-row gap-6 justify-center align-middle">
@@ -144,7 +168,10 @@ export function VideoUpload() {
         </div>
 
         <div className="mt-5">
-          <Typography variant="h6"  className="mb-3 font-quicksand text-primarybg">
+          <Typography
+            variant="h6"
+            className="mb-3 font-quicksand text-primarybg"
+          >
             Select a Thumbnail
           </Typography>
 

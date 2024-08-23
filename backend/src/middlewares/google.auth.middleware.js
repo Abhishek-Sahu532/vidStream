@@ -1,44 +1,44 @@
-import passport from "passport";
-import GoogleStrategy from "passport-google-oauth20";
-import { User } from "../models/user.model.js";
+// import passport from "passport";
+// import GoogleStrategy from "passport-google-oauth20";
+// import { User } from "../models/user.model.js";
 
-const { Strategy: GoogleOAuthStrategy } = GoogleStrategy;
+// const { Strategy: GoogleOAuthStrategy } = GoogleStrategy;
 
-// console.log(process.env.GOOGLE_CLIENT_ID)
-passport.use(
-  new GoogleOAuthStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
-    },
+// // console.log(process.env.GOOGLE_CLIENT_ID)
+// passport.use(
+//   new GoogleOAuthStrategy(
+//     {
+//       clientID: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       callbackURL: "/auth/google/callback",
+//     },
 
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        console.log(profile);
-        let user = {};
+//     async (accessToken, refreshToken, profile, done) => {
+//       try {
+//         console.log(profile);
+//         let user = {};
 
-        return done(null, user);
-      } catch (error) {
-        console.log(
-          "..................................................................................",
-          error
-        );
-        return done(error, false);
-      }
-    }
-  )
-);
+//         return done(null, user);
+//       } catch (error) {
+//         console.log(
+//           "..................................................................................",
+//           error
+//         );
+//         return done(error, false);
+//       }
+//     }
+//   )
+// );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err, false);
-  }
-});
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     const user = await User.findById(id);
+//     done(null, user);
+//   } catch (err) {
+//     done(err, false);
+//   }
+// });

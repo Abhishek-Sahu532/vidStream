@@ -2,38 +2,69 @@ import { useEffect } from "react";
 import { SuggestionCard } from "../../Components/Suggestioncard";
 import { VideoPlayer } from "../../Components/VideoPlayer";
 import { useSelector, useDispatch } from "react-redux";
-import { getVideosDetails } from "../../actions/VideoAction";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Loader } from "../../Components/Loader";
-import { getVideoRecommendations } from "../../actions/UserAction";
-import { GET_USER_VIDEO_RECOMMENDATIONS_RESET } from "../../constaints/UserConstaints";
-import { VIDEO_DETAILS_RESET } from "../../constaints/VideoConstaints";
+import {
+  getVideoRequest,
+  getVideoSuccess,
+  getVideoReset,
+  getVideoFailure,
+  getVideoRecommendationRequest,
+  getVideoRecommendationSuccess,
+  getVideoRecommendationFailure,
+} from "../../Slices/VideoSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export const VideoDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-
-  const { loading, error, video } = useSelector((state) => state.video);
-  const { loading: recommLoading, data: recommendations } = useSelector(
-    (state) => state.videoRecommendations
+  const { loading, error, videos, recommendVideos } = useSelector(
+    (state) => state.videos
   );
 
-  const filteredRecommendations = recommendations?.filter((vid) => vid._id !== id);
+  const filteredRecommendations = recommendVideos?.recommvideos?.filter(
+    (vid) => vid._id !== id
+  );
+  //get video details accordingly to the video id
+  const getVideosDetails = async (id) => {
+    try {
+      dispatch(getVideoRequest());
+      const res = await axios.get(`/api/v1/video/${id}`);
+      dispatch(getVideoSuccess(res.data.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(getVideoFailure(errorMessage || error.message));
+    }
+  };
 
+  //RECOMMENDATION VIDEOS
+  const getVideoRecommendations = async () => {
+    try {
+      dispatch(getVideoRecommendationRequest());
+      const res = await axios.get("/api/v1/users/video-recommentions");
+      dispatch(getVideoRecommendationSuccess(res.data.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(getVideoRecommendationFailure(errorMessage || error.message));
+    }
+  };
+
+  useEffect(() => {
+    getVideoRecommendations();
+    getVideosDetails(id);
+  }, [id, dispatch]);
 
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
-    dispatch(getVideosDetails(id));
-    dispatch(getVideoRecommendations());
-
     return () => {
-      dispatch({ type: VIDEO_DETAILS_RESET });
-      dispatch({ type: GET_USER_VIDEO_RECOMMENDATIONS_RESET });
+      dispatch(getVideoReset());
+      //video reset
     };
-  }, [dispatch, id, error]);
+  }, [dispatch, error]);
   return (
     <div className="mt-20">
       <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -43,15 +74,15 @@ export const VideoDetails = () => {
               <Loader />
             </div>
           ) : (
-            <VideoPlayer video={video} />
+            <VideoPlayer video={videos} />
           )}
         </div>
         <div className="col-span-2 md:col-span-1">
-          {recommLoading ? (
+          {loading ? (
             <Loader />
           ) : (
             filteredRecommendations &&
-            filteredRecommendations.map((vid, index) => (
+            filteredRecommendations?.map((vid, index) => (
               <SuggestionCard vid={vid} key={index} />
             ))
           )}

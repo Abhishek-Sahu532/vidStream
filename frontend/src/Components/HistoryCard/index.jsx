@@ -3,10 +3,10 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Avatar,
   CardFooter,
   Button,
 } from "@material-tailwind/react";
+
 
 export function HistoryCard({ his }) {
   const date = new Date(his.createdAt);

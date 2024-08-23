@@ -5,27 +5,53 @@ import "@splidejs/react-splide/css";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { toast } from "react-toastify";
 import { SubscribedChannelCard } from "../../Components/SubscribedChannelCard";
-import { getUserSubscribedChannel } from "../../actions/SubscriberAction";
-import { useParams } from "react-router-dom";
-import {Loader } from '../../Components/Loader'
-
-
+import { Loader } from "../../Components/Loader";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  userSubscriberedRequest,
+  userSubscriberedSuccess,
+  userSubscriberedFailure,
+} from "../../Slices/SubscriberSlices";
+import { extractErrorMessage } from "../../extractErrorMessage";
+import axios from "axios";
 
 export const SubscribedChannelPage = () => {
   const { username } = useParams();
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.user);
-  const { loading,  error, subscribedChannels } = useSelector(
-    (state) => state.userSubscribedChannel
+  const { success } = useSelector((state) => state.user);
+  const { subscribers, loading, error } = useSelector(
+    (state) => state.subscribers
   );
+  console.log(subscribers.channels);
+  const navigate = useNavigate();
+
+
+  //function to handle the dispatch actions
+  const getUserSubscribedChannel = async (username) => {
+    try {
+      dispatch(userSubscriberedRequest());
+      const config = { headers: { "Content-Type": "application/json" } };
+      const res = await axios.get(
+        `/api/v1/subscriber/subscribed-channels/${username}`,
+        config
+      );
+      dispatch(userSubscriberedSuccess(res?.data?.data));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(userSubscriberedFailure(errorMessage || error.message));
+      console.log(errorMessage);
+    }
+  };
+
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(getUserSubscribedChannel(username));
+    if (!success) {
+      navigate("/signin");
     }
     if (error) {
       toast.error(error);
     }
-  }, [dispatch, isAuthenticated, error]);
+    getUserSubscribedChannel(username);
+  }, [dispatch, success, error]);
   return (
     <div className="p-10 mt-20 ">
       <Title title="Subscribed Channels" />
@@ -33,37 +59,34 @@ export const SubscribedChannelPage = () => {
         <Loader />
       ) : (
         <>
-          {subscribedChannels && subscribedChannels.channels.length < 0 ? (
+          {subscribers && subscribers?.channels?.length < 0 ? (
             <p className="mt-4 md:mt-0 text-center">Please subscriber any</p>
           ) : (
             <section tag="section">
               <p className="text-center text-xl text-blue-gray-600">
-                {" "}
-                You have subscribed {
-                  subscribedChannels?.totalChannels  
-                }  Channels{" "}
+                {` You have subscribed ${subscribers?.totalChannels} Channels`}
               </p>
               <Splide
-               options={{
-              rewind: true,
-              lazyLoad: "nearby",
-              gap: "2rem",
-              breakpoints: {
-                640: {
-                  perPage: 2,
-                  gap: "7rem",
-                },
-                480: {
-                  perPage: 1,
-                  gap: ".7rem",
-                },
-              },
-            }}
+                options={{
+                  rewind: true,
+                  lazyLoad: "nearby",
+                  gap: "2rem",
+                  breakpoints: {
+                    640: {
+                      perPage: 2,
+                      gap: "7rem",
+                    },
+                    480: {
+                      perPage: 1,
+                      gap: ".7rem",
+                    },
+                  },
+                }}
                 class="splide"
                 data-splide='{"perPage":3}'
               >
-                {subscribedChannels &&
-                  subscribedChannels.channels.map((sub, index) => (
+                {subscribers &&
+                  subscribers?.channels?.map((sub, index) => (
                     <SplideSlide key={index}>
                       <SubscribedChannelCard sub={sub} />
                     </SplideSlide>

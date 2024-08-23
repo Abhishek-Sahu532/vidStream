@@ -4,11 +4,11 @@ import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export const createComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
-
+ 
   if (!content) {
     throw new ApiError(400, "Comment is required");
   }
@@ -26,13 +26,10 @@ export const createComment = asyncHandler(async (req, res) => {
     video: videoId,
     createdBy: user,
   });
-
+  // console.log(createdComment);
   if (!createdComment) {
     throw new ApiError(500, "Something went wrong while creating the comment");
   }
-
-  // console.log(createdComment);
-  //commnet created till now
 
   return res
     .status(201)
@@ -42,7 +39,7 @@ export const createComment = asyncHandler(async (req, res) => {
 export const getVideoComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { page = 1, limit = 10 } = req.query;
-// console.log(videoId)
+  // console.log(videoId)
   const video = await Video.findById(videoId);
 
   if (!video) {

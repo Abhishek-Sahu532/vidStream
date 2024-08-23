@@ -1,35 +1,42 @@
 import * as React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { Signin } from "../Pages/Signin";
-import { Signup } from "../Pages/Signup";
-import { VideoUpload } from "../Pages/VideoUpload";
-import Root from "../Pages/Root";
-import { Subscribers } from "../Pages/Subscribers";
-import { History } from "../Pages/History";
-import { UserProfile } from "../Pages/UserProfile";
-import { ForgetNewPassword } from "../Components/ForgetNewPassword";
-import { ForgetPassword } from "../Components/ForgetPassword";
-import ProtectedRoutes from "../ProtectedRoutes";
 import App from "../App";
-import { CommingSoon } from "../Components/CommingSoon";
-import { SubscribedChannelPage } from "../Pages/SubscribedChannel";
-import { AboutUs } from "../Pages/AboutUs";
-import { FaqPage } from "../Pages/FAQ";
-import { LikedPage } from "../Pages/LikedPage";
-import { ResetPassword } from "../Components/ResetPassword";
-import { UpdateCoverImage } from "../Components/UpdateCoveImage";
-import { UpdateAvatar } from "../Components/UpdateAvatar";
-import { UpdateUserDetails } from "../Components/UpdateUserDetails";
+import {
+  Signin,
+  Signup,
+  Root,
+  UserProfile,
+  VideoUpload,
+  VideoDetails,
+  History,
+  Subscribers,
+  SubscribedChannelPage,
+  LikedPage,
+  AboutUs,
+  FaqPage,
+} from "../Pages";
+import { ProtectedRoutes } from "../ProtectedRoutes";
+import {
+  CommingSoon,
+  ForgetPassword,
+  ForgetNewPassword,
+  ResetPassword,
+  UpdateCoverImage,
+  UpdateAvatar,
+  UpdateUserDetails,
+} from "../Components";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <div>Oops</div>,
     children: [
       { path: "", element: <Root /> },
       { path: "search", element: <Root /> },
       { path: "signin", element: <Signin /> },
       { path: "signup", element: <Signup /> },
+      { path: "video/:id", element: <VideoDetails /> },
       {
         path: "upload-a-video",
         element: <ProtectedRoutes />,
@@ -40,6 +47,7 @@ const router = createBrowserRouter([
         element: <ProtectedRoutes />,
         children: [{ index: true, element: <History /> }],
       },
+      { path: "/channel/:username", element: <UserProfile /> },
       {
         path: "subscriber/:username",
         element: <ProtectedRoutes />,
@@ -50,7 +58,11 @@ const router = createBrowserRouter([
         element: <ProtectedRoutes />,
         children: [{ index: true, element: <SubscribedChannelPage /> }],
       },
-      { path: "channel/:username", element: <UserProfile /> },
+      {
+        path: "liked-videos",
+        element: <ProtectedRoutes />,
+        children: [{ index: true, element: <LikedPage /> }],
+      },
       { path: "forget-password", element: <ForgetPassword /> },
       { path: "forget-password/:token", element: <ForgetNewPassword /> },
       {
@@ -85,11 +97,7 @@ const router = createBrowserRouter([
         element: <ProtectedRoutes />,
         children: [{ index: true, element: <CommingSoon /> }],
       },
-      {
-        path: "liked-videos",
-        element: <ProtectedRoutes />,
-        children: [{ index: true, element: <LikedPage /> }],
-      },
+
       {
         path: "user/inbox",
         element: <ProtectedRoutes />,

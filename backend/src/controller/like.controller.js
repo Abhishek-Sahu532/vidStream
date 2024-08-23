@@ -5,17 +5,17 @@ import { User } from "../models/user.model.js";
 import { Video } from "../models/video.model.js";
 import { Like } from "../models/like.model.js";
 
+
 export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) {
     throw new ApiError(400, "User not found");
   }
-
   const videoId = req.params.videoId;
+  console.log('videoId', req.body.action)
   if (!videoId) {
     throw new ApiError(400, "Video Id not found");
   }
-
   const video = await Video.findById(videoId);
   if (!video) {
     throw new ApiError(400, "Video not found");
@@ -24,6 +24,7 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
     video: videoId,
     $or: [{ like: user._id }, { dislike: user._id }],
   });
+  console.log('existingLikeDislike', existingLikeDislike)
   if (existingLikeDislike) {
     // User has already interacted with the video (either liked or disliked)
     if (existingLikeDislike.like) {

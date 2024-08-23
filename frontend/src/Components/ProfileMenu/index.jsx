@@ -7,15 +7,18 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-import { signout } from "../../actions/UserAction";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import { signinUserFailure, signoutUserSucess } from "../../Slices/UserSlices";
+import axios from "axios";
+import { extractErrorMessage } from "../../extractErrorMessage";
 
-export function ProfileMenu() {
+export const ProfileMenu = () => {
   const dispatch = useDispatch();
-  const { loading, user } = useSelector((state) => state.user);
+  const { success, loading, currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
+  // console.log(currentUser, loading)
   const menuListItems = [
     {
       name: " My Profile",
@@ -35,7 +38,7 @@ export function ProfileMenu() {
           />
         </svg>
       ),
-      link:`/channel/${user?.username}`,
+      link: `/channel/${currentUser?.username}`,
       func: "",
     },
     {
@@ -97,25 +100,34 @@ export function ProfileMenu() {
       func: "",
     },
   ];
-  const signOuthandler = () => {
-    dispatch(signout());
-    toast.success("User Sign out successfully");
-    navigate("/");
+
+  // console.log("hi",menuListItems)
+  const signOuthandler = async () => {
+    try {
+      const res = await axios.get(`/api/v1/users/logout`);
+      dispatch(signoutUserSucess(res.data));
+      toast.success("User signed out successfully");
+      navigate("/");
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error.response?.data);
+      dispatch(signinUserFailure(errorMessage || error.message));
+    }
   };
+
   return (
     <Menu>
-      <MenuHandler>
-        {loading ?? loading ? (
-          ""
-        ) : (
+      {loading ? (
+        ""
+      ) : (
+        <MenuHandler>
           <Avatar
             variant="circular"
-            alt={user.fullname}
+            alt={currentUser?.fullname}
             className="cursor-pointer"
-            src={user.avatar}
+            src={currentUser?.avatar}
           />
-        )}
-      </MenuHandler>
+        </MenuHandler>
+      )}
       <MenuList className="mt-4">
         {menuListItems.map((item) => (
           <Link to={item.link} key={item.name}>
@@ -152,4 +164,4 @@ export function ProfileMenu() {
       </MenuList>
     </Menu>
   );
-}
+};
