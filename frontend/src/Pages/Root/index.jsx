@@ -17,12 +17,10 @@ import { extractErrorMessage } from "../../extractErrorMessage";
 
 export const Root = () => {
   const { loading, videos } = useSelector((state) => state.videos);
-  // console.log(loading, videos);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [pageSize] = useState(6); // Default page size to 6
   const [isFetching, setIsFetching] = useState(false);
-  // console.log(loading, videos);
 
   const fetchAllVideos = useCallback(
     async ({ page = 1, pageSize = 6 }) => {

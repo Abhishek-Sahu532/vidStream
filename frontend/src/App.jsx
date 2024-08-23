@@ -13,25 +13,29 @@ import {
 } from "./Slices/UserSlices";
 import { extractErrorMessage } from "./extractErrorMessage";
 
-
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { success, currentUser } = useSelector((state) => state.user);
 
-
   //to get the user and logged in the app
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         dispatch(currentUserRequest());
-        const res = await axios.get("/api/v1/users/current-user");
-        // console.log('res', res.data.data);
-        dispatch(currentUserSucess(res.data.data));
+        
+        if (import.meta.env.VITE_DEV_MODE == "production") {
+          const res = await axios.get(
+            `${import.meta.env.VITE_DEV_MODE}/current-user`
+          );
+          dispatch(currentUserSucess(res.data.data));
+        } else {
+          const res = await axios.get("/api/v1/users/current-user");
+          dispatch(currentUserSucess(res.data.data));
+        }
       } catch (error) {
         let htmlError = extractErrorMessage(error.response?.data);
-        // console.log(htmlError);
         dispatch(currentUserFailure(htmlError || error.message));
       }
     };
@@ -47,7 +51,7 @@ function App() {
     if (success) {
       const lastVisitedUrl = sessionStorage.getItem("lastVisitedUrl");
       // console.log("lastVisitedUrl", lastVisitedUrl);
-      if (lastVisitedUrl !== '/signin') {
+      if (lastVisitedUrl !== "/signin") {
         navigate(lastVisitedUrl);
       } else {
         navigate(`/channel/${currentUser?.username}`);
