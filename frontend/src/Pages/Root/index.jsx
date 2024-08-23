@@ -13,8 +13,6 @@ import {
 import axios from "axios";
 import { extractErrorMessage } from "../../extractErrorMessage";
 
-
-
 export const Root = () => {
   const { loading, videos } = useSelector((state) => state.videos);
   const dispatch = useDispatch();
@@ -26,10 +24,20 @@ export const Root = () => {
     async ({ page = 1, pageSize = 6 }) => {
       try {
         dispatch(allVideosRequest());
-        const res = await axios.get(
-          `/api/v1/video/all-videos?page=${page}&limit=${pageSize}`
-        );
-        dispatch(allVideosSuccess(res?.data?.data || []));
+
+        if (import.meta.env.VITE_DEV_MODE == "production") {
+          const res = await axios.get(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/video/all-videos?page=${page}&limit=${pageSize}`
+          );
+          dispatch(allVideosSuccess(res?.data?.data || []));
+        } else {
+          const res = await axios.get(
+            `/api/v1/video/all-videos?page=${page}&limit=${pageSize}`
+          );
+          dispatch(allVideosSuccess(res?.data?.data || []));
+        }
       } catch (error) {
         let htmlError = extractErrorMessage(error.response?.data);
         dispatch(allVideosFailure(htmlError || error.message));

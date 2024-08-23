@@ -27,7 +27,7 @@ function App() {
 
         if (import.meta.env.VITE_DEV_MODE == "production") {
           const res = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users//current-user`
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`
           );
           dispatch(currentUserSucess(res.data.data));
         } else {
