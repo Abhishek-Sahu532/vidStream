@@ -24,10 +24,10 @@ function App() {
     const fetchCurrentUser = async () => {
       try {
         dispatch(currentUserRequest());
-        
+
         if (import.meta.env.VITE_DEV_MODE == "production") {
           const res = await axios.get(
-            `${import.meta.env.VITE_DEV_MODE}/current-user`
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users//current-user`
           );
           dispatch(currentUserSucess(res.data.data));
         } else {
@@ -38,6 +38,7 @@ function App() {
         let htmlError = extractErrorMessage(error.response?.data);
         dispatch(currentUserFailure(htmlError || error.message));
       }
+      console.log(import.meta.env.VITE_BACKEND_URL, import.meta.env.VITE_DEV_MODE)
     };
     fetchCurrentUser();
   }, [dispatch]);
