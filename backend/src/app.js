@@ -74,10 +74,15 @@ app.use("/api/v1/comment", commentRouter);
 app.use("/api/v1/subscriber", subscribeRouter);
 app.use("/api/v1/like", likeRouter);
 
-app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+// app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-});
+// app.get("/*", function (req, res) {
+//   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+// });
+
+app.get('/ok', (req, res)=>{
+  res.json({'msg': 'all ok'})
+})
+
 
 export { app };
