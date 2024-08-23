@@ -16,7 +16,7 @@ const __dirname = dirname(__filename);
 
 app.use(
   cors({
-    origin: "https://vid-stream-two.vercel.app",
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
