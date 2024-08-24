@@ -45,7 +45,8 @@ export const CommentSection = () => {
       const config = {
         headers: {
           "Content-Type": "application/json",
-        },
+          withCredentials: true
+        }
       };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
@@ -78,7 +79,7 @@ export const CommentSection = () => {
       dispatch(getCommentsRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/comment/getcomments/${id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/comment/getcomments/${id}`, { withCredentials: true}
         );
         dispatch(getCommentsSuccess(res.data.data));
       } else {

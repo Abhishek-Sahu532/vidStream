@@ -124,10 +124,10 @@ export const loginUser = asyncHandler(async (req, res) => {
   //sending details in cookies
   const options = {
     // domain: 'vid-stream-client.vercel.app',
-    path: '/',
+    path: "/",
     httpOnly: true,
     secure: true,
-    sameSite: 'none'
+    sameSite: "none",
   };
   //by default an user or client can change the cookies in the browser but when we modify the httpOnly and secure with the true value so only from server we can change the cookies.
   return res
@@ -160,13 +160,15 @@ export const logoutUser = asyncHandler(async (req, res) => {
     }
   );
   const options = {
+    path: "/",
     httpOnly: true,
     secure: true,
+    sameSite: "none",
   };
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken", { ...options, value: null })
+    .clearCookie("refreshToken", { ...options, value: null })
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 

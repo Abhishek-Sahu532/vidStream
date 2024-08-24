@@ -31,7 +31,7 @@ export const ResetPassword = () => {
 
     try {
       dispatch(resetPasswordForLoggedInUserRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.put(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/reset-password`,

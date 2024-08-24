@@ -74,6 +74,7 @@ export function VideoUpload() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+         withCredentials: true
       };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(

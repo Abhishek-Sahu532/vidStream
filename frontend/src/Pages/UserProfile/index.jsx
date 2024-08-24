@@ -50,7 +50,7 @@ export const UserProfile = () => {
       dispatch(getUserChannelRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/c/${username}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/c/${username}`, { withCredentials: true}
         );
         dispatch(getUserChannelrSucess(res?.data?.data));
       } else {

@@ -36,7 +36,7 @@ export function NavbarWithSearch() {
         const res = await axios.get(
           `${
             import.meta.env.VITE_BACKEND_URL
-          }/api/v1/video/all-videos?query=${searchQuery}`
+          }/api/v1/video/all-videos?query=${searchQuery}`, { withCredentials: true}
         );
         dispatch(allVideosSuccess(res?.data?.data || []));
       } else {

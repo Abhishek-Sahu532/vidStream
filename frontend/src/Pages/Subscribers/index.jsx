@@ -28,7 +28,7 @@ export const Subscribers = () => {
   const getUserSubscriber = async () => {
     try {
       dispatch(userSubscriptionRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
 
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(

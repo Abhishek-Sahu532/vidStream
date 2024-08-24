@@ -28,7 +28,7 @@ export const UpdateCoverImage = () => {
     myForm.set("coverImage", data.coverImage[0]);
     try {
       dispatch(updateCoverImageRequest());
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
+      const config = { headers: { "Content-Type": "multipart/form-data" },  withCredentials: true };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.patch(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/cover-image`,

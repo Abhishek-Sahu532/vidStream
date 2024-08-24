@@ -30,6 +30,7 @@ export const ForgetPassword = () => {
       dispatch(forgetPasswordRequest());
       const config = {
         headers: { "Content-Type": "application/json" },
+         withCredentials: true
       };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(

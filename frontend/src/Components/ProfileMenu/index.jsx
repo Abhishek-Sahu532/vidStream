@@ -104,7 +104,7 @@ export const ProfileMenu = () => {
     try {
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/logout`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/logout` , { withCredentials: true}
         );
         dispatch(signoutUserSucess(res.data));
         toast.success("User signed out successfully");

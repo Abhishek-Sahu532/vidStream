@@ -29,7 +29,7 @@ export const UpdateAvatar = () => {
     myForm.set("avatar", data.avatar[0]);
     try {
       dispatch(updateAvtarRequest());
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
+      const config = { headers: { "Content-Type": "multipart/form-data" },  withCredentials: true };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.patch(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/update-avatar`,

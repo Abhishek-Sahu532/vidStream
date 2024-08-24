@@ -33,7 +33,7 @@ export const VideoDetails = () => {
       dispatch(getVideoRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/video/${id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/video/${id}`, { withCredentials: true}
         );
         dispatch(getVideoSuccess(res.data.data));
       } else {
@@ -52,7 +52,7 @@ export const VideoDetails = () => {
       dispatch(getVideoRecommendationRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/video-recommentions`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/video-recommentions` , { withCredentials: true}
         );
         dispatch(getVideoRecommendationSuccess(res.data.data));
       } else {

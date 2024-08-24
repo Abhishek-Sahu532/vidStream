@@ -24,7 +24,7 @@ export const History = () => {
       dispatch(userHistoryRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/history`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/history`, { withCredentials: true}
         );
         dispatch(userHistorySuccess(res.data?.data));
       } else {

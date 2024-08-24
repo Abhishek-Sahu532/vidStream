@@ -80,9 +80,6 @@ app.use("/api/v1/like", likeRouter);
 //   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 // });
 
-app.get('/ok', (req, res)=>{
-  res.json({'msg': 'all ok'})
-})
 
 
 export { app };

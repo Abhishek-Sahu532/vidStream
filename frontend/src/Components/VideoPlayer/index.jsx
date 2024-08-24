@@ -85,7 +85,7 @@ export const VideoPlayer = ({ video }) => {
     // console.log('videoId', videoId, action)
     try {
       dispatch(addVideoLikeDislikeRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json" }, withCredentials: true };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
           `${

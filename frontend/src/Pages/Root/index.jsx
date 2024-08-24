@@ -28,7 +28,7 @@ export const Root = () => {
           const res = await axios.get(
             `${
               import.meta.env.VITE_BACKEND_URL
-            }/api/v1/video/all-videos?page=${page}&limit=${pageSize}`
+            }/api/v1/video/all-videos?page=${page}&limit=${pageSize}` 
           );
           console.log(import.meta.env.VITE_BACKEND_URL)
           dispatch(allVideosSuccess(res?.data?.data || []));

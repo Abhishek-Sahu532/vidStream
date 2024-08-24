@@ -40,13 +40,19 @@ export const Signup = () => {
 
     try {
       dispatch(registerUserRequest());
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
+      const config = {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      };
 
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/register`, myForm, config
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/register`,
+          myForm,
+          config
         );
         dispatch(registerUserSuccess(res.data));
+        console.log(3654364)
       } else {
         const res = await axios.post(`/api/v1/users/register`, myForm, config);
         dispatch(registerUserSuccess(res.data));

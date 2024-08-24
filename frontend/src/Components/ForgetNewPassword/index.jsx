@@ -33,7 +33,7 @@ export const ForgetNewPassword = () => {
     myForm.set("confirmPassword", data.confirmpassword);
     try {
       dispatch(resetPasswordRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
 
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.put(

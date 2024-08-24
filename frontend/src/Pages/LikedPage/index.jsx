@@ -19,7 +19,7 @@ export const LikedPage = () => {
   const getUsersLikedVideo = async () => {
     try {
       dispatch(getLikedVideosRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/like/liked-videos`,
