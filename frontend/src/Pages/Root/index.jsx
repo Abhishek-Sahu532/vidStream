@@ -24,7 +24,6 @@ export const Root = () => {
     async ({ page = 1, pageSize = 6 }) => {
       try {
         dispatch(allVideosRequest());
-
         if (import.meta.env.VITE_DEV_MODE == "production") {
           const res = await axios.get(
             `${

@@ -13,7 +13,6 @@ import {
 import { extractErrorMessage } from "../../extractErrorMessage";
 import axios from "axios";
 
-
 export const UpdateAvatar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,12 +30,21 @@ export const UpdateAvatar = () => {
     try {
       dispatch(updateAvtarRequest());
       const config = { headers: { "Content-Type": "multipart/form-data" } };
-      const res = await axios.patch(
-        `/api/v1/users/update-avatar`,
-        myForm,
-        config
-      );
-      dispatch(updateAvtarSuccess(res.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.patch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/update-avatar`,
+          myForm,
+          config
+        );
+        dispatch(updateAvtarSuccess(res.data));
+      } else {
+        const res = await axios.patch(
+          `/api/v1/users/update-avatar`,
+          myForm,
+          config
+        );
+        dispatch(updateAvtarSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(updateAvtarFailure(errorMessage || error.message));

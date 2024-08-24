@@ -75,19 +75,26 @@ export function VideoUpload() {
           "Content-Type": "multipart/form-data",
         },
       };
-      const res = await axios.post(
-        "/api/v1/video/publish-a-video",
-        myForm,
-        config
-      );
-      // console.log(res);
-      dispatch(videoUploadSuccess(res.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/video/publish-a-video`,
+          myForm,
+          config
+        );
+        dispatch(videoUploadSuccess(res.data));
+      } else {
+        const res = await axios.post(
+          "/api/v1/video/publish-a-video",
+          myForm,
+          config
+        );
+        dispatch(videoUploadSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(videoUploadFailure(errorMessage || error.message));
     }
   };
-
   useEffect(() => {
     if (success) {
       toast.success(success);
@@ -97,7 +104,6 @@ export function VideoUpload() {
       toast.error(error);
     }
   }, [success, toast, navigate, error]);
-
   return (
     <Card color="transparent" shadow={false} className="mt-28 px-16 b">
       <Title title="Upload A Video" />

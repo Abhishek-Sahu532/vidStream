@@ -24,20 +24,15 @@ import {
 import axios from "axios";
 import { extractErrorMessage } from "../../extractErrorMessage";
 
-
-
-
 export function Signin() {
   const {
     register,
     handleSubmit,
-    formState: { errors,  isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, success, currentUser } = useSelector(
-    (state) => state.user
-  );
+  const { error, success, currentUser } = useSelector((state) => state.user);
 
   const onSubmit = async (data) => {
     const userData = {
@@ -48,10 +43,16 @@ export function Signin() {
     try {
       dispatch(signinUserRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.post(`/api/v1/users/login`, userData, config);
-      // console.log('res', res.data?.data?.user)
-      dispatch(signinUserSuccess(res.data.data?.user));
-      if(success){
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/login` , userData, config
+        );
+        dispatch(signinUserSuccess(res.data.data?.user));
+      } else {
+        const res = await axios.post(`/api/v1/users/login`, userData, config);
+        dispatch(signinUserSuccess(res.data.data?.user));
+      }
+      if (success) {
         navigate(`/channel/${currentUser?.username}`);
       }
     } catch (error) {
@@ -66,13 +67,11 @@ export function Signin() {
     // );
   };
 
-
-
   useEffect(() => {
     if (success) {
       const lastVisitedUrl = sessionStorage.getItem("lastVisitedUrl");
       // console.log(lastVisitedUrl)
-      if (lastVisitedUrl !== '/signin') {
+      if (lastVisitedUrl !== "/signin") {
         navigate(lastVisitedUrl);
       } else {
         navigate(`/channel/${currentUser?.username}`);

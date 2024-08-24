@@ -10,7 +10,6 @@ import {
 } from "../../Slices/LikeSlices.js";
 import { extractErrorMessage } from "../../extractErrorMessage.js";
 import axios from "axios";
-// import { getUsersLikedVideo } from "../../actions/Like.Action.js";
 
 export const LikedPage = () => {
   const dispatch = useDispatch();
@@ -21,8 +20,16 @@ export const LikedPage = () => {
     try {
       dispatch(getLikedVideosRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.get(`/api/v1/like/liked-videos`, config);
-      dispatch(getLikedVideosRequestSuccess(res.data?.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/like/liked-videos`,
+          config
+        );
+        dispatch(getLikedVideosRequestSuccess(res.data?.data));
+      } else {
+        const res = await axios.get(`/api/v1/like/liked-videos`, config);
+        dispatch(getLikedVideosRequestSuccess(res.data?.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getLikedVideosRequestFailure(errorMessage || error.message));

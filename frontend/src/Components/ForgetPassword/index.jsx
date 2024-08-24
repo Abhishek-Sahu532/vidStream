@@ -15,12 +15,12 @@ import { extractErrorMessage } from "../../extractErrorMessage";
 
 export const ForgetPassword = () => {
   const dispatch = useDispatch();
-  const { error, success, message} = useSelector((state)=> state.user)
+  const { error, success, message } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
   } = useForm();
   // console.log(isSubmitting)
   const onSubmit = async (data) => {
@@ -31,10 +31,22 @@ export const ForgetPassword = () => {
       const config = {
         headers: { "Content-Type": "application/json" },
       };
-      let res = await axios.post(`api/v1/users/forget-password`, myForm, config);
-      dispatch(forgetPasswordSuccess(res.data));
-      // console.log(res.data)
-      reset()
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/users/forget-password`,
+          myForm,
+          config
+        );
+        dispatch(forgetPasswordSuccess(res.data));
+      } else {
+        let res = await axios.post(
+          `api/v1/users/forget-password`,
+          myForm,
+          config
+        );
+        dispatch(forgetPasswordSuccess(res.data));
+      }
+      reset();
     } catch (error) {
       let errorMessage = extractErrorMessage(error.response?.data);
       dispatch(forgetPasswordFailure(errorMessage || error.message));
@@ -86,8 +98,12 @@ export const ForgetPassword = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-start w-full gap-[18px]">
-              <Button type="submit" className="w-full font-bold" disabled={isSubmitting ? true : false}>
-                 {isSubmitting ? 'Sending...' : 'Send'}
+              <Button
+                type="submit"
+                className="w-full font-bold"
+                disabled={isSubmitting ? true : false}
+              >
+                {isSubmitting ? "Sending..." : "Send"}
               </Button>
               <Link to="/signin">
                 <p

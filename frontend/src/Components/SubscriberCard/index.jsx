@@ -9,12 +9,7 @@ import {
   import { Link } from "react-router-dom";
   
   export function SubscriberCard({ sub }) {
-    const date = new Date(sub.createdAt);
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "2-digit",
-      month: "short",
-      day: "2-digit",
-    })
+  
     return (
       <Card className="w-full sm:w-80">
       <CardHeader shadow={false} floated={false} className="h-48 sm:h-80">

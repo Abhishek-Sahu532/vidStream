@@ -8,7 +8,7 @@ import {
   Collapse,
 } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sidebar, NotificationsMenu, ProfileMenu} from "../../Components";
+import { Sidebar, NotificationsMenu, ProfileMenu } from "../../Components";
 import { useSelector, useDispatch } from "react-redux";
 import {
   allVideosRequest,
@@ -17,8 +17,6 @@ import {
 } from "../../Slices/VideoSlices";
 import { extractErrorMessage } from "../../extractErrorMessage";
 import axios from "axios";
-
-
 
 export function NavbarWithSearch() {
   const [openNav, setOpenNav] = useState(false);
@@ -33,10 +31,20 @@ export function NavbarWithSearch() {
     navigate(`/search?query=${searchQuery}`);
     try {
       dispatch(allVideosRequest());
-      const res = await axios.get(
-        `/api/v1/video/all-videos?query=${searchQuery}`
-      );
-      dispatch(allVideosSuccess(res?.data?.data || []));
+
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/video/all-videos?query=${searchQuery}`
+        );
+        dispatch(allVideosSuccess(res?.data?.data || []));
+      } else {
+        const res = await axios.get(
+          `/api/v1/video/all-videos?query=${searchQuery}`
+        );
+        dispatch(allVideosSuccess(res?.data?.data || []));
+      }
     } catch (error) {
       let htmlError = extractErrorMessage(error.response?.data);
       dispatch(allVideosFailure(htmlError || error.message));

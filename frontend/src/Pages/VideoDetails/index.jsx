@@ -31,8 +31,15 @@ export const VideoDetails = () => {
   const getVideosDetails = async (id) => {
     try {
       dispatch(getVideoRequest());
-      const res = await axios.get(`/api/v1/video/${id}`);
-      dispatch(getVideoSuccess(res.data.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/video/${id}`
+        );
+        dispatch(getVideoSuccess(res.data.data));
+      } else {
+        const res = await axios.get(`/api/v1/video/${id}`);
+        dispatch(getVideoSuccess(res.data.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getVideoFailure(errorMessage || error.message));
@@ -43,8 +50,15 @@ export const VideoDetails = () => {
   const getVideoRecommendations = async () => {
     try {
       dispatch(getVideoRecommendationRequest());
-      const res = await axios.get("/api/v1/users/video-recommentions");
-      dispatch(getVideoRecommendationSuccess(res.data.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/video-recommentions`
+        );
+        dispatch(getVideoRecommendationSuccess(res.data.data));
+      } else {
+        const res = await axios.get("/api/v1/users/video-recommentions");
+        dispatch(getVideoRecommendationSuccess(res.data.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getVideoRecommendationFailure(errorMessage || error.message));

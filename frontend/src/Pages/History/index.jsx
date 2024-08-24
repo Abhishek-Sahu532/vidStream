@@ -14,29 +14,35 @@ import axios from "axios";
 import { extractErrorMessage } from "../../extractErrorMessage.js";
 
 export const History = () => {
-  const dispatch = useDispatch()
-  const { history, success,  error , loading} = useSelector((state) => state.user);
-
+  const dispatch = useDispatch();
+  const { history, error, loading } = useSelector(
+    (state) => state.user
+  );
 
   const getUserWatchhistory = async () => {
     try {
-      dispatch(userHistoryRequest());    
-      const res = await axios.get(`/api/v1/users/history`);
+      dispatch(userHistoryRequest());
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/history`
+        );
         dispatch(userHistorySuccess(res.data?.data));
-      // console.log("res", res.data);
+      } else {
+        const res = await axios.get(`/api/v1/users/history`);
+        dispatch(userHistorySuccess(res.data?.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(userHistoryFailure(errorMessage || error.message));
-      console.log('error', errorMessage)
+      console.log("error", errorMessage);
     }
   };
-
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
     getUserWatchhistory();
-  }, [dispatch,  error, toast]);
+  }, [dispatch, error, toast]);
   return (
     <div className="p-10 mt-20 ">
       <Title title="History" />

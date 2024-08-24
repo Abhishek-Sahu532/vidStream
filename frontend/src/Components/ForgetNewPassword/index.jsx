@@ -34,16 +34,28 @@ export const ForgetNewPassword = () => {
     try {
       dispatch(resetPasswordRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.put(
-        `/api/v1/users/forget-password/${token}`,
-        myForm,
-        config
-      );
-      dispatch(resetPasswordSuccess(res.data));
+
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.put(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/users/forget-password/${token}`,
+          myForm,
+          config
+        );
+        dispatch(resetPasswordSuccess(res.data));
+      } else {
+        const res = await axios.put(
+          `/api/v1/users/forget-password/${token}`,
+          myForm,
+          config
+        );
+        dispatch(resetPasswordSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(resetPasswordFailure(errorMessage || error.message));
-      console.log(errorMessage);
+      // console.log(errorMessage);
     }
   };
 

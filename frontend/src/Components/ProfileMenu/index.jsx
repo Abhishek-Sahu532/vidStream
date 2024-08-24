@@ -17,8 +17,6 @@ export const ProfileMenu = () => {
   const dispatch = useDispatch();
   const { success, loading, currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
-  // console.log(currentUser, loading)
   const menuListItems = [
     {
       name: " My Profile",
@@ -104,9 +102,17 @@ export const ProfileMenu = () => {
   // console.log("hi",menuListItems)
   const signOuthandler = async () => {
     try {
-      const res = await axios.get(`/api/v1/users/logout`);
-      dispatch(signoutUserSucess(res.data));
-      toast.success("User signed out successfully");
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/logout`
+        );
+        dispatch(signoutUserSucess(res.data));
+        toast.success("User signed out successfully");
+      } else {
+        const res = await axios.get(`/api/v1/users/logout`);
+        dispatch(signoutUserSucess(res.data));
+        toast.success("User signed out successfully");
+      }
       navigate("/");
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);

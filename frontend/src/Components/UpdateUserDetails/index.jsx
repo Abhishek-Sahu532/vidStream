@@ -32,13 +32,22 @@ export const UpdateUserDetails = () => {
     try {
       dispatch(updateUserDetailsRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.patch(
-        `/api/v1/users/update-account`,
-        { username, fullname, email },
-        config
-      );
-      dispatch(updateUserDetailsSuccess(res.data));
-      // console.log("data from reset password", data);
+
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.patch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/update-account`,
+          { username, fullname, email },
+          config
+        );
+        dispatch(updateUserDetailsSuccess(res.data));
+      } else {
+        const res = await axios.patch(
+          `/api/v1/users/update-account`,
+          { username, fullname, email },
+          config
+        );
+        dispatch(updateUserDetailsSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(updateUserDetailsFailure(errorMessage || error.message));

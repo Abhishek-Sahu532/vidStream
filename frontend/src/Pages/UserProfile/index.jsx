@@ -4,7 +4,7 @@ import {
   Loader,
   UpdateProfileDialogBox,
 } from "../../Components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Title from "../../Title";
@@ -31,9 +31,9 @@ import { extractErrorMessage } from "../../extractErrorMessage";
 
 export const UserProfile = () => {
   const { username } = useParams();
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { loading, error, channel } = useSelector((state) => state.channel);
-  // console.log(channel);
   const { success, currentUser } = useSelector((state) => state.user);
   const {
     message,
@@ -48,8 +48,15 @@ export const UserProfile = () => {
   const getChannelProfile = async () => {
     try {
       dispatch(getUserChannelRequest());
-      const res = await axios.get(`/api/v1/users/c/${username}`);
-      dispatch(getUserChannelrSucess(res?.data?.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/c/${username}`
+        );
+        dispatch(getUserChannelrSucess(res?.data?.data));
+      } else {
+        const res = await axios.get(`/api/v1/users/c/${username}`);
+        dispatch(getUserChannelrSucess(res?.data?.data));
+      }
     } catch (error) {
       let htmlError = extractErrorMessage(error.response?.data);
       dispatch(getUserChannelFailure(htmlError || error.message));
@@ -71,26 +78,44 @@ export const UserProfile = () => {
       try {
         dispatch(deleteSubscriberRequest());
         const config = { headers: { "Content-Type": "application/json" } };
-        await axios.delete(
-          `/api/v1/subscriber/delete-a-subscriber/${channel?._id}`,
-          config
-        );
-        dispatch(deleteSubscriberSuccess());
+
+        if (import.meta.env.VITE_DEV_MODE == "production") {
+          const res = await axios.delete(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/subscriber/delete-a-subscriber/${channel?._id}`
+          );
+          dispatch(deleteSubscriberSuccess(res.data));
+        } else {
+          const res = await axios.delete(
+            `/api/v1/subscriber/delete-a-subscriber/${channel?._id}`,
+            config
+          );
+          dispatch(deleteSubscriberSuccess(res.data));
+        }
       } catch (error) {
         let htmlError = extractErrorMessage(error.response?.data);
         dispatch(deleteSubscriberFailure(htmlError || error.message));
       }
-
-      // dispatch(deleteASubscriber(data._id));
     } else {
       try {
         dispatch(createSubscriberRequest());
         const config = { headers: { "Content-Type": "application/json" } };
-        await axios.post(
-          `/api/v1/subscriber/create-a-subscriber/${channel?._id}`,
-          config
-        );
-        dispatch(createSubscriberSuccess());
+        if (import.meta.env.VITE_DEV_MODE == "production") {
+          const res = await axios.post(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/v1/subscriber/create-a-subscriber/${channel?._id}`,
+            config
+          );
+          dispatch(createSubscriberSuccess(res.data));
+        } else {
+          const res = await axios.post(
+            `/api/v1/subscriber/create-a-subscriber/${channel?._id}`,
+            config
+          );
+          dispatch(createSubscriberSuccess(res.data));
+        }
       } catch (error) {
         let htmlError = extractErrorMessage(error.response?.data);
         dispatch(createSubscriberFailure(htmlError || error.message));
@@ -104,6 +129,9 @@ export const UserProfile = () => {
       toast.error(error);
       return;
     }
+    // if(!success){
+    //   navigate('/signin')
+    // }
     if (subscriberError) {
       toast.error(subscriberError);
       return;

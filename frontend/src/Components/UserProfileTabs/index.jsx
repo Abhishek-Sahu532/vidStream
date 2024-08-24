@@ -9,10 +9,7 @@ import { useState } from "react";
 import { VideoPlayerForProfilePage } from "../VideoPlayerForProfilePage";
 
 export function UserProfileTabs({ userVideos }) {
-  // const [selectedTab, setSelectedTab] = useState("home");
   const [videos, setVideos] = useState(userVideos);
-
-  // console.log(videos);
   const data = [
     {
       label: "Home",

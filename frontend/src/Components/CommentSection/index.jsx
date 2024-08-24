@@ -47,12 +47,23 @@ export const CommentSection = () => {
           "Content-Type": "application/json",
         },
       };
-      const res = await axios.post(
-        `/api/v1/comment/create-a-comment/${id}`,
-        myForm,
-        config
-      );
-      dispatch(newCommentSuccess(res.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.post(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/comment/create-a-comment/${id}`,
+          myForm,
+          config
+        );
+        dispatch(newCommentSuccess(res.data));
+      } else {
+        const res = await axios.post(
+          `/api/v1/comment/create-a-comment/${id}`,
+          myForm,
+          config
+        );
+        dispatch(newCommentSuccess(res.data));
+      }
       reset();
       getVideoComments(id);
     } catch (error) {
@@ -65,8 +76,15 @@ export const CommentSection = () => {
   const getVideoComments = async (id) => {
     try {
       dispatch(getCommentsRequest());
-      const res = await axios.get(`/api/v1/comment/getcomments/${id}`);
-      dispatch(getCommentsSuccess(res.data.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/comment/getcomments/${id}`
+        );
+        dispatch(getCommentsSuccess(res.data.data));
+      } else {
+        const res = await axios.get(`/api/v1/comment/getcomments/${id}`);
+        dispatch(getCommentsSuccess(res.data.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getCommentsFailure(errorMessage || error.message));

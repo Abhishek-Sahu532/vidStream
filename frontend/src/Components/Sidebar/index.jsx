@@ -27,7 +27,7 @@ export function Sidebar() {
   const openDrawer = () => setdrawerOpen(true);
   const closeDrawer = () => setdrawerOpen(false);
   const { currentUser } = useSelector((state) => state.user);
-// console.log(currentUser.data)
+
   return (
     <>
       {" "}

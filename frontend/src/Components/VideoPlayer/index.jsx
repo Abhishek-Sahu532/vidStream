@@ -15,8 +15,6 @@ import { Link } from "react-router-dom";
 import { ShareComponent } from "../ShareComponent";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// import { addAVideoLikeDislike } from "../../actions/Like.Action";
-// import { ADD_VIDEO_LIKE_DISLIKE_RESET } from "../../constaints/LikeConsttaints";
 import {
   addVideoLikeDislikeRequest,
   addVideoLikeDislikeSuccess,
@@ -26,6 +24,7 @@ import {
 import { extractErrorMessage } from "../../extractErrorMessage";
 import axios from "axios";
 
+
 function Icon({ id, open }) {
   return (
     <svg
@@ -34,7 +33,9 @@ function Icon({ id, open }) {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      className={`${id === open ? "rotate-180" : ""} h-5 w-5 transition-transform`}
+      className={`${
+        id === open ? "rotate-180" : ""
+      } h-5 w-5 transition-transform`}
     >
       <path
         strokeLinecap="round"
@@ -63,8 +64,6 @@ export const VideoPlayer = ({ video }) => {
   const navigate = useNavigate();
   const { success } = useSelector((state) => state.user);
   const { likes } = useSelector((state) => state.likes);
-  // const { message } = useSelector((state) => state.addVideoLikeDislike);
-
   const [open, setOpen] = useState(0);
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
   const [shareComOpen, setShareComOpen] = useState(false);
@@ -80,20 +79,30 @@ export const VideoPlayer = ({ video }) => {
     }
   };
 
-//HANDLE LIKES AND DISLIKES
+  //HANDLE LIKES AND DISLIKES
 
   const addAVideoLikeDislike = async (videoId, action) => {
     // console.log('videoId', videoId, action)
     try {
       dispatch(addVideoLikeDislikeRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.post(
-        `/api/v1/like/add-a-likeDislike/${videoId}`,
-        { action },
-        config
-      );
-      // console.log(res.data);
-      dispatch(addVideoLikeDislikeSuccess(res.data));
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.post(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/like/add-a-likeDislike/${videoId}`,
+          { action },
+          config
+        );
+        dispatch(addVideoLikeDislikeSuccess(res.data));
+      } else {
+        const res = await axios.post(
+          `/api/v1/like/add-a-likeDislike/${videoId}`,
+          { action },
+          config
+        );
+        dispatch(addVideoLikeDislikeSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       // console.log(errorMessage);
@@ -108,7 +117,7 @@ export const VideoPlayer = ({ video }) => {
     }
     if (!userLiked) {
       setLikesCount((prev) => prev + 1);
-      if(userDisliked) {
+      if (userDisliked) {
         setDislikesCount((prev) => prev - 1);
         setUserDisliked(false);
       }
@@ -117,7 +126,6 @@ export const VideoPlayer = ({ video }) => {
       setLikesCount((prev) => prev - 1);
       setUserLiked(false);
     }
-    // console.log(video?.video?._id);
     addAVideoLikeDislike(video?.video?._id, "like");
   };
 
@@ -149,7 +157,6 @@ export const VideoPlayer = ({ video }) => {
   }, [success, dispatch]);
 
   return (
-    // <></>
     <div>
       <Title title={video?.video?.title} />
       <div>

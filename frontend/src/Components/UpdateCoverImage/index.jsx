@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Card, Typography,  Button } from "@material-tailwind/react";
+import { Card, Typography, Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -29,13 +29,21 @@ export const UpdateCoverImage = () => {
     try {
       dispatch(updateCoverImageRequest());
       const config = { headers: { "Content-Type": "multipart/form-data" } };
-      const res = await axios.patch(
-        `/api/v1/users/cover-image`,
-        myForm,
-        config
-      );
-      dispatch(updateCoverImageSuccess(res.data));
-      // console.log("data from reset password", data);
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.patch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/cover-image`,
+          myForm,
+          config
+        );
+        dispatch(updateCoverImageSuccess(res.data));
+      } else {
+        const res = await axios.patch(
+          `/api/v1/users/cover-image`,
+          myForm,
+          config
+        );
+        dispatch(updateCoverImageSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(updateCoverImageFailure(errorMessage || error.message));

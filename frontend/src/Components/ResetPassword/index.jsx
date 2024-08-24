@@ -32,13 +32,21 @@ export const ResetPassword = () => {
     try {
       dispatch(resetPasswordForLoggedInUserRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.put(
-        `/api/v1/users/reset-password`,
-        myForm,
-        config
-      );
-      dispatch(resetPasswordForLoggedInUserSuccess(res.data));
-      console.log(res.data);
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.put(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/reset-password`,
+          myForm,
+          config
+        );
+        dispatch(resetPasswordForLoggedInUserSuccess(res.data));
+      } else {
+        const res = await axios.put(
+          `/api/v1/users/reset-password`,
+          myForm,
+          config
+        );
+        dispatch(resetPasswordForLoggedInUserSuccess(res.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(

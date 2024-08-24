@@ -24,21 +24,22 @@ function App() {
     const fetchCurrentUser = async () => {
       try {
         dispatch(currentUserRequest());
-
         if (import.meta.env.VITE_DEV_MODE == "production") {
           const res = await axios.get(
             `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`
           );
           dispatch(currentUserSucess(res.data.data));
+          console.log(res.data.data)
         } else {
           const res = await axios.get("/api/v1/users/current-user");
           dispatch(currentUserSucess(res.data.data));
+
         }
       } catch (error) {
         let htmlError = extractErrorMessage(error.response?.data);
         dispatch(currentUserFailure(htmlError || error.message));
+        console.log(htmlError)
       }
-      console.log(import.meta.env.VITE_BACKEND_URL, import.meta.env.VITE_DEV_MODE)
     };
     fetchCurrentUser();
   }, [dispatch]);

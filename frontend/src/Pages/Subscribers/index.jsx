@@ -29,9 +29,17 @@ export const Subscribers = () => {
     try {
       dispatch(userSubscriptionRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.get(`/api/v1/subscriber/${username}`, config);
-      dispatch(userSubscriptionSuccess(res.data?.data));
-      // console.log("res", res.data.data);
+
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/subscriber/${username}`,
+          config
+        );
+        dispatch(userSubscriptionSuccess(res.data?.data));
+      } else {
+        const res = await axios.get(`/api/v1/subscriber/${username}`, config);
+        dispatch(userSubscriptionSuccess(res.data?.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(userSubscriptionFailure(errorMessage || error.message));
@@ -78,7 +86,7 @@ export const Subscribers = () => {
                     },
                   },
                 }}
-                class="splide"
+                className="splide"
                 data-splide='{"perPage":3}'
               >
                 {subscribers &&

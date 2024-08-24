@@ -41,8 +41,16 @@ export const Signup = () => {
     try {
       dispatch(registerUserRequest());
       const config = { headers: { "Content-Type": "multipart/form-data" } };
-      const res = await axios.post(`/api/v1/users/register`, myForm, config);
-      dispatch(registerUserSuccess(res.data));
+
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/register`, myForm, config
+        );
+        dispatch(registerUserSuccess(res.data));
+      } else {
+        const res = await axios.post(`/api/v1/users/register`, myForm, config);
+        dispatch(registerUserSuccess(res.data));
+      }
       navigate("/signin");
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);

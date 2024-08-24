@@ -25,17 +25,27 @@ export const SubscribedChannelPage = () => {
   console.log(subscribers.channels);
   const navigate = useNavigate();
 
-
   //function to handle the dispatch actions
   const getUserSubscribedChannel = async (username) => {
     try {
       dispatch(userSubscriberedRequest());
       const config = { headers: { "Content-Type": "application/json" } };
-      const res = await axios.get(
-        `/api/v1/subscriber/subscribed-channels/${username}`,
-        config
-      );
-      dispatch(userSubscriberedSuccess(res?.data?.data));
+
+      if (import.meta.env.VITE_DEV_MODE == "production") {
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/subscriber/subscribed-channels/${username}`,
+          config
+        );
+        dispatch(userSubscriberedSuccess(res?.data?.data));
+      } else {
+        const res = await axios.get(
+          `/api/v1/subscriber/subscribed-channels/${username}`,
+          config
+        );
+        dispatch(userSubscriberedSuccess(res?.data?.data));
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(userSubscriberedFailure(errorMessage || error.message));
