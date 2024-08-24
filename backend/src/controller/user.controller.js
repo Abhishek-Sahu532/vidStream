@@ -19,9 +19,6 @@ import {
 } from "../utils/collaborativeFiltering.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
-// import passport from "passport";
-// import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -126,7 +123,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   );
   //sending details in cookies
   const options = {
-    domain: 'vid-stream-client.vercel.app',
+    // domain: 'vid-stream-client.vercel.app',
     path: '/',
     httpOnly: true,
     secure: true,
