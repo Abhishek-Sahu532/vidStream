@@ -126,8 +126,11 @@ export const loginUser = asyncHandler(async (req, res) => {
   );
   //sending details in cookies
   const options = {
+    domain: 'vid-stream-client.vercel.app',
+    path: '/',
     httpOnly: true,
     secure: true,
+    sameSite: 'none'
   };
   //by default an user or client can change the cookies in the browser but when we modify the httpOnly and secure with the true value so only from server we can change the cookies.
   return res

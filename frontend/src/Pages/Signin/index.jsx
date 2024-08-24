@@ -10,7 +10,6 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-// import { googleAuthentication } from "../../actions/UserAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -42,10 +41,15 @@ export function Signin() {
     };
     try {
       dispatch(signinUserRequest());
-      const config = { headers: { "Content-Type": "application/json" } };
+      const config = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/login` , userData, config
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/login`,
+          userData,
+          config
         );
         dispatch(signinUserSuccess(res.data.data?.user));
       } else {
