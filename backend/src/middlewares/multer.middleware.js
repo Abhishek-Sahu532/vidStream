@@ -7,8 +7,8 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define the upload directory
-const uploadDir = path.join(__dirname, './backend/public/temp');
+// Use /tmp for Vercel environment
+const uploadDir = path.join("/tmp", "public", "temp");
 
 // Ensure the directory exists
 if (!fs.existsSync(uploadDir)) {
@@ -17,7 +17,7 @@ if (!fs.existsSync(uploadDir)) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadDir); // Use the created/upload directory
+    cb(null, uploadDir); // Use the /tmp directory on Vercel
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -25,4 +25,3 @@ const storage = multer.diskStorage({
 });
 
 export const upload = multer({ storage });
-
