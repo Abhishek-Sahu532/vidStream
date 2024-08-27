@@ -21,10 +21,10 @@ export const UserSlices = createSlice({
     registerUserRequest: (state) => {
       state.loading = true;
     },
-    registerUserSuccess: (state) => {
+    registerUserSuccess: (state, action) => {
       state.currentUser = {};
       state.loading = false;
-      state.success = true;
+      state.success = action.payload.success;
     },
     registerUserFailure: (state, action) => {
       state.currentUser = {};
@@ -46,10 +46,10 @@ export const UserSlices = createSlice({
       state.error = action.payload;
     },
 
-    signoutUserSucess: (state) => {
+    signoutUserSucess: (state, action) => {
       state.currentUser = {};
       state.loading = false;
-      state.success = true;
+      state.success = action.payload.success;
     },
     signoutUserFailure: (state, action) => {
       state.loading = false;
@@ -62,7 +62,7 @@ export const UserSlices = createSlice({
     currentUserSucess: (state, action) => {
       state.currentUser = action.payload;
       state.loading = false;
-      state.success = true;
+      state.success =true;
     },
     currentUserFailure: (state, action) => {
       state.loading = false;
@@ -76,7 +76,7 @@ export const UserSlices = createSlice({
     userHistorySuccess: (state, action) => {
       state.history = action.payload;
       state.loading = false;
-      state.success = true;
+      state.success =true;
     },
     userHistoryFailure: (state, action) => {
       state.loading = false;
@@ -89,7 +89,7 @@ export const UserSlices = createSlice({
     },
     forgetPasswordSuccess: (state, action) => {
       state.loading = false;
-      state.success = true;
+      state.success =true;
       state.message = action.payload.message;
     },
     forgetPasswordFailure: (state, action) => {
@@ -103,7 +103,7 @@ export const UserSlices = createSlice({
     },
     resetPasswordSuccess: (state, action) => {
       state.loading = false;
-      state.success = true;
+      state.success =true;
       state.message = action.payload.message;
     },
     resetPasswordFailure: (state, action) => {

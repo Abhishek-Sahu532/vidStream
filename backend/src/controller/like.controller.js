@@ -5,14 +5,13 @@ import { User } from "../models/user.model.js";
 import { Video } from "../models/video.model.js";
 import { Like } from "../models/like.model.js";
 
-
 export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) {
     throw new ApiError(400, "User not found");
   }
   const videoId = req.params.videoId;
-  console.log('videoId', req.body.action)
+  console.log("videoId", req.body.action);
   if (!videoId) {
     throw new ApiError(400, "Video Id not found");
   }
@@ -24,7 +23,7 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
     video: videoId,
     $or: [{ like: user._id }, { dislike: user._id }],
   });
-  console.log('existingLikeDislike', existingLikeDislike)
+  console.log("existingLikeDislike", existingLikeDislike);
   if (existingLikeDislike) {
     // User has already interacted with the video (either liked or disliked)
     if (existingLikeDislike.like) {
@@ -82,7 +81,7 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
 //GET LIKE VIDEOS
 export const getUsersLikedVideo = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  console.log('userId', userId);
+  console.log("userId", userId);
 
   const likedVideos = await User.aggregate([
     {
@@ -153,5 +152,9 @@ export const getUsersLikedVideo = asyncHandler(async (req, res) => {
     throw new ApiError(404, "User has not liked any videos");
   }
 
-  return res.status(200).json(new ApiResponse(200, likedVideos, "Liked videos fetched successfully"));
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, likedVideos, "Liked videos fetched successfully")
+    );
 });

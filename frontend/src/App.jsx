@@ -18,34 +18,29 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const { success, currentUser } = useSelector((state) => state.user);
-
   //to get the user and logged in the app
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         dispatch(currentUserRequest());
-        if (import.meta.env.VITE_DEV_MODE == "production"){
+        if (import.meta.env.VITE_DEV_MODE == "production") {
           const res = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`, { withCredentials: true},
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
+            { withCredentials: true }
           );
-          console.log(import.meta.env.VITE_BACKEND_URL)
+          console.log(import.meta.env.VITE_BACKEND_URL);
           dispatch(currentUserSucess(res.data.data));
         } else {
           const res = await axios.get("/api/v1/users/current-user");
           dispatch(currentUserSucess(res.data.data));
-          console.log(123)
         }
       } catch (error) {
         let htmlError = extractErrorMessage(error.response?.data);
         dispatch(currentUserFailure(htmlError || error.message));
-        // console.log(htmlError)
       }
     };
-    fetchCurrentUser(); 
+    fetchCurrentUser();
   }, [dispatch]);
-
-
-
 
   useEffect(() => {
     // Store the current URL in session storage whenever it changes

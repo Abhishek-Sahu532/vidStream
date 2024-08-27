@@ -19,9 +19,10 @@ export const Signup = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm();
-
+  console.log(success);
   //handling the submission of the form
   const onSubmit = async (data) => {
     const myForm = new FormData();
@@ -52,12 +53,10 @@ export const Signup = () => {
           config
         );
         dispatch(registerUserSuccess(res.data));
-        console.log(3654364)
       } else {
         const res = await axios.post(`/api/v1/users/register`, myForm, config);
         dispatch(registerUserSuccess(res.data));
       }
-      navigate("/signin");
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(registerUserFailure(errorMessage || error.message));
@@ -69,11 +68,11 @@ export const Signup = () => {
       toast.error(error);
     }
     if (success) {
+      reset();
       toast.success("User Successfully Singed In");
-      console.log(1234);
       navigate("/signin");
     }
-  }, [success, navigate, error, toast, dispatch]);
+  }, [success, navigate, error]);
 
   return (
     <div className="mt-28 flex flex-col text-primarybg  bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">

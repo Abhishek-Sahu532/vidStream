@@ -32,7 +32,6 @@ export function Signin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error, success, currentUser } = useSelector((state) => state.user);
-
   const onSubmit = async (data) => {
     const userData = {
       email: data.email,
@@ -56,9 +55,7 @@ export function Signin() {
         const res = await axios.post(`/api/v1/users/login`, userData, config);
         dispatch(signinUserSuccess(res.data.data?.user));
       }
-      if (success) {
-        navigate(`/channel/${currentUser?.username}`);
-      }
+   
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(signinUserFailure(errorMessage || error.message));
@@ -88,7 +85,7 @@ export function Signin() {
           : error
       );
     }
-  }, [navigate, toast, success, error]);
+  }, [navigate, success, error]);
 
   return (
     <Card className="w-96 mx-auto mt-36">

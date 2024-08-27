@@ -20,7 +20,7 @@ import axios from "axios";
 
 export function NavbarWithSearch() {
   const [openNav, setOpenNav] = useState(false);
-  const { success } = useSelector((state) => state.user);
+  const { success , currentUser} = useSelector((state) => state.user);
   const navigate = useNavigate();
   // console.log(currentUser)
   const [searchQuery, setSearchQuery] = useState("");
@@ -170,7 +170,7 @@ export function NavbarWithSearch() {
           </Button>
           {/* <hr className="bg-blue-gray-800" /> */}
 
-          {success ? (
+          {success && currentUser?.username ? (
             <>
               <NotificationsMenu /> <ProfileMenu />
             </>
@@ -292,7 +292,7 @@ export function NavbarWithSearch() {
             {/* login button */}
           </div>
 
-          {success ? (
+          {success && currentUser?.username ?   (
             <ProfileMenu />
           ) : (
             <div className="flex ">

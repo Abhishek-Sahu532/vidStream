@@ -9,7 +9,6 @@ cloudinary.config({
 
 const uploadOnCloudinary = async (path) => {
   try {
-
     if (!path) {
       return null;
     }

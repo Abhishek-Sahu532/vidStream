@@ -23,7 +23,7 @@ import {
 } from "../../Slices/LikeSlices";
 import { extractErrorMessage } from "../../extractErrorMessage";
 import axios from "axios";
-
+import { formatTimeDifference } from "../dateformat";
 
 function Icon({ id, open }) {
   return (
@@ -47,21 +47,15 @@ function Icon({ id, open }) {
 }
 
 export const VideoPlayer = ({ video }) => {
-  const dateString = video?.video?.createdAt;
-  const date = new Date(dateString);
   const dispatch = useDispatch();
-  const formattedDate = date.toLocaleDateString("en-US", {
-    year: "2-digit",
-    month: "short",
-    day: "2-digit",
-  });
+  const navigate = useNavigate();
   const [likesCount, setLikesCount] = useState(video?.likesCount);
 
   const [dislikesCount, setDislikesCount] = useState(video?.dislikesCount);
   const [userLiked, setUserLiked] = useState(video?.userLiked);
   const [userDisliked, setUserDisliked] = useState(video?.userDisliked);
 
-  const navigate = useNavigate();
+
   const { success } = useSelector((state) => state.user);
   const { likes } = useSelector((state) => state.likes);
   const [open, setOpen] = useState(0);
@@ -82,10 +76,9 @@ export const VideoPlayer = ({ video }) => {
   //HANDLE LIKES AND DISLIKES
 
   const addAVideoLikeDislike = async (videoId, action) => {
-    // console.log('videoId', videoId, action)
     try {
       dispatch(addVideoLikeDislikeRequest());
-      const config = { headers: { "Content-Type": "application/json" }, withCredentials: true };
+      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
           `${
@@ -285,7 +278,9 @@ export const VideoPlayer = ({ video }) => {
           <Typography className="font-semibold ">
             {video?.video?.views} Views
           </Typography>
-          <Typography className="font-semibold ">{formattedDate}</Typography>
+          <Typography className="font-semibold ">
+            {formatTimeDifference(video?.video?.createdAt)}
+          </Typography>
         </div>
 
         <div className="mb-6">

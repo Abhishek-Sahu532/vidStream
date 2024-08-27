@@ -6,6 +6,7 @@ const app = express();
 import path from "path";
 // import passport from "passport";
 import session from "express-session";
+import MongoStore from 'connect-mongo'
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -18,6 +19,8 @@ app.use(
   cors({
     origin: [process.env.CORS_ORIGIN, 'http://localhost:5173'] ,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 
@@ -26,18 +29,42 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
+
+
 // Express session
+// app.use(
+//   session({
+//     secret: process.env.ACCESS_TOKEN_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       secure: process.env.NODE_ENV === "production", // use secure cookies in production
+//       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     },
+//   })
+// );
+
 app.use(
   session({
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI, // Your MongoDB connection string
+      collectionName: 'sessions', // Optional: Collection name for storing sessions
+    }),
     secret: process.env.ACCESS_TOKEN_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // use secure cookies in production
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   })
 );
+
 
 
 

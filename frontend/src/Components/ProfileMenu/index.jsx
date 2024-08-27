@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { signinUserFailure, signoutUserSucess } from "../../Slices/UserSlices";
+import { signoutUserFailure, signoutUserSucess } from "../../Slices/UserSlices";
 import axios from "axios";
 import { extractErrorMessage } from "../../extractErrorMessage";
 
@@ -116,7 +116,7 @@ export const ProfileMenu = () => {
       navigate("/");
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
-      dispatch(signinUserFailure(errorMessage || error.message));
+      dispatch(signoutUserFailure(errorMessage || error.message));
     }
   };
 

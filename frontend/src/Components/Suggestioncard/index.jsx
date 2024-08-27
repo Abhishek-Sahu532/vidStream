@@ -38,11 +38,11 @@ export function SuggestionCard({ vid }) {
           <hr className="text-blue-gray-800 min-w-fit" />
 
           <Typography className="p-0 mt-1 h-10 text-sm text-wrap break-words overflow-hidden text-ellipsis whitespace-nowrap truncate ...">
-            {vid.uploader.username}
+            {vid.uploader?.username}
           </Typography>
 
           <div className="flex justify-between">
-            <Typography> Views {vid.views}</Typography>
+            <Typography> Views {vid?.views}</Typography>
             <Typography>Date {formattedDate}</Typography>
           </div>
         </CardBody>

@@ -33,35 +33,35 @@ const router = createBrowserRouter([
     errorElement: <div>Oops</div>,
     children: [
       { path: "", element: <Root /> },
-      { path: "search", element: <Root /> },
-      { path: "signin", element: <Signin /> },
-      { path: "signup", element: <Signup /> },
-      { path: "video/:id", element: <VideoDetails /> },
+      { path: "search", element: <Root /> }, //done
+      { path: "signin", element: <Signin /> }, //done
+      { path: "signup", element: <Signup /> }, //done
+      { path: "video/:id", element: <VideoDetails /> }, //done - subscribered to user, comment - 
       {
         path: "upload-a-video",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <VideoUpload /> }],
+        children: [{ index: true, element: <VideoUpload /> }],  //--fail
       },
       {
         path: "user/history",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <History /> }],
+        children: [{ index: true, element: <History /> }], //done
       },
-      { path: "/channel/:username", element: <UserProfile /> },
+      { path: "/channel/:username", element: <UserProfile /> }, //done - subscribered to user, comment - failed
       {
         path: "subscriber/:username",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <Subscribers /> }],
+        children: [{ index: true, element: <Subscribers /> }], //done
       },
       {
         path: "subscribed-channel/:username",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <SubscribedChannelPage /> }],
+        children: [{ index: true, element: <SubscribedChannelPage /> }], //done
       },
       {
         path: "liked-videos",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <LikedPage /> }],
+        children: [{ index: true, element: <LikedPage /> }], //done
       },
       { path: "forget-password", element: <ForgetPassword /> },
       { path: "forget-password/:token", element: <ForgetNewPassword /> },

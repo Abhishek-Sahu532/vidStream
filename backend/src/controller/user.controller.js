@@ -37,12 +37,14 @@ const generateAccessAndRefreshToken = async (userId) => {
   }
 };
 
+
 function getPublicIdFromUrl(url) {
   const parts = url.split("/");
   const publicIdWithExtension = parts[parts.length - 1];
   const publicId = publicIdWithExtension.split(".")[0];
   return publicId;
 }
+
 //registering the user -- TESTED
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullname, email, username, password } = req.body;
@@ -60,6 +62,9 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already exists");
   }
   const avatarLocalPath = req.files?.avatar[0]?.path;
+
+  // console.log(avatarLocalPath)
+
   const coverImageLocalPath =
     req.files?.coverImage && req.files?.coverImage
       ? req.files?.coverImage[0]?.path
@@ -102,7 +107,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 //login user -- TESTED
 export const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  console.log(username, email, password);
+  // console.log(username, email, password);
   if (!username && !email) {
     throw new ApiError(400, "username or password is required");
   }

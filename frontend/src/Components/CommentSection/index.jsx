@@ -16,15 +16,15 @@ import {
 import { extractErrorMessage } from "../../extractErrorMessage";
 import axios from "axios";
 import { Loader } from "../Loader";
+import { formatTimeDifference } from "../dateformat";
 
 export const CommentSection = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-
+ 
   const { comments, loading } = useSelector((state) => state.comments);
   const { success } = useSelector((state) => state.user);
 
-  // console.log(commentSuccess)
   const {
     register,
     handleSubmit,
@@ -45,8 +45,8 @@ export const CommentSection = () => {
       const config = {
         headers: {
           "Content-Type": "application/json",
-          withCredentials: true
-        }
+          withCredentials: true,
+        },
       };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
@@ -79,7 +79,10 @@ export const CommentSection = () => {
       dispatch(getCommentsRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/comment/getcomments/${id}`, { withCredentials: true}
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/comment/getcomments/${id}`,
+          { withCredentials: true }
         );
         dispatch(getCommentsSuccess(res.data.data));
       } else {
@@ -190,7 +193,7 @@ export const CommentSection = () => {
                         {com?.owner?.fullname}
                       </h3>
                       <p className="text-gray-700 text-sm mb-2">
-                        Posted on April 17, 2023
+                    {  formatTimeDifference(com?.createdAt)}
                       </p>
                     </div>
                   </div>
