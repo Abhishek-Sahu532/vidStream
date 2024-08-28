@@ -9,13 +9,16 @@ import {
 import { useCopyToClipboard } from "usehooks-ts";
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { IoMdClose } from "react-icons/io";
+import { useParams } from "react-router-dom";
 
 
 export function ShareComponent({ open, handleClose }) {
   const [value, copy] = useCopyToClipboard();
   const [copied, setCopied] = React.useState(false);
+
+  const {id} = useParams()
   const [inputValue, setInputValue] = React.useState(
-    "npm i @material-tailwind/react"
+    `https://vid-stream-client.vercel.app/video/${id}`
   );
   return (
     <Dialog
@@ -38,9 +41,6 @@ export function ShareComponent({ open, handleClose }) {
             className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
             labelProps={{
               className: "hidden",
-            }}
-            onChange={(e) => {
-              setInputValue(e.target.value);
             }}
             containerProps={{ className: "min-w-[100px]" }}
           />
