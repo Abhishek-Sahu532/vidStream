@@ -14,33 +14,35 @@ import {
 import { extractErrorMessage } from "./extractErrorMessage";
 
 function App() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { success, currentUser } = useSelector((state) => state.user);
   //to get the user and logged in the app
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        dispatch(currentUserRequest());
-        if (import.meta.env.VITE_DEV_MODE == "production") {
-          const res = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
-            { withCredentials: true }
-          );
-          console.log(import.meta.env.VITE_BACKEND_URL);
-          dispatch(currentUserSucess(res.data.data));
-        } else {
-          const res = await axios.get("/api/v1/users/current-user");
-          dispatch(currentUserSucess(res.data.data));
-        }
-      } catch (error) {
-        let htmlError = extractErrorMessage(error.response?.data);
-        dispatch(currentUserFailure(htmlError || error.message));
-      }
-    };
-    fetchCurrentUser();
-  }, [dispatch]);
+
+
+  // useEffect(() => {
+  //   const fetchCurrentUser = async () => {
+  //     try {
+  //       dispatch(currentUserRequest());
+  //       if (import.meta.env.VITE_DEV_MODE == "production") {
+  //         const res = await axios.get(
+  //           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
+  //           { withCredentials: true }
+  //         );
+  //         console.log(import.meta.env.VITE_BACKEND_URL);
+  //         dispatch(currentUserSucess(res.data.data));
+  //       } else {
+  //         const res = await axios.get("/api/v1/users/current-user");
+  //         dispatch(currentUserSucess(res.data.data));
+  //       }
+  //     } catch (error) {
+  //       let htmlError = extractErrorMessage(error.response?.data);
+  //       dispatch(currentUserFailure(htmlError || error.message));
+  //     }
+  //   };
+  //   fetchCurrentUser();
+  // }, [dispatch]);
 
   useEffect(() => {
     // Store the current URL in session storage whenever it changes

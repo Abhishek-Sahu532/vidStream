@@ -36,13 +36,16 @@ export const VideoDetails = () => {
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/video/${id}`
         );
         dispatch(getVideoSuccess(res.data.data));
+        console.log('getVideosDetails', res.data.data)
       } else {
         const res = await axios.get(`/api/v1/video/${id}`);
         dispatch(getVideoSuccess(res.data.data));
       }
     } catch (error) {
+    
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getVideoFailure(errorMessage || error.message));
+      console.log('getVideosDetails', errorMessage)
     }
   };
 
@@ -57,6 +60,7 @@ export const VideoDetails = () => {
           }/api/v1/users/video-recommentions`
         );
         dispatch(getVideoRecommendationSuccess(res.data.data));
+        console.log('getVideoRecommendationSuccess', res.data.data)
       } else {
         const res = await axios.get("/api/v1/users/video-recommentions");
         dispatch(getVideoRecommendationSuccess(res.data.data));
@@ -64,6 +68,7 @@ export const VideoDetails = () => {
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getVideoRecommendationFailure(errorMessage || error.message));
+      console.log('getVideoRecommendationFailure', errorMessage)
     }
   };
 
