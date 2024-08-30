@@ -24,6 +24,8 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
     $or: [{ like: user._id }, { dislike: user._id }],
   });
   console.log("existingLikeDislike", existingLikeDislike);
+
+  
   if (existingLikeDislike) {
     // User has already interacted with the video (either liked or disliked)
     if (existingLikeDislike.like) {

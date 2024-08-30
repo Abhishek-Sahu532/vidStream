@@ -4,6 +4,7 @@ const initialState = {
   videos: [],
   recommendVideos: [],
   error: null,
+  recommendError : null, 
   loading: false,
   success: false,
 };
@@ -85,7 +86,7 @@ export const videoSlices = createSlice({
     getVideoRecommendationFailure: (state, action) => {
       state.loading = false;
       state.success = false;
-      state.error = action.payload;
+      state.recommendError = action.payload;
     },
   },
 });

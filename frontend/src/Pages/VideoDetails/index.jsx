@@ -20,10 +20,12 @@ import axios from "axios";
 export const VideoDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { loading, error, videos, recommendVideos } = useSelector(
+  const { loading, videos, recommendVideos } = useSelector(
     (state) => state.videos
   );
 
+  const { success } = useSelector((state) => state.user);
+  console.log(success);
   const filteredRecommendations = recommendVideos?.recommvideos?.filter(
     (vid) => vid._id !== id
   );
@@ -36,16 +38,13 @@ export const VideoDetails = () => {
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/video/${id}`
         );
         dispatch(getVideoSuccess(res.data.data));
-        console.log('getVideosDetails', res.data.data)
       } else {
         const res = await axios.get(`/api/v1/video/${id}`);
         dispatch(getVideoSuccess(res.data.data));
       }
     } catch (error) {
-    
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getVideoFailure(errorMessage || error.message));
-      console.log('getVideosDetails', errorMessage)
     }
   };
 
@@ -57,10 +56,10 @@ export const VideoDetails = () => {
         const res = await axios.get(
           `${
             import.meta.env.VITE_BACKEND_URL
-          }/api/v1/users/video-recommentions`
+          }/api/v1/users/video-recommentions`,
+          { withCredentials: true }
         );
         dispatch(getVideoRecommendationSuccess(res.data.data));
-        console.log('getVideoRecommendationSuccess', res.data.data)
       } else {
         const res = await axios.get("/api/v1/users/video-recommentions");
         dispatch(getVideoRecommendationSuccess(res.data.data));
@@ -68,24 +67,23 @@ export const VideoDetails = () => {
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(getVideoRecommendationFailure(errorMessage || error.message));
-      console.log('getVideoRecommendationFailure', errorMessage)
     }
   };
 
   useEffect(() => {
     getVideoRecommendations();
     getVideosDetails(id);
+    if (!success) {
+      toast.info("Please sign in to access your personalized recommendations!");
+    }
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
     return () => {
       dispatch(getVideoReset());
       //video reset
     };
-  }, [dispatch, error]);
+  }, [dispatch]);
   return (
     <div className="mt-20">
       <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

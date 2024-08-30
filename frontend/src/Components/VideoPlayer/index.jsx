@@ -55,7 +55,6 @@ export const VideoPlayer = ({ video }) => {
   const [userLiked, setUserLiked] = useState(video?.userLiked);
   const [userDisliked, setUserDisliked] = useState(video?.userDisliked);
 
-
   const { success } = useSelector((state) => state.user);
   const { likes } = useSelector((state) => state.likes);
   const [open, setOpen] = useState(0);
@@ -78,7 +77,10 @@ export const VideoPlayer = ({ video }) => {
   const addAVideoLikeDislike = async (videoId, action) => {
     try {
       dispatch(addVideoLikeDislikeRequest());
-      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
+      const config = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
           `${
@@ -88,6 +90,7 @@ export const VideoPlayer = ({ video }) => {
           config
         );
         dispatch(addVideoLikeDislikeSuccess(res.data));
+        console.log(res.data)
       } else {
         const res = await axios.post(
           `/api/v1/like/add-a-likeDislike/${videoId}`,
@@ -98,7 +101,7 @@ export const VideoPlayer = ({ video }) => {
       }
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
-      // console.log(errorMessage);
+      console.log(errorMessage);
       dispatch(addVideoLikeDislikeFailure(errorMessage || error.message));
     }
   };

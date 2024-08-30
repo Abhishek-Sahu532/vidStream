@@ -31,7 +31,7 @@ import { extractErrorMessage } from "../../extractErrorMessage";
 
 export const UserProfile = () => {
   const { username } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error, channel } = useSelector((state) => state.channel);
   const { success, currentUser } = useSelector((state) => state.user);
@@ -50,7 +50,8 @@ export const UserProfile = () => {
       dispatch(getUserChannelRequest());
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/c/${username}`, { withCredentials: true}
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/c/${username}`,
+          { withCredentials: true }
         );
         dispatch(getUserChannelrSucess(res?.data?.data));
       } else {
@@ -129,9 +130,9 @@ export const UserProfile = () => {
       toast.error(error);
       return;
     }
-    // if(!success){
-    //   navigate('/signin')
-    // }
+    if (!success) {
+      navigate("/signin");
+    }
     if (subscriberError) {
       toast.error(subscriberError);
       return;
@@ -140,7 +141,7 @@ export const UserProfile = () => {
       // toast.success(message?.message);
       dispatch(userSubscriberReset());
     }
-  }, [toast, error, username, toast, message]);
+  }, [error, success, message]);
   return (
     <>
       {loading && loading ? (

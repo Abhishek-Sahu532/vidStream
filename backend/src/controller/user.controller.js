@@ -37,7 +37,6 @@ const generateAccessAndRefreshToken = async (userId) => {
   }
 };
 
-
 function getPublicIdFromUrl(url) {
   const parts = url.split("/");
   const publicIdWithExtension = parts[parts.length - 1];
