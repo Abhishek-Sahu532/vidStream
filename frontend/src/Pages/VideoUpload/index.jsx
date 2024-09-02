@@ -24,7 +24,7 @@ import axios from "axios";
 export function VideoUpload() {
   const { success, loading, error } = useSelector((state) => state.videos);
   const { currentUser } = useSelector((state) => state.user);
-  console.log(success, loading, error);
+  // console.log(success, loading, error);
   const {
     register,
     handleSubmit,
@@ -74,7 +74,7 @@ export function VideoUpload() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-         withCredentials: true
+        withCredentials: true,
       };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
@@ -99,7 +99,7 @@ export function VideoUpload() {
   useEffect(() => {
     if (success) {
       toast.success(success);
-      navigate(`/channel/${currentUser?.data?.username}`);
+      navigate(`/channel/${currentUser?.username}`);
     }
     if (error) {
       toast.error(error);
@@ -272,7 +272,7 @@ export function VideoUpload() {
         )}
         <Checkbox
           className=""
-          color="primarybg"
+          color="indigo"
           {...register("checkbox", {
             required: "Please check the Terms & Conditions",
           })}

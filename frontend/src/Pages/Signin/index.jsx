@@ -55,7 +55,6 @@ export function Signin() {
         const res = await axios.post(`/api/v1/users/login`, userData, config);
         dispatch(signinUserSuccess(res.data.data?.user));
       }
-   
     } catch (error) {
       const errorMessage = extractErrorMessage(error.response?.data);
       dispatch(signinUserFailure(errorMessage || error.message));

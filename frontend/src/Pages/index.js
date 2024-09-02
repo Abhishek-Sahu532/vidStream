@@ -10,6 +10,7 @@ import { Subscribers } from "./Subscribers";
 import { UserProfile } from "./UserProfile";
 import { VideoDetails } from "./VideoDetails";
 import { VideoUpload } from "./VideoUpload";
+import Inbox  from "./Inbox";
 
 export {
   AboutUs,
@@ -24,4 +25,5 @@ export {
   UserProfile,
   VideoDetails,
   VideoUpload,
+  Inbox,
 };

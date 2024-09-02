@@ -13,7 +13,7 @@ import {
   SubscribedChannelPage,
   LikedPage,
   AboutUs,
-  FaqPage,
+  FaqPage,Inbox
 } from "../Pages";
 import { ProtectedRoutes } from "../ProtectedRoutes";
 import {
@@ -33,35 +33,35 @@ const router = createBrowserRouter([
     errorElement: <div>Oops</div>,
     children: [
       { path: "", element: <Root /> },
-      { path: "search", element: <Root /> }, //done
-      { path: "signin", element: <Signin /> }, //done
-      { path: "signup", element: <Signup /> }, //done
-      { path: "video/:id", element: <VideoDetails /> }, //done - subscribered to user, comment - 
+      { path: "search", element: <Root /> }, 
+      { path: "signin", element: <Signin /> },
+      { path: "signup", element: <Signup /> },
+      { path: "video/:id", element: <VideoDetails /> }, 
       {
         path: "upload-a-video",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <VideoUpload /> }],  //--fail
+        children: [{ index: true, element: <VideoUpload /> }],  
       },
       {
         path: "user/history",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <History /> }], //done
+        children: [{ index: true, element: <History /> }],
       },
-      { path: "/channel/:username", element: <UserProfile /> }, //done - subscribered to user, comment - failed
+      { path: "/channel/:username", element: <UserProfile /> }, 
       {
         path: "subscriber/:username",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <Subscribers /> }], //done
+        children: [{ index: true, element: <Subscribers /> }], 
       },
       {
         path: "subscribed-channel/:username",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <SubscribedChannelPage /> }], //done
+        children: [{ index: true, element: <SubscribedChannelPage /> }], 
       },
       {
         path: "liked-videos",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <LikedPage /> }], //done
+        children: [{ index: true, element: <LikedPage /> }], 
       },
       { path: "forget-password", element: <ForgetPassword /> },
       { path: "forget-password/:token", element: <ForgetNewPassword /> },
@@ -101,7 +101,7 @@ const router = createBrowserRouter([
       {
         path: "user/inbox",
         element: <ProtectedRoutes />,
-        children: [{ index: true, element: <CommingSoon /> }],
+        children: [{ index: true, element: <Inbox /> }],
       },
       {
         path: "help",

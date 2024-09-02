@@ -22,7 +22,6 @@ export const ResetPassword = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-  console.log(error2);
   const onSubmit = async (data) => {
     const myForm = new FormData();
     myForm.set("oldPassword", data.oldPassword);
@@ -31,7 +30,10 @@ export const ResetPassword = () => {
 
     try {
       dispatch(resetPasswordForLoggedInUserRequest());
-      const config = { headers: { "Content-Type": "application/json" },  withCredentials: true };
+      const config = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.put(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/reset-password`,
@@ -135,7 +137,7 @@ export const ResetPassword = () => {
           </div>
           <Button
             type="submit"
-            className="w-full bg-primarybg font-quicksand text-md font-bold"
+            className="w-full bg-secondarybg font-quicksand text-md font-bold"
             disabled={isSubmitting ? true : false}
           >
             {isSubmitting ? "Updating..." : "Update Password"}

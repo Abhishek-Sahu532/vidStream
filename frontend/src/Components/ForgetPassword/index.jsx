@@ -22,7 +22,7 @@ export const ForgetPassword = () => {
     formState: { errors, isSubmitting },
     reset,
   } = useForm();
-  // console.log(isSubmitting)
+
   const onSubmit = async (data) => {
     const myForm = new FormData();
     myForm.set("email", data.email);
@@ -30,7 +30,7 @@ export const ForgetPassword = () => {
       dispatch(forgetPasswordRequest());
       const config = {
         headers: { "Content-Type": "application/json" },
-         withCredentials: true
+        withCredentials: true,
       };
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.post(
@@ -72,16 +72,15 @@ export const ForgetPassword = () => {
               <div className="flex flex-col items-center justify-start w-full gap-[22px]">
                 <div className="flex flex-col items-center justify-start w-full gap-2">
                   <div className="flex flex-row justify-between items-center w-full">
-                    <p className="text-2xl mb-4 tracking-[-0.72px]">
+                    <p className="text-2xl text-primarybg font-bold mb-4 tracking-[-0.72px]">
                       Reset Password
                     </p>
                   </div>
-                  <p as="p" className="!text-gray-900">
+                  <p as="p" className="text-primarybg font-thin font-quicksand">
                     Enter the email address associated with your account and
                     we&#39;ll send you a link to reset your password.
                   </p>
                 </div>
-
                 <Input
                   type="email"
                   {...register("email", {
@@ -91,7 +90,7 @@ export const ForgetPassword = () => {
                   placeholder="email address"
                   label="Email"
                   prefix='{<Img src="images/img_icon_24px_email.svg" alt="icon / 24px / email" />}'
-                  className="w-full gap-3.5 font-semibold border-blue_gray-100_01 border border-solid"
+                  className="w-full gap-3.5 font-semibold border-secondarybg border border-solid active:border-secondarybg  "
                 />
                 {errors.email && (
                   <p className="my-2 text-red-600">{errors.email.message}</p>
@@ -101,7 +100,7 @@ export const ForgetPassword = () => {
             <div className="flex flex-col items-center justify-start w-full gap-[18px]">
               <Button
                 type="submit"
-                className="w-full font-bold"
+                className="w-full bg-secondarybg font-quicksand text-md"
                 disabled={isSubmitting ? true : false}
               >
                 {isSubmitting ? "Sending..." : "Send"}
@@ -110,7 +109,7 @@ export const ForgetPassword = () => {
                 <p
                   color="white_A700"
                   size="2xl"
-                  className="w-full text-gray-900 font-bold border-gray-600_02"
+                  className="w-full text-primarybg font-bold border-gray-600_02"
                 >
                   Return to sign in
                 </p>
@@ -127,7 +126,11 @@ export const ForgetPassword = () => {
               </Typography>
 
               <Link to="/signup">
-                <Typography size="lg" as="h3" className="tracking-[-0.40px]">
+                <Typography
+                  size="lg"
+                  as="h3"
+                  className="text-primarybg tracking-[-0.40px] font-bold  "
+                >
                   Create Account
                 </Typography>
               </Link>

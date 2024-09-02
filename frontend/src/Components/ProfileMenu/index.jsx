@@ -37,7 +37,7 @@ export const ProfileMenu = () => {
         </svg>
       ),
       link: `/channel/${currentUser?.username}`,
-      func: "",
+   
     },
     {
       name: "Upload A Video",
@@ -52,7 +52,7 @@ export const ProfileMenu = () => {
         </svg>
       ),
       link: "/upload-a-video",
-      func: "",
+    
     },
 
     {
@@ -74,7 +74,7 @@ export const ProfileMenu = () => {
         </svg>
       ),
       link: "/user/inbox",
-      func: "",
+     
     },
     {
       name: "Help",
@@ -95,11 +95,9 @@ export const ProfileMenu = () => {
         </svg>
       ),
       link: "/help",
-      func: "",
     },
   ];
 
-  // console.log("hi",menuListItems)
   const signOuthandler = async () => {
     try {
       if (import.meta.env.VITE_DEV_MODE == "production") {
@@ -139,14 +137,12 @@ export const ProfileMenu = () => {
           <Link to={item.link} key={item.name}>
             <MenuItem className="flex items-center gap-2">
               {item.iconPath}
-
               <Typography variant="small" className="font-medium ">
                 {item.name}
               </Typography>
             </MenuItem>
           </Link>
         ))}
-
         <hr className="my-2 border-blue-gray-50" />
         <MenuItem onClick={signOuthandler} className="flex items-center gap-2 ">
           <svg
