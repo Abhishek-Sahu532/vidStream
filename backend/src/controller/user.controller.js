@@ -258,8 +258,9 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
       $set: { fullname, email, username },
     },
     { new: true }
-  ).select("-password");
+  ).select("-password -watchHistory");
 
+console.log(user)
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Account details updated successfully"));

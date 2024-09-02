@@ -20,7 +20,6 @@ function App() {
   const { success, currentUser } = useSelector((state) => state.user);
   //to get the user and logged in the app
 
-
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -64,7 +63,8 @@ function App() {
     <div className="w-screen overflow-auto overflow-x-hidden h-screen font-quicksand">
       <NavbarWithSearch />
       <Outlet />
-      <ToastContainer stacked 
+      <ToastContainer
+        stacked
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}

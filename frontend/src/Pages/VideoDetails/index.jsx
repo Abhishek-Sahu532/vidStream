@@ -65,8 +65,8 @@ export const VideoDetails = () => {
         dispatch(getVideoRecommendationSuccess(res.data.data));
       }
     } catch (error) {
-      const errorMessage = extractErrorMessage(error.response?.data);
-      dispatch(getVideoRecommendationFailure(errorMessage || error.message));
+      // const errorMessage = extractErrorMessage(error.response?.data);
+      // dispatch(getVideoRecommendationFailure(errorMessage || error.message));
     }
   };
 

@@ -31,7 +31,10 @@ export const UpdateUserDetails = () => {
     // dispatch(updateUserDetails({ username, fullname, email }));
     try {
       dispatch(updateUserDetailsRequest());
-      const config = { headers: { "Content-Type": "application/json" }, withCredentials: true };
+      const config = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      };
 
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.patch(
