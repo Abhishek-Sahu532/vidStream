@@ -25,6 +25,9 @@ import { VideoDetailsCard } from "./VideoDetailsCard";
 import { UpdateAvatar } from "./UpdateAvatar";
 import { VideoPlayer } from "./VideoPlayer";
 import { VideoPlayerForProfilePage } from "./VideoPlayerForProfilePage";
+import  ChatInbox  from "./ChatInbox";
+import  ChatHeader  from "./ChatHeader";
+import  ChatSidebar  from "./ChatSidebar";
 
 export {
   CommentSection,
@@ -54,4 +57,7 @@ export {
   VideoDetailsCard,
   VideoPlayer,
   VideoPlayerForProfilePage,
+  ChatInbox,
+  ChatSidebar,
+  ChatHeader
 };

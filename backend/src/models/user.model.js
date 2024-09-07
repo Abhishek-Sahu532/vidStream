@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import crypto from 'crypto'
+import crypto from "crypto";
 
 const userSchema = new Schema(
   {
@@ -43,6 +43,7 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Video",
+        select: false
       },
     ],
     password: {
@@ -54,11 +55,11 @@ const userSchema = new Schema(
     },
     resetPasswordToken: {
       type: String,
-      default: ''
+      default: "",
     },
     resetPasswordExpire: {
-      type: Date
-    }
+      type: Date,
+    },
   },
   { timestamps: true }
 );
@@ -107,13 +108,10 @@ userSchema.methods.refreshAccessToken = function () {
   );
 };
 
-
-
 //RESET TOKEN
 userSchema.methods.getResetPasswordToken = function () {
-
   //Token
-  const resetToken = crypto.randomBytes(20).toString('hex');
+  const resetToken = crypto.randomBytes(20).toString("hex");
 
   //Hashing Token & saving the value
   // console.log('>>>1', this.resetPasswordToken)
@@ -122,9 +120,9 @@ userSchema.methods.getResetPasswordToken = function () {
     .update(resetToken)
     .digest("hex");
 
-  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;//min/sec/miliseconds
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; //min/sec/miliseconds
 
-  return resetToken
-}
+  return resetToken;
+};
 
 export const User = mongoose.model("User", userSchema);

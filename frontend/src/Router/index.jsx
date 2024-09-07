@@ -98,11 +98,7 @@ const router = createBrowserRouter([
         children: [{ index: true, element: <CommingSoon /> }],
       },
 
-      {
-        path: "user/inbox",
-        element: <ProtectedRoutes />,
-        children: [{ index: true, element: <Inbox /> }],
-      },
+      
       {
         path: "help",
         element: <ProtectedRoutes />,
@@ -110,6 +106,11 @@ const router = createBrowserRouter([
       },
       { path: "*", element: <CommingSoon /> },
     ],
+  },
+  {
+    path: "user/inbox",
+    element: <ProtectedRoutes />,
+    children: [{ index: true, element: <Inbox /> }],
   },
 ]);
 
