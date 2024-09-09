@@ -10,6 +10,9 @@ import {
   getChatDetails,
   renameGroup,
   getMessages,
+  searchUser,
+  sendFriendRequest,
+  acceptFriendRequest,
 } from "../controller/chat.controller.js";
 
 const router = Router();
@@ -25,5 +28,10 @@ router.route("/leave/:id").delete(verifyJWT, leaveGroup);
 router.route("/message/:id").get(verifyJWT, getMessages);
 
 router.route("/:id").get(verifyJWT, getChatDetails).put(verifyJWT, renameGroup);
+
+router.route('/searchUser').get(verifyJWT, searchUser)
+router.route('/sendrequest').put(verifyJWT, sendFriendRequest)
+
+router.route('/acceptrequest').put(verifyJWT, acceptFriendRequest)
 
 export default router;

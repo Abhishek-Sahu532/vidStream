@@ -1,11 +1,12 @@
 import { User } from "../models/user.model.js";
 import { Chat } from "../models/chat.model.js";
 import { Message } from "../models/message.model.js";
+import { Request } from "../models/request.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { emitEvent } from "../utils/emitEvent.js";
-import { ALERT, REFETCH_CHATS } from "../constants.js";
+import { ALERT, NEW_REQUEST, REFETCH_CHATS } from "../constants.js";
 
 export const newGroupCreation = asyncHandler(async (req, res) => {
   const { name, members } = req.body;
@@ -294,4 +295,62 @@ export const getMessages = asyncHandler(async (req, res) => {
         "Fetch Chats successfully"
       )
     );
+});
+
+export const searchUser = asyncHandler(async (req, res) => {
+  const { name = "" } = req.query;
+  //finding all my chats
+  const myChats = await Chat.find({ groupChat: false, members: req.user });
+  //all users from my chats means friends or people I have chatted with
+  const allUsersFromMyChats = myChats.flatMap((chat) => chat.members);
+
+  //extracting all users from my chats means friends or people I have chatted with
+  const allUsersExceptMeAndFriends = await User.find({
+    _id: { $nin: allUsersFromMyChats },
+    fullname: { $regex: name, $options: "i" },
+  });
+
+  //finding all users except me and my friends
+  const users = allUsersExceptMeAndFriends.map(({ _id, fullname, avatar }) => {
+    _id, fullname, avatar;
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "Fetch Chats successfully"));
+});
+
+export const sendFriendRequest = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  const request = Request.findOne({
+    $or: [
+      { sender: req.user, receiver: userId },
+      { sender: userId, receiver: req.user },
+    ],
+  });
+
+  if (request) {
+    return new ApiError(400, "Request already sent");
+  }
+
+  await Request.create({
+    sender: req.user,
+    receiver: userId,
+  });
+
+  emitEvent(req, NEW_REQUEST, [userId]);
+
+  return res.status(200).json(new ApiResponse(200, {}, "Friend request sent"));
+});
+
+
+//will work from here
+export const acceptFriendRequest = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+ 
+
+  emitEvent(req, NEW_REQUEST, [userId]);
+
+  return res.status(200).json(new ApiResponse(200, {}, "Friend request sent"));
 });
