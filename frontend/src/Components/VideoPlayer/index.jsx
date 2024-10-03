@@ -153,10 +153,10 @@ export const VideoPlayer = ({ video }) => {
   }, [success, dispatch]);
 
   return (
-    <div>
+    <div className="text-white/80">
       <Title title={video?.video?.title} />
       <div>
-        <video className="h-full w-full rounded-lg" controls muted>
+        <video className="h-full w-full rounded-lg" controls muted >
           <source src={video?.video?.videoFile} />
           Your browser does not support the video tag.
         </video>
@@ -187,19 +187,19 @@ export const VideoPlayer = ({ video }) => {
           <div className="mr-0 sm:mr-8">
             <Button
               variant="outlined"
-              className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6"
+              className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6 text-white border-white"
               onClick={handleSubscriber}
             >
               Subscribe
             </Button>
           </div>
 
-          <div className="flex gap-1  mt-2 sm:mt-0">
+          <div className="flex gap-1  mt-2 sm:mt-0 ">
             <div className="flex w-max flex-col gap-2 sm:gap-4">
               <ButtonGroup variant="text" size="sm">
                 <Button
                   onClick={handleLikeBtn}
-                  className="flex items-center gap-2 sm:gap-3"
+                  className="flex items-center gap-2 sm:gap-3 text-white"
                 >
                   {/* Like Icon */}
 
@@ -221,7 +221,7 @@ export const VideoPlayer = ({ video }) => {
                 </Button>
 
                 <Button
-                  className="p-2 sm:p-3 flex items-center gap-2 sm:gap-3"
+                  className="p-2 sm:p-3 flex items-center gap-2 sm:gap-3 text-white"
                   onClick={handleDislikeBtn}
                 >
                   {/* Dislike Icon */}
@@ -246,7 +246,7 @@ export const VideoPlayer = ({ video }) => {
             <div className="flex gap-1 sm:gap-2">
               <Button
                 variant="outlined"
-                className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6 flex items-center justify-center"
+                className="size-fit p-2 sm:p-3 py-2 px-2 sm:px-6 flex items-center justify-center text-white border-white"
                 onClick={handleShareComOpen}
               >
                 <span className="hidden md:inline-block lg:inline-block">
@@ -293,11 +293,11 @@ export const VideoPlayer = ({ video }) => {
             <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
               <AccordionHeader
                 onClick={() => handleOpen(1)}
-                className="text-sm"
+                className="text-sm text-white/80"
               >
                 Video Description
               </AccordionHeader>
-              <AccordionBody>{video?.video?.description}</AccordionBody>
+              <AccordionBody className='text-white/90 text-md'>{video?.video?.description}</AccordionBody>
             </Accordion>
           )}
         </div>

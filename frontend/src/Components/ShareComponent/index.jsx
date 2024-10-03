@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
 import { useCopyToClipboard } from "usehooks-ts";
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
@@ -21,7 +22,7 @@ export function ShareComponent({ open, handleClose }) {
     `https://vid-stream-client.vercel.app/video/${id}`
   );
   return (
-    <Dialog
+    <Dialog className="flex justify-between "
       open={open}
       onClose={handleClose}
       animate={{
@@ -29,16 +30,13 @@ export function ShareComponent({ open, handleClose }) {
         unmount: { scale: 0.9, y: -100 },
       }}
     >
-      <DialogHeader className="" onClick={handleClose}>
-        <IoMdClose />
-      </DialogHeader>
+     
       <DialogBody className="flex  gap-4">
-        <div className="w-56">
+        <div className=''>
           <Input
             value={inputValue}
-            type="email"
-            placeholder="Enter to copy"
-            className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+            type="text"
+            className="!border w-60 !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
             labelProps={{
               className: "hidden",
             }}
@@ -46,13 +44,14 @@ export function ShareComponent({ open, handleClose }) {
           />
         </div>
         <Button
-          size="md"
+          size="md" 
+          variant="outlined"
           onMouseLeave={() => setCopied(false)}
           onClick={() => {
             copy(inputValue);
             setCopied(true);
           }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-gradient text-white/90"
         >
           {copied ? (
             <>
@@ -67,6 +66,9 @@ export function ShareComponent({ open, handleClose }) {
           )}
         </Button>
       </DialogBody>
+      <DialogFooter onClick={handleClose}>
+      <IoMdClose/>
+      </DialogFooter>
     </Dialog>
   );
 }

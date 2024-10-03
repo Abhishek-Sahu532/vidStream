@@ -63,12 +63,12 @@ export const Subscribers = () => {
       ) : (
         <>
           {subscribers && subscribers?.subscribers?.length < 0 ? (
-            <p className="mt-4 md:mt-0 text-center">Please subscriber any</p>
+            <p className="mt-4 md:mt-0 text-center text-white/90">Please subscriber any</p>
           ) : (
             <section tag="section">
-              <p className="text-center text-xl text-blue-gray-600">
+              <p className="text-center text-xl text-white/90 mb-2 font-semibold">
                 {" "}
-                You have {subscribers?.totalSubscribers} subscribers{" "}
+                You have {subscribers?.totalSubscribers} subscribers
               </p>
               <Splide
                 options={{

@@ -21,6 +21,9 @@ module.exports = withMT({
         sans: ["Helvetica", "Arial", "sans-serif"],
         quicksand: ["Quicksand", "sans-serif"],
       },
+      backgroundImage: {
+        'gradient': 'linear-gradient(to bottom left, #000000, #000000, #000000, #000000, #000000, #171616, #272526, #373436, #5e5a5f, #86838b, #afb0bb, #d9dfec)',
+      },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],

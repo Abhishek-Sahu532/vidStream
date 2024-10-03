@@ -101,14 +101,14 @@ export const CommentSection = () => {
 
   return (
     <>
-      <div className="bg-gray-100 p-6">
+      <div className=" p-6">
         <h2 className="text-lg font-bold mb-4">Comments</h2>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-white p-4 rounded-lg shadow-md"
+          className=" p-4 rounded-lg shadow-md border-2"
         >
-          <h3 className="text-lg font-bold mb-2">Add a comment</h3>
-          <div className="flex w-full flex-row items-center gap-2 rounded-[99px] border border-gray-900/10 bg-gray-900/5 p-2">
+          <h3 className="text-lg font-bold mb-2 ">Add a comment</h3>
+          <div className="flex w-full flex-row items-center gap-2  rounded-[99px] border border-white p-2">
             <div className="flex">
               {/* <emoji-picker></emoji-picker> */}
               <IconButton variant="text" className="rounded-full">
@@ -149,7 +149,7 @@ export const CommentSection = () => {
               <IconButton variant="text" className="rounded-full" type="submit">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
+                  fill="white"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -176,7 +176,7 @@ export const CommentSection = () => {
       ) : (
         <>
           {comments && comments?.docs?.length < 0 ? (
-            <h1 className="text-blue-gray-700">
+            <h1 className="text-blue-gray-700 ">
               There is nothing to show, be the first to comment
             </h1>
           ) : (
@@ -184,7 +184,7 @@ export const CommentSection = () => {
               {comments?.docs?.map((com) => (
                 <div
                   key={com?._id}
-                  className="bg-white p-4 rounded-lg shadow-md"
+                  className=" p-4 rounded-lg shadow-md border-b-2"
                 >
                   <div className="flex gap-4">
                     <Avatar src={com?.owner?.avatar} alt="avatar" />
@@ -192,12 +192,12 @@ export const CommentSection = () => {
                       <h3 className="text-lg font-bold">
                         {com?.owner?.fullname}
                       </h3>
-                      <p className="text-gray-700 text-sm mb-2">
+                      <p className="text-white/60 text-sm mb-2">
                     {  formatTimeDifference(com?.createdAt)}
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-700">{com?.content}</p>
+                  <p className="text-white/90  text-lg ">{com?.content}</p>
                 </div>
               ))}
             </div>

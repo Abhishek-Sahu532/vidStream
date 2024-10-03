@@ -172,15 +172,15 @@ export const UserProfile = () => {
                     alt="channel_logo"
                   />
                   <div className="ml-4 sm:ml-6">
-                    <div className="text-xl sm:text-2xl  flex items-center">
-                      <span className="mr-2 text-primarybg ">
+                    <div className="text-xl sm:text-2xl  flex items-center ">
+                      <span className="mr-2 text-white/90 ">
                         {channel?.fullname}
                       </span>
                       <span className="w-3 h-3 text-white inline-block text-center rounded-full bg-grey-dark text-2xs">
                         &#10003;
                       </span>
                     </div>
-                    <p className="mt-2 text-xs sm:text-sm text-primarybg font-bold ">
+                    <p className="mt-2 text-xs sm:text-sm text-white/70 font-bold ">
                       {channel?.subscribersCount} subscribers
                     </p>
                   </div>

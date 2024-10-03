@@ -9,7 +9,6 @@ import axios from "axios";
 import {
   currentUserRequest,
   currentUserSucess,
-  currentUserFailure,
 } from "./Slices/UserSlices";
 import { extractErrorMessage } from "./extractErrorMessage";
 
@@ -60,8 +59,9 @@ function App() {
     }
   }, [success, navigate]);
   return (
-    <div className="w-screen overflow-auto overflow-x-hidden h-screen font-quicksand">
+    <div className="w-screen bg-gradient overflow-auto overflow-x-hidden h-screen font-quicksand">
       <NavbarWithSearch />
+
       <Outlet />
       <ToastContainer
         stacked
