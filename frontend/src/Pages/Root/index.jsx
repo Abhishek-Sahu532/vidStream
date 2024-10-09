@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Advertisement,
@@ -12,63 +12,71 @@ import {
 } from "../../Slices/VideoSlices";
 import axios from "axios";
 import { extractErrorMessage } from "../../extractErrorMessage";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const Root = () => {
-  const { loading, videos } = useSelector((state) => state.videos);
+  const { loading, videos = [] } = useSelector((state) => state.videos);
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(6); // Default page size to 6
-  const [isFetching, setIsFetching] = useState(false);
+  const [page, setPage] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return parseInt(params.get('page')) || 1;
+  });
 
-  const fetchAllVideos = useCallback(
-    async ({ page = 1, pageSize = 6 }) => {
-      try {
-        dispatch(allVideosRequest());
-        if (import.meta.env.VITE_DEV_MODE == "production") {
-          const res = await axios.get(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/v1/video/all-videos?page=${page}&limit=${pageSize}` 
-          );
-          console.log(import.meta.env.VITE_BACKEND_URL)
-          dispatch(allVideosSuccess(res?.data?.data || []));
-        } else {
-          const res = await axios.get(
-            `/api/v1/video/all-videos?page=${page}&limit=${pageSize}`
-          );
-          dispatch(allVideosSuccess(res?.data?.data || []));
-        }
-      } catch (error) {
-        let htmlError = extractErrorMessage(error.response?.data);
-        dispatch(allVideosFailure(htmlError || error.message));
+  const [pageSize] = useState(6);
+  const [hasMore, setHasMore] = useState(true);
+
+  const updateURL = (newPage) => {
+    const newURL = new URL(window.location);
+    newURL.searchParams.set('page', newPage);
+    newURL.searchParams.set('limit', pageSize);
+    window.history.pushState({}, '', newURL);
+  };
+
+
+  const fetchAllVideos = async () => {
+    try {
+      dispatch(allVideosRequest());
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_DEV_MODE == "production"
+            ? import.meta.env.VITE_BACKEND_URL
+            : ""
+        }/api/v1/video/all-videos?page=${page}&limit=${pageSize}`
+      );
+      const videoData = res?.data?.data || [];
+      if (page === 1) {
+        dispatch(allVideosSuccess(videoData));
+      } else {
+        dispatch(allVideosSuccess([...videos, ...videoData])); // Append new data to existing videos
       }
-    },
-    [dispatch]
-  );
-
-  useEffect(() => {
-    fetchAllVideos({ page, pageSize });
-  }, [page, pageSize, fetchAllVideos]);
-
-  const fetchMoreData = () => {
-    if (!isFetching) {
-      setIsFetching(true);
-      setPage((prev) => prev + 1);
+      // If the number of videos fetched is less than the pageSize, stop further loading
+      if (videoData.length <pageSize) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      const htmlError = extractErrorMessage(error.response?.data);
+      dispatch(allVideosFailure(htmlError || error.message));
     }
   };
 
   useEffect(() => {
-    if (isFetching) {
-      fetchAllVideos({ page, pageSize }).finally(() => setIsFetching(false));
+    fetchAllVideos();
+  }, [page]);
+
+  const fetchMoreData = () => {
+    if (hasMore) {
+      setPage((prev) => prev + 1);
+      console.log(page)
+       updateURL(page);
     }
-  }, [isFetching, page, pageSize, fetchAllVideos]);
+  };
   return (
     <>
       <div>
         <Advertisement />
-        <div>
-          {loading ? (
-            <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
+        <div className="h-screen">
+          {loading && page === 1 ? (
+            <div className="flex gap-10 p-8 mb-3 flex-wrap justify-around ">
               {Array(6)
                 .fill()
                 .map((_, index) => (
@@ -76,8 +84,18 @@ export const Root = () => {
                 ))}
             </div>
           ) : (
-            <div className="flex gap-10 p-8 flex-wrap justify-around overflow-auto">
-              {Array.isArray(videos) && videos.length > 0 ? (
+            <InfiniteScroll
+              className="flex gap-10 p-8 flex-wrap justify-around"
+              dataLength={4}
+              next={fetchMoreData} // Function to load more videos
+              hasMore={hasMore} // Boolean indicating if there's more data to load
+              endMessage={
+                <p className="text-center text-white  relative  ">
+                  <b>Yay! You have seen it all</b>
+                </p>
+              }
+            >
+              {videos.length > 0 ? (
                 videos.map((video, index) => (
                   <div key={index}>
                     <VideoDetailsCard vid={video} />
@@ -86,17 +104,9 @@ export const Root = () => {
               ) : (
                 <p>No videos available</p>
               )}
-            </div>
+            </InfiniteScroll>
           )}
         </div>
-
-        <button
-          onClick={fetchMoreData}
-          className="mx-auto bg-primarybg p-3 text-white font-bold mb-4 font-quicksand rounded-2xl  flex items-center hover:shadow-[-1px_5px_15px_10px_#9197c3]"
-          disabled={isFetching}
-        >
-          {isFetching ? "Loading..." : "Load More"}
-        </button>
       </div>
     </>
   );

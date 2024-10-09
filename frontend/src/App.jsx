@@ -28,7 +28,6 @@ function App() {
             `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
             { withCredentials: true }
           );
-          console.log(import.meta.env.VITE_BACKEND_URL);
           dispatch(currentUserSucess(res.data.data));
         } else {
           const res = await axios.get("/api/v1/users/current-user");
@@ -59,7 +58,7 @@ function App() {
     }
   }, [success, navigate]);
   return (
-    <div className="w-screen bg-gradient overflow-auto overflow-x-hidden h-screen font-quicksand">
+    <div className="w-screen bg-gradient overflow-auto  min-h-screen font-quicksand">
       <NavbarWithSearch />
 
       <Outlet />
