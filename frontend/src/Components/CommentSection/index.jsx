@@ -5,18 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import {
-  newCommentRequest,
-  newCommentSuccess,
-  newCommentFailure,
-  getCommentsRequest,
-  getCommentsSuccess,
-  getCommentsFailure,
-} from "../../Slices/CommentSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage.js";
 import axios from "axios";
 import { Loader } from "../Loader";
-import { formatTimeDifference } from "../dateformat";
+import { formatTimeDifference } from "../../lib/dateformat";
+import {  newCommentRequest,
+    newCommentSuccess,
+    newCommentFailure,
+    getCommentsRequest,
+    getCommentsSuccess,
+    getCommentsFailure, } from "../../redux/Slices/CommentSlices";
 
 export const CommentSection = () => {
   const { id } = useParams();
@@ -24,7 +22,7 @@ export const CommentSection = () => {
  
   const { comments, loading } = useSelector((state) => state.comments);
   const { success } = useSelector((state) => state.user);
-
+  
   const {
     register,
     handleSubmit,

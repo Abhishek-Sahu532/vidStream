@@ -13,8 +13,8 @@ import {
   getVideoRecommendationRequest,
   getVideoRecommendationSuccess,
   getVideoRecommendationFailure,
-} from "../../Slices/VideoSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/VideoSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 
 export const VideoDetails = () => {

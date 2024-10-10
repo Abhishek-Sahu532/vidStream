@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { SubscriberCard } from "../../Components/SubscriberCard";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import "@splidejs/react-splide/css";
 import { Loader } from "../../Components/Loader";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
@@ -11,8 +11,8 @@ import {
   userSubscriptionRequest,
   userSubscriptionSuccess,
   userSubscriptionFailure,
-} from "../../Slices/SubscriberSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/SubscriberSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 
 export const Subscribers = () => {

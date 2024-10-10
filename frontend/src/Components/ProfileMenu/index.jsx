@@ -9,9 +9,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { signoutUserFailure, signoutUserSucess } from "../../Slices/UserSlices";
+import { signoutUserFailure, signoutUserSucess } from "../../redux/Slices/UserSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
 export const ProfileMenu = () => {
   const dispatch = useDispatch();

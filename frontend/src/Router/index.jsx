@@ -15,7 +15,7 @@ import {
   AboutUs,
   FaqPage,Inbox
 } from "../Pages";
-import { ProtectedRoutes } from "../ProtectedRoutes";
+import { ProtectedRoutes } from "../lib/ProtectedRoutes";
 import {
   CommingSoon,
   ForgetPassword,

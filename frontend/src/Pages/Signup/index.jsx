@@ -2,14 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import { toast } from "react-toastify";
 import {
   registerUserRequest,
   registerUserSuccess,
   registerUserFailure,
-} from "../../Slices/UserSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/UserSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 import { Typography } from "@material-tailwind/react";
 

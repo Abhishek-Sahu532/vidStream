@@ -4,13 +4,13 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./App.css";
 import axios from "axios";
 import {
   currentUserRequest,
   currentUserSucess,
-} from "./Slices/UserSlices";
-import { extractErrorMessage } from "./extractErrorMessage";
+  
+} from "./redux/Slices/UserSlices";
+import { extractErrorMessage } from "./lib/extractErrorMessage";
 
 function App() {
   const dispatch = useDispatch();

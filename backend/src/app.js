@@ -2,18 +2,13 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
-const app = express();
-// import path from "path";
-// import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
-// import { fileURLToPath } from "url";
-// import { dirname } from "path";
-// import "./middlewares/google.auth.middleware.js";
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+const app = express();
+
+
 
 app.use(
   cors({
@@ -28,6 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
+
+
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -62,6 +60,8 @@ app.use(
     },
   })
 );
+
+
 
 // Passport middleware
 // app.use(passport.initialize());

@@ -30,9 +30,11 @@ export function ShareComponent({ open, handleClose }) {
         unmount: { scale: 0.9, y: -100 },
       }}
     >
-     
-      <DialogBody className="flex  gap-4">
-        <div className=''>
+      <DialogHeader className="" onClick={handleClose}>
+        <IoMdClose />
+      </DialogHeader>
+      <DialogBody className="flex items-center gap-4">
+        <div className="w-56">
           <Input
             value={inputValue}
             type="text"

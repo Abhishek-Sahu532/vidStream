@@ -343,14 +343,96 @@ export const sendFriendRequest = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Friend request sent"));
 });
 
-
-//will work from here
 export const acceptFriendRequest = asyncHandler(async (req, res) => {
-  const { userId } = req.body;
+  const { requestId, accept } = req.body;
 
- 
+  const request = await Request.findById(requestId)
+    .populate("sender", "fullname")
+    .populate("receiver", "fullname");
 
-  emitEvent(req, NEW_REQUEST, [userId]);
+  if (!request) {
+    return new ApiError(404, "Request not found");
+  }
 
-  return res.status(200).json(new ApiResponse(200, {}, "Friend request sent"));
+  if (request.receiver._id.toString() !== req.user.toString()) {
+    return new ApiError("401", "You are not authorized to accept this request");
+  }
+
+  if (!accept) {
+    await request.deleteOne();
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Friend Request Rejected"));
+  }
+
+  const members = [request.sender._id, request.receiver._id];
+
+  await Promise.all([
+    Chat.create({
+      members,
+      name: `${request.sender.name}-${request.receiver.name}`,
+    }),
+    request.deleteOne(),
+  ]);
+
+  emitEvent(req, REFETCH_CHATS, members);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { senderId: request.sender._id },
+        "Friend Request Accepted"
+      )
+    );
+});
+
+export const getAllNotifications = asyncHandler(async (req, res) => {
+  const request = await Request.find({ receiver: req.user }).populate(
+    "sender",
+    "fullname avatar"
+  );
+
+  const allRequest = request.map(({ _id, sender }) => ({
+    _id,
+    sender: {
+      _id: sender._id,
+      name: sender.fullname,
+      avatar: avatar,
+    },
+  }));
+
+  return res.status(200).json(new ApiResponse(200, allRequest, "Success"));
+});
+
+export const getAllMyFriends = asyncHandler(async (req, res) => {
+  const chatId = req.query.chatId;
+
+  const chats = Chat.find({
+    members: req.user,
+    groupChat: false,
+  }).populate("members", "fullname avatar");
+
+  const friends = (await chats).map((members) => {
+    const otherUser = getOtherMembers(members, req.user);
+    return {
+      _id: otherUser._id,
+      name: otherUser.fullname,
+      avatar: otherUser.avatar,
+    };
+  });
+
+  if (chatId) {
+    const chat = await Chat.findById(chatId);
+    const availableFriends = friends.filter(
+      (friend) => !chat.members.includes(friend._id)
+    );
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { friends: availableFriends }, "Success"));
+  } else {
+    return res.status(200).json(new ApiResponse(200, friends, "Success"));
+  }
 });

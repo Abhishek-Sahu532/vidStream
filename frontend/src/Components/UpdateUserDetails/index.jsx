@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import {
   updateUserDetailsRequest,
   updateUserDetailsSuccess,
   updateUserDetailsFailure,
-} from "../../Slices/UserSlices";
+} from "../../redux/Slices/UserSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
 export const UpdateUserDetails = () => {
   const dispatch = useDispatch();

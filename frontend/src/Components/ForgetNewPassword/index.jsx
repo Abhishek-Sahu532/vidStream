@@ -1,18 +1,16 @@
 import React, { useEffect } from "react";
-// import { Heading, Button, Input, Img, Text } from "../../components";
-// import { default as ModalProvider } from "react-modal";
 import { Card, Typography, Input, Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import {
   resetPasswordRequest,
   resetPasswordSuccess,
   resetPasswordFailure,
-} from "../../Slices/UserSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/UserSlices.js";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 
 export const ForgetNewPassword = () => {

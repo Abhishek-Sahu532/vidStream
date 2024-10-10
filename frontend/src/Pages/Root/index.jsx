@@ -9,10 +9,10 @@ import {
   allVideosRequest,
   allVideosSuccess,
   allVideosFailure,
-} from "../../Slices/VideoSlices";
+} from "../../redux/Slices/VideoSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export const Root = () => {
   const { loading, videos = [] } = useSelector((state) => state.videos);

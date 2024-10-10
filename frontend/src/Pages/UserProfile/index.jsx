@@ -7,7 +7,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import { toast } from "react-toastify";
 import { Button } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
@@ -16,7 +16,7 @@ import {
   getUserChannelRequest,
   getUserChannelrSucess,
   getUserChannelFailure,
-} from "../../Slices/ChannelSlices";
+} from "../../redux/Slices/ChannelSlices";
 import {
   createSubscriberRequest,
   createSubscriberSuccess,
@@ -25,9 +25,9 @@ import {
   deleteSubscriberSuccess,
   deleteSubscriberFailure,
   userSubscriberReset,
-} from "../../Slices/SubscriberSlices";
+} from "../../redux/Slices/SubscriberSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
 export const UserProfile = () => {
   const { username } = useParams();
