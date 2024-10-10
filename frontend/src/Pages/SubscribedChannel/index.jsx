@@ -22,7 +22,6 @@ export const SubscribedChannelPage = () => {
   const { subscribers, loading, error } = useSelector(
     (state) => state.subscribers
   );
-  console.log(subscribers.channels);
   const navigate = useNavigate();
 
   //function to handle the dispatch actions
@@ -70,10 +69,10 @@ export const SubscribedChannelPage = () => {
       ) : (
         <>
           {subscribers && subscribers?.channels?.length < 0 ? (
-            <p className="mt-4 md:mt-0 text-center">Please subscriber any</p>
+            <p className="mt-4 md:mt-0 text-center text-white/90">Please subscriber any</p>
           ) : (
             <section tag="section">
-              <p className="text-center text-xl text-blue-gray-600">
+              <p className="text-center text-xl text-white/90 font-semibold ">
                 {` You have subscribed ${subscribers?.totalChannels} Channels`}
               </p>
               <Splide

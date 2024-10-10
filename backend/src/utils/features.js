@@ -49,13 +49,10 @@ export class ApiFeature {
     return this;
   }
 
-    pagination(resultPerPage) {
+  pagination(resultPerPage) {
     const currentPage = Number(this.queryStr.page) || 1;
-    const skip = currentPage === 1 ? 0 : resultPerPage * (currentPage - 2) + 6;
-    const limit = currentPage === 1 ? 6 : resultPerPage;
-
-    this.query = this.query.limit(limit).skip(skip);
-
+    const skip = resultPerPage * (currentPage - 1);
+    this.query = this.query.limit(resultPerPage).skip(skip);
     return this;
   }
 }

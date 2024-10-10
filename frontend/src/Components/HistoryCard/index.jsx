@@ -16,8 +16,8 @@ export function HistoryCard({ his }) {
     day: "2-digit",
   });
   return (
-    <Card className="w-full sm:w-96">
-      <CardHeader shadow={false} floated={false} className="h-48 sm:h-96">
+    <Card className="w-full bg-gradient  sm:w-96 h-auto shadow-xl border-l-4  border-t-4 border-secondarybg border-r-[0.5px]   border-b-[0.5px]  ">
+      <CardHeader shadow={false} floated={false} className="h-60">
         <img
           src={his.thumbnail}
           alt={his.title}
@@ -26,17 +26,17 @@ export function HistoryCard({ his }) {
       </CardHeader>
       <CardBody className="h-32 sm:h-36 overflow-clip">
         <div className="mb-2 flex items-center justify-between">
-          <Typography color="blue-gray" className="font-medium">
+          <Typography color="blue-gray" className="font-medium text-white/90">
             {his.views} Views
           </Typography>
-          <Typography color="blue-gray" className="font-medium">
+          <Typography color="blue-gray" className="font-medium text-white/90">
             {formattedDate}
           </Typography>
         </div>
         <Typography
           variant="small"
           color="gray"
-          className="font-normal opacity-75"
+          className="font-normal opacity-75 text-white/60"
         >
           {his.description}
         </Typography>
@@ -45,9 +45,8 @@ export function HistoryCard({ his }) {
         <Button
           ripple={false}
           fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+          className="bg-gradient text-white/90 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
         >
-          {/* <Avatar src={his.avatar} size="sm" alt={his.title} /> */}
           {his.title}
         </Button>
       </CardFooter>

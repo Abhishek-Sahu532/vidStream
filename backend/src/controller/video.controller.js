@@ -41,77 +41,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
     throw new ApiError(401, "No more videos available");
   }
 
-  let allVideos = videos;
-
-  if (page > 1) {
-    // Fetch all previous pages' videos
-    for (let p = 1; p < page; p++) {
-      const prevPageApiFeature = new ApiFeature(
-        Video.find({}).populate({
-          path: "uploader",
-          select: "fullname username avatar",
-        }),
-        { ...req.query, page: p }
-      )
-        .search()
-        .pagination(resultPerPage);
-
-      const prevPageVideos = await prevPageApiFeature.query;
-      allVideos = prevPageVideos.concat(allVideos);
-    }
-  }
-
-  console.log(allVideos.length);
+  // console.log("allVideos.length", videos.length);
   return res
     .status(200)
-    .json(new ApiResponse(200, allVideos, "Videos fetched successfully"));
+    .json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
-
-// const getAllVideos = asyncHandler(async (req, res) => {
-//   const { page = 1, limit, userId } = req.query;
-//   const resultPerPage = Number(limit) || 3;
-//   let allVideos = [];
-
-//   const fetchVideosForPage = async (currentPage) => {
-//     const apiFeature = new ApiFeature(
-//       Video.find({}).populate({
-//         path: "uploader",
-//         select: "fullname username avatar",
-//       }),
-//       { ...req.query, page: currentPage }
-//     ).search().pagination(resultPerPage);
-
-//     return await apiFeature.query;
-//   };
-
-//   // Fetch videos for the requested page
-//   let currentVideos = await fetchVideosForPage(page);
-
-//   if (!currentVideos.length) {
-//     return res.status(400).json(new ApiError(400, "No more videos available"));
-//   }
-
-//   allVideos = currentVideos.concat(allVideos);
-
-//   // If the requested page is greater than 1, fetch previous pages' videos
-//   if (page > 1) {
-//     for (let p = 1; p < page; p++) {
-//       let previousVideos = await fetchVideosForPage(p);
-
-//       // If no more videos are available, stop fetching
-//       if (!previousVideos.length) {
-//         break;
-//       }
-
-//       allVideos = allVideos.concat(previousVideos);
-//     }
-//   }
-
-//   console.log(allVideos.length);
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, allVideos, "Videos fetched successfully"));
-// });
 
 // UPLOAD A VIDEO - TESTED
 

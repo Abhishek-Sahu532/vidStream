@@ -24,7 +24,6 @@ import axios from "axios";
 export function VideoUpload() {
   const { success, loading, error } = useSelector((state) => state.videos);
   const { currentUser } = useSelector((state) => state.user);
-  // console.log(success, loading, error);
   const {
     register,
     handleSubmit,
@@ -108,10 +107,10 @@ export function VideoUpload() {
   return (
     <Card color="transparent" shadow={false} className="mt-28 px-16 b">
       <Title title="Upload A Video" />
-      <Typography variant="h4" color="blue-gray">
+      <Typography variant="h4" className="text-white/80">
         Upload a Video
       </Typography>
-      <Typography color="gray" className="mt-1 font-normal">
+      <Typography color="gray" className="mt-1 font-normal text-white/60">
         Nice to meet you! Enter your details to register.
       </Typography>
       <form
@@ -121,7 +120,7 @@ export function VideoUpload() {
         <div>
           <Typography
             variant="h6"
-            className="mb-3 text-primarybg font-quicksand"
+            className="mb-3 text-white/90 text-xl font-bold  font-quicksand"
           >
             SELECT A VIDEO
           </Typography>
@@ -177,7 +176,7 @@ export function VideoUpload() {
         <div className="mt-5">
           <Typography
             variant="h6"
-            className="mb-3 font-quicksand text-primarybg"
+            className="mb-3 font-quicksand text-white/90 text-xl"
           >
             Select a Thumbnail
           </Typography>
@@ -230,7 +229,7 @@ export function VideoUpload() {
         </div>
 
         <div className="flex flex-row gap-6 justify-center align-middle mt-5">
-          <Typography variant="h6" className="text-center text-primarybg">
+          <Typography variant="h6" className="text-center text-white/90 text-xl">
             Title
           </Typography>
           <Input
@@ -250,7 +249,7 @@ export function VideoUpload() {
           <p className="my-2 text-red-600">{errors.title.message}</p>
         )}
         <div className="mt-8">
-          <Typography variant="h6" className="mb-3 text-primarybg">
+          <Typography variant="h6" className="mb-3 text-white/90 text-xl">
             Description
           </Typography>
 
@@ -279,7 +278,7 @@ export function VideoUpload() {
           label={
             <Typography
               variant="small"
-              className="flex items-center text-primarybg font-normal"
+              className="flex items-center text-white/90 text-sm font-normal"
             >
               I agree the
               <a
