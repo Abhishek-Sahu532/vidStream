@@ -8,20 +8,19 @@ import {
   Checkbox,
   Button,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import {
   signinUserRequest,
   signinUserSuccess,
   signinUserFailure,
-} from "../../Slices/UserSlices";
+} from "../../redux/Slices/UserSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
 export function Signin() {
   const {

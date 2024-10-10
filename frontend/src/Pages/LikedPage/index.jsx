@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Title from "../../Title.jsx";
+import Title from "../../lib/Title.jsx";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { LikeCard, Loader } from "../../Components";
 import {
   getLikedVideosRequest,
   getLikedVideosRequestSuccess,
   getLikedVideosRequestFailure,
-} from "../../Slices/LikeSlices.js";
-import { extractErrorMessage } from "../../extractErrorMessage.js";
+} from "../../redux/Slices/LikeSlices.js";
+import { extractErrorMessage } from "../../lib/extractErrorMessage.js";
 import axios from "axios";
 
 export const LikedPage = () => {

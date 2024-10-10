@@ -12,13 +12,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import {
   videoUploadRequest,
   videoUploadSuccess,
   videoUploadFailure,
-} from "../../Slices/VideoSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/VideoSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 
 export function VideoUpload() {

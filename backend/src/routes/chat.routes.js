@@ -13,6 +13,8 @@ import {
   searchUser,
   sendFriendRequest,
   acceptFriendRequest,
+  getAllNotifications,
+  getAllMyFriends,
 } from "../controller/chat.controller.js";
 
 const router = Router();
@@ -29,9 +31,13 @@ router.route("/message/:id").get(verifyJWT, getMessages);
 
 router.route("/:id").get(verifyJWT, getChatDetails).put(verifyJWT, renameGroup);
 
-router.route('/searchUser').get(verifyJWT, searchUser)
-router.route('/sendrequest').put(verifyJWT, sendFriendRequest)
+router.route("/searchUser").get(verifyJWT, searchUser);
+router.route("/sendrequest").put(verifyJWT, sendFriendRequest);
 
-router.route('/acceptrequest').put(verifyJWT, acceptFriendRequest)
+router.route("/acceptrequest").put(verifyJWT, acceptFriendRequest);
+
+router.route("/notification").get(verifyJWT, getAllNotifications);
+
+router.route("/myfriends").get(verifyJWT, getAllMyFriends);
 
 export default router;

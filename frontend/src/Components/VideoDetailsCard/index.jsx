@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { formatTimeDifference } from "../dateformat";
+import { formatTimeDifference } from "../../lib/dateformat.js";
 
 export const VideoDetailsCard = ({ vid }) => {
  

@@ -9,9 +9,9 @@ import {
   allVideosRequest,
   allVideosSuccess,
   allVideosFailure,
-} from "../../Slices/VideoSlices";
+} from "../../redux/Slices/VideoSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
 export const Root = () => {
   const { loading, videos } = useSelector((state) => state.videos);

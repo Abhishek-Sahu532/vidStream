@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import "@splidejs/react-splide/css";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { toast } from "react-toastify";
@@ -11,8 +11,8 @@ import {
   userSubscriberedRequest,
   userSubscriberedSuccess,
   userSubscriberedFailure,
-} from "../../Slices/SubscriberSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/SubscriberSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 
 export const SubscribedChannelPage = () => {

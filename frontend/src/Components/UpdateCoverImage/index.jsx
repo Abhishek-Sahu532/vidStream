@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import {
   updateCoverImageRequest,
   updateCoverImageSuccess,
   updateCoverImageFailure,
-} from "../../Slices/UserSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/UserSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
 
 export const UpdateCoverImage = () => {

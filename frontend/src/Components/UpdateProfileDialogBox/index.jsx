@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogBody,
 } from "@material-tailwind/react";
-
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 

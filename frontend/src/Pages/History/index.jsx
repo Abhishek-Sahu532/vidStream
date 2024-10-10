@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { HistoryCard } from "../../Components";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import Title from "../../Title.jsx";
+import Title from "../../lib/Title.jsx";
 import "@splidejs/react-splide/css";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import {
   userHistoryRequest,
   userHistorySuccess,
   userHistoryFailure,
-} from "../../Slices/UserSlices.js";
+} from "../../redux/Slices/UserSlices.js";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage.js";
+import { extractErrorMessage } from "../../lib/extractErrorMessage.js";
 
 export const History = () => {
   const dispatch = useDispatch();

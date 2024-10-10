@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import {
   forgetPasswordRequest,
   forgetPasswordSuccess,
   forgetPasswordFailure,
-} from "../../Slices/UserSlices";
+} from "../../redux/Slices/UserSlices";
 import axios from "axios";
-import { extractErrorMessage } from "../../extractErrorMessage";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
 export const ForgetPassword = () => {
   const dispatch = useDispatch();

@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { useSelector, useDispatch } from "react-redux";
 import { CommentSection } from "../CommentSection";
-import Title from "../../Title";
+import Title from "../../lib/Title";
 import { Link } from "react-router-dom";
 import { ShareComponent } from "../ShareComponent";
 import { useNavigate } from "react-router-dom";
@@ -20,10 +20,10 @@ import {
   addVideoLikeDislikeSuccess,
   addVideoLikeDislikeFailure,
   addVideoLikeDislikeReset,
-} from "../../Slices/LikeSlices";
-import { extractErrorMessage } from "../../extractErrorMessage";
+} from "../../redux/Slices/LikeSlices";
+import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
-import { formatTimeDifference } from "../dateformat";
+import { formatTimeDifference } from "../../lib/dateformat.js";
 
 function Icon({ id, open }) {
   return (
