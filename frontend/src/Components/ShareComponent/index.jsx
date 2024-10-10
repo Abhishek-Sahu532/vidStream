@@ -32,7 +32,7 @@ export function ShareComponent({ open, handleClose }) {
       <DialogHeader className="" onClick={handleClose}>
         <IoMdClose />
       </DialogHeader>
-      <DialogBody className="flex  gap-4">
+      <DialogBody className="flex items-center gap-4">
         <div className="w-56">
           <Input
             value={inputValue}
