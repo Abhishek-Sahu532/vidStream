@@ -66,15 +66,16 @@ export const Root = () => {
   const fetchMoreData = () => {
     if (hasMore) {
       setPage((prev) => prev + 1);
-      console.log(page)
+    console.log(page)
        updateURL(page);
     }
   };
+  
   return (
     <>
-      <div>
+      <div className="pt-24 relative"  >
         <Advertisement />
-        <div className="h-screen">
+        <div >
           {loading && page === 1 ? (
             <div className="flex gap-10 p-8 mb-3 flex-wrap justify-around ">
               {Array(6)

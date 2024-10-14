@@ -40,7 +40,7 @@ export const LikedPage = () => {
     getUsersLikedVideo();
   }, [dispatch]);
   return (
-    <div className="p-10 mt-20 ">
+    <div className="p-10 pt-24 ">
       <Title title="Likes" />
       {loading ? (
         <Loader />
@@ -52,7 +52,7 @@ export const LikedPage = () => {
             </p>
           ) : (
             <section tag="section">
-              <p className="text-center text-xl text-blue-gray-600">
+              <p className="text-center text-xl text-blue-gray-600 mb-2">
                 {` You have liked ${likes?.length} Videos`}
               </p>
               <Splide

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export function Advertisement() {
   return (
-    <div className="p-4 px-10 rounded-l-xl border border-[#9197c3] rounded-xl mx-4 mt-24 ">
+    <div className="p-4 px-10 rounded-l-xl border border-[#9197c3] rounded-xl mx-4 ">
       <Typography variant="small" className="font-bold mb-2 text-[#7174ad] ">
         Upcoming Events
       </Typography>

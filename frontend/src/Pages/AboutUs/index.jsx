@@ -2,7 +2,7 @@ import React from "react";
 import {Link } from 'react-router-dom'
 export const AboutUs = () => {
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen pt-28">
       {/* Header */}
       <header className="bg-white py-8 shadow">
         <div className="container mx-auto px-4">

@@ -55,7 +55,7 @@ export const Subscribers = () => {
     }
   }, [dispatch]);
   return (
-    <div className="p-10 mt-20 ">
+    <div className="p-10 pt-24 ">
       <Title title="Subscriber" />
 
       {loading ? (
@@ -66,7 +66,7 @@ export const Subscribers = () => {
             <p className="mt-4 md:mt-0 text-center text-white/90">Please subscriber any</p>
           ) : (
             <section tag="section">
-              <p className="text-center text-xl text-white/90 mb-2 font-semibold">
+              <p className="text-center text-xl text-white/90 mb-4 font-semibold ">
                 {" "}
                 You have {subscribers?.totalSubscribers} subscribers
               </p>

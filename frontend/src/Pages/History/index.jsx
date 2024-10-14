@@ -44,7 +44,7 @@ export const History = () => {
     getUserWatchhistory();
   }, [dispatch, error, toast]);
   return (
-    <div className="p-10 mt-20 max-h-screen ">
+    <div className="p-10 pt-28 max-h-screen ">
       <Title title="History" />
       {loading ? (
         <p className="mt-4 md:mt-0 text-center text-white/90">

@@ -62,7 +62,7 @@ export const SubscribedChannelPage = () => {
     getUserSubscribedChannel(username);
   }, [dispatch, success, error]);
   return (
-    <div className="p-10 mt-20 ">
+    <div className="p-10 pt-20 ">
       <Title title="Subscribed Channels" />
       {loading ? (
         <Loader />

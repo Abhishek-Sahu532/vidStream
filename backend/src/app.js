@@ -4,15 +4,18 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-
+import passport from "passport";
+import "./middlewares/google.auth.middleware.js";
 
 const app = express();
 
-
-
 app.use(
   cors({
-    origin: [process.env.CORS_ORIGIN, "http://localhost:5173", "http://localhost:8000"],
+    origin: [
+      process.env.CORS_ORIGIN,
+      "http://localhost:5173",
+      "http://localhost:8000",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -24,27 +27,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-
-
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Express session
-// app.use(
-//   session({
-//     secret: process.env.ACCESS_TOKEN_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       secure: process.env.NODE_ENV === "production", // use secure cookies in production
-//       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-//     },
-//   })
-// );
-
 app.use(
   session({
     store: MongoStore.create({
@@ -61,25 +49,7 @@ app.use(
   })
 );
 
-
-
 // Passport middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
-// // Serialize user for the session
-// passport.serializeUser((user, done) => {
-//   done(null, user.id);
-// });
-
-// // Deserialize user from the session
-// passport.deserializeUser(async (id, done) => {
-//   try {
-//     const user = await User.findById(id);
-//     done(null, user);
-//   } catch (error) {
-//     done(error, null);
-//   }
-// });
 
 //routes imports
 import userRouter from "./routes/user.routes.js";
@@ -96,5 +66,39 @@ app.use("/api/v1/comment", commentRouter);
 app.use("/api/v1/subscriber", subscribeRouter);
 app.use("/api/v1/like", likeRouter);
 app.use("/api/v1/chat", chatRouter);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Callback route after Google OAuth
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    const { accessToken, refreshToken } = req.user;
+    const options = {
+      // domain: 'vid-stream-client.vercel.app',
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    };
+
+    res.cookie("accessToken", accessToken, options);
+    res.cookie("refreshToken", refreshToken, options);
+
+    // Redirect to frontend after successful login
+    const redirectUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://vid-stream-client.vercel.app/"
+        : "http://localhost:5173/";
+    res.redirect(redirectUrl);
+  }
+);
 
 export { app };

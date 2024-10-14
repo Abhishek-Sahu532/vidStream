@@ -75,7 +75,7 @@ export const Signup = () => {
     }
   }, [success, navigate, error]);
   return (
-    <div className="mt-28 flex flex-col text-primarybg  bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
+    <div className="pt-28 flex flex-col text-primarybg  bg-transparent shadow-none rounded-xl bg-clip-border items-center justify-center">
       <Title title="Sign up" />
       <h4 className="block  text-2xl antialiased font-semibold leading-snug tracking-normal text-primarybg font-quicksand">
         Sign Up

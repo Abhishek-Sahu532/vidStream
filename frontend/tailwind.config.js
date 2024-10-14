@@ -23,6 +23,7 @@ module.exports = withMT({
       },
       backgroundImage: {
         'gradient': 'linear-gradient(to bottom left, #000000, #000000, #000000, #000000, #000000, #171616, #272526, #373436, #5e5a5f, #86838b, #afb0bb, #d9dfec)',
+        
       },
     },
   },

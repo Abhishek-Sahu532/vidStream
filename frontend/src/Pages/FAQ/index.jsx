@@ -12,7 +12,7 @@ export const FaqPage = () => {
     const handleOpen = (value) => setOpen(open === value ? 0 : value);
    
   return (
-    <div className="bg-gray-100 min-h-screen py-12 mt-9">
+    <div className="bg-gray-100 min-h-screen py-12 pt-28">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl mb-8 text-center font-quicksand text-primarybg">Vidstream FAQ</h1>
 

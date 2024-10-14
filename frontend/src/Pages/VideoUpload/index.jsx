@@ -105,7 +105,7 @@ export function VideoUpload() {
     }
   }, [success, toast, navigate, error]);
   return (
-    <Card color="transparent" shadow={false} className="mt-28 px-16 b">
+    <Card color="transparent" shadow={false} className="pt-28 px-16 b">
       <Title title="Upload A Video" />
       <Typography variant="h4" className="text-white/80">
         Upload a Video
