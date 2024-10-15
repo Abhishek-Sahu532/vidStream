@@ -12,7 +12,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      process.env.CORS_ORIGIN,
+     "https://vid-stream-client.vercel.app",
       "http://localhost:5173",
       "http://localhost:8000",
     ],
@@ -21,6 +21,20 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://vid-stream-client.vercel.app");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  next();
+});
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
