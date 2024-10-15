@@ -23,9 +23,7 @@ export const VideoDetails = () => {
   const { loading, videos, recommendVideos } = useSelector(
     (state) => state.videos
   );
-
   const { success } = useSelector((state) => state.user);
-  console.log(success);
   const filteredRecommendations = recommendVideos?.recommvideos?.filter(
     (vid) => vid._id !== id
   );

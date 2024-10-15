@@ -58,6 +58,7 @@ import commentRouter from "./routes/comment.routes.js";
 import subscribeRouter from "./routes/subscription.routes.js";
 import likeRouter from "./routes/like.routes.js";
 import chatRouter from "./routes/chat.routes.js";
+import { generateAccessAndRefreshToken } from "./controller/user.controller.js";
 
 //routes declaration
 app.use("/api/v1/users", userRouter);
@@ -79,26 +80,41 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res) => {
-    const { accessToken, refreshToken } = req.user;
-    const options = {
-      // domain: 'vid-stream-client.vercel.app',
-      path: "/",
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    };
+  async (req, res) => {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.redirect("/login"); // Handle if user is not authenticated
+      }
 
-    res.cookie("accessToken", accessToken, options);
-    res.cookie("refreshToken", refreshToken, options);
+      // Generate tokens asynchronously
+      const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
+        user._id
+      );
 
-    // Redirect to frontend after successful login
-    const redirectUrl =
-      process.env.NODE_ENV === "production"
-        ? "https://vid-stream-client.vercel.app/"
-        : "http://localhost:5173/";
-    res.redirect(redirectUrl);
+      const options = {
+        path: "/",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      };
+
+      // Set cookies with the generated tokens
+      res.cookie("accessToken", accessToken, options);
+      res.cookie("refreshToken", refreshToken, options);
+console.log('user from password block', user)
+      // Redirect to frontend after successful login
+      const redirectUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://vid-stream-client.vercel.app/"
+          : "http://localhost:5173/";
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error("Error in Google authentication callback:", error);
+      res.redirect("/login"); // Redirect to login in case of an error
+    }
   }
 );
+
 
 export { app };

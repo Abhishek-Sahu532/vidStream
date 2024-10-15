@@ -13,10 +13,8 @@ import {
   resetPassword,
   updateAccountDetails,
   updateCoverImage,
-  // googleAuthCallback,
   updateUserAvatar,
   resetPasswordForLoggedUser,
-  // googleAuth,
 } from "../controller/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -69,41 +67,5 @@ router.route("/reset-password").put(verifyJWT, resetPasswordForLoggedUser);
 
 router.route("/video-recommentions").get(verifyJWT, getRecommendations);
 
-// router.get("/auth/google", (req, res) => {
-//   const authUrl = `${req.protocol}://${req.get("host")}/api/v1/users/auth/google/initiate`;
-//   res.json({ authUrl });
-// });
-
-// router.get(
-//   "/auth/google/initiate",
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
-
-// router.get("/auth/status", (req, res) => {
-//   console.log("Session:", req.session);
-//   console.log("User:", req.user);
-//   console.log("Is Authenticated:", req.isAuthenticated());
-
-//   if (req.isAuthenticated()) {
-//     res.json({ isAuthenticated: true, user: req.user });
-//   } else {
-//     res.json({ isAuthenticated: false });
-//   }
-// });
-
-// router.get(
-//   "/auth/google/callback",
-//   passport.authenticate("google", {
-//     failureRedirect: "http://localhost:5173/login",
-//   }),
-//   (req, res) => {
-//     res.send(`
-//       <script>
-//         window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS', user: ${JSON.stringify(req.user)} }, 'http://localhost:5173');
-//         window.close();
-//       </script>
-//     `);
-//   }
-// );
 
 export default router;

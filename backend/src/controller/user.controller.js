@@ -19,7 +19,7 @@ import {
 } from "../utils/collaborativeFiltering.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
-const generateAccessAndRefreshToken = async (userId) => {
+export const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
@@ -615,6 +615,10 @@ export const resetPasswordForLoggedUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, `Password changed successfully.`));
 });
 
+
+
+
+
 export const getRecommendations = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
@@ -627,11 +631,15 @@ export const getRecommendations = asyncHandler(async (req, res) => {
 
   // Get content-based recommendations
   const contentBasedRecommendations = new Set();
+
   allWatchedVideos.forEach((video) => {
     const similarVideos = getSimilarVideos(video, allVideos);
-    similarVideos.forEach((simVideo) =>
-      contentBasedRecommendations.add(simVideo?._id.toString())
-    );
+    similarVideos.forEach((simVideo) => {
+      if (simVideo?._id) {
+        contentBasedRecommendations.add(simVideo._id.toString());
+      }
+    });
+    
   });
 
   // Get collaborative filtering recommendations
@@ -648,7 +656,6 @@ export const getRecommendations = asyncHandler(async (req, res) => {
   );
 
   //  Fetch and return recommended video details
-
   const recommvideos = await Video.find({
     _id: { $in: combinedRecommendations },
   })
@@ -668,52 +675,5 @@ export const getRecommendations = asyncHandler(async (req, res) => {
     );
 });
 
-//GOOGLE AUTH
-// Configure the Google strategy for use by Passport.
 
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: "http://localhost:5173/users/auth/google/callback",
-//     },
-//     async (accessToken, refreshToken, profile, done) => {
-//       try {
-//         // Find or create user in your database
-//         let user = await User.findOne({ username: profile.id });
-//         if (!user) {
-//           user = await User.create({
-//             username: profile.id,
-//             fullname: profile.displayName,
-//             email: profile.emails[0].value,
-//           });
-//         }
-//         // console.log("created user,", user);
-//         // console.log("user1", user);
-//         return done(null, user);
-//       } catch (error) {
-//         return done(error, null);
-//       }
-//     }
-//   )
-// );
 
-// // Your route handler
-// export const googleAuth = asyncHandler(async (req, res, next) => {
-//   passport.authenticate("google", { scope: ["profile", "email"] })(
-//     req,
-//     res,
-//     next
-//   );
-// });
-
-// // Callback route handler
-// export const googleAuthCallback = asyncHandler(async (req, res, next) => {
-//   passport.authenticate("google", {
-//     successRedirect: "/dashboard", // Redirect to dashboard after successful login
-//     failureRedirect: "/login", // Redirect to login page if authentication fails
-//   })(req, res, next);
-// });
-
-//get recommendations

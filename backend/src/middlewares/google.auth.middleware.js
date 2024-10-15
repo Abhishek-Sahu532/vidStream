@@ -32,7 +32,7 @@ passport.use(
         } else {
           // Create a new user
           const newUser = new User({
-            googleId: profile.id,
+            // googleId: profile.id,
             username: profile.emails[0].value,
             email: profile.emails[0].value,
             fullname: profile.displayName,
@@ -43,10 +43,12 @@ passport.use(
 
           user = await newUser.save();
 
-         console.log(user)
-        //   return done(null, user);
+          //   return done(null, user);
         }
-        return done(null, { user, accessToken, refreshToken });
+        // console.log(user, accessToken)
+        
+        // return done(null, {user, accessToken, refreshToken} );
+        return done(null, user );
       } catch (error) {
         console.error("Error during Google OAuth Strategy:", error);
         return done(error, false);
@@ -58,14 +60,14 @@ passport.use(
 // Serialize user into the sessions
 passport.serializeUser((user, done) => {
   // Store user.googleId in the session
-  done(null, user.user.googleId); // Make sure this is user.googleId and not user._id
+  done(null, user._id); // Make sure this is user.googleId and not user._id
 });
 
 // Deserialize user from the sessions
-passport.deserializeUser(async (googleId, done) => {
+passport.deserializeUser(async (_id, done) => {
   try {
     // Find user by googleId instead of _id
-    const user = await User.findOne({ googleId });
+    const user = await User.findOne({ _id });
     done(null, user);
   } catch (err) {
     done(err, false);

@@ -10,9 +10,10 @@ export const deleteFromCloudinary = async (publicId) => {
     if (result.result === "ok") {
       console.log(`File with public ID ${publicId} deleted from Cloudinary`);
       return true; // or you can return some success indicator
-    } else {
-      throw new Error("Failed to delete file from Cloudinary");
-    }
+    } 
+    // else {
+    //   throw new Error("Failed to delete file from Cloudinary");
+    // }
   } catch (error) {
     console.error("Error deleting file from Cloudinary:", error);
     throw error; // or handle the error as needed in your application

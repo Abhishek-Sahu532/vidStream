@@ -11,7 +11,7 @@ import {
 } from "../../redux/Slices/UserSlices";
 import { extractErrorMessage } from "../../lib/extractErrorMessage";
 import axios from "axios";
-import { Typography } from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 
 export const Signup = () => {
   const dispatch = useDispatch();
@@ -63,6 +63,14 @@ export const Signup = () => {
       dispatch(registerUserFailure(errorMessage || error.message));
     }
   };
+
+  const handleLogin = () => {
+    const backendUrl = import.meta.env.VITE_DEV_MODE === 'production' 
+    ? 'https://vid-stream-two.vercel.app/auth/google'
+    : 'http://localhost:8000/auth/google';
+window.open(backendUrl, "_self");
+  };
+
 
   useEffect(() => {
     if (error) {
@@ -265,6 +273,22 @@ export const Signup = () => {
         >
           sign up
         </button>
+        <Typography className="font-semibold text-white/80 text-center p-3">OR</Typography>
+        <Button
+              fullWidth
+              size="lg"
+              className="flex items-center gap-8  bg-primarybg font-quicksand text-md"
+              onClick={handleLogin}
+              disabled={isSubmitting ? true : false}
+            >
+              <img
+                src="https://docs.material-tailwind.com/icons/google.svg"
+                alt="Google"
+                className="h-6 w-6"
+              />
+              Continue with Google
+            </Button>
+
         <p className="block mt-4  text-base antialiased font-normal leading-relaxed text-center text-secondarybg">
           Already have an account?
           <Link to="/signin" className="font-medium text-primarybg">

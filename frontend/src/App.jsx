@@ -58,7 +58,7 @@ function App() {
     }
   }, [success, navigate]);
   return (
-    <div className="w-screen relative bg-gradient  min-h-screen font-quicksand">
+    <div className="w-screen relative bg-gradient  min-h-screen font-quicksand overflow-x-hidden">
       <NavbarWithSearch />
 
       <Outlet />

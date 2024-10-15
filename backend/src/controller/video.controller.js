@@ -40,8 +40,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
   if (!videos.length) {
     throw new ApiError(401, "No more videos available");
   }
-
-  // console.log("allVideos.length", videos.length);
   return res
     .status(200)
     .json(new ApiResponse(200, videos, "Videos fetched successfully"));

@@ -13,7 +13,7 @@ import { signoutUserFailure, signoutUserSucess } from "../../redux/Slices/UserSl
 import axios from "axios";
 import { extractErrorMessage } from "../../lib/extractErrorMessage";
 
-export const ProfileMenu = () => {
+export const ProfileMenu = ({ openNav, toggleNav }) => {
   const dispatch = useDispatch();
   const { success, loading, currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -135,7 +135,7 @@ export const ProfileMenu = () => {
       <MenuList className="mt-4">
         {menuListItems.map((item) => (
           <Link to={item.link} key={item.name}>
-            <MenuItem className="flex items-center gap-2">
+            <MenuItem className="flex items-center gap-2" onClick={toggleNav} >
               {item.iconPath}
               <Typography variant="small" className="font-medium ">
                 {item.name}

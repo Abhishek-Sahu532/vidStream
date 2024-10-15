@@ -20,23 +20,23 @@ import axios from "axios";
 
 export function NavbarWithSearch() {
   const [openNav, setOpenNav] = useState(false);
-  const { success , currentUser} = useSelector((state) => state.user);
+  const [collapse, setCollapse] = useState(false);
+
+  const { success, currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  // console.log(currentUser)
   const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     navigate(`/search?query=${searchQuery}`);
     try {
       dispatch(allVideosRequest());
-
       if (import.meta.env.VITE_DEV_MODE == "production") {
         const res = await axios.get(
           `${
             import.meta.env.VITE_BACKEND_URL
-          }/api/v1/video/all-videos?query=${searchQuery}`, { withCredentials: true}
+          }/api/v1/video/all-videos?query=${searchQuery}`,
+          { withCredentials: true }
         );
         dispatch(allVideosSuccess(res?.data?.data || []));
       } else {
@@ -50,7 +50,6 @@ export function NavbarWithSearch() {
       dispatch(allVideosFailure(htmlError || error.message));
     }
   };
-
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -59,7 +58,7 @@ export function NavbarWithSearch() {
   }, []);
 
   const navList = (
-    <ul className="flex flex-col gap-2 items-center lg:flex-row lg:gap-6">
+    <ul className="flex  gap-6 justify-around  items-center lg:flex-row lg:gap-6">
       <Typography
         as="li"
         variant="small"
@@ -243,7 +242,8 @@ export function NavbarWithSearch() {
       {/* mobile menu */}
       <Collapse open={openNav}>
         <div className="container mx-auto">
-          {navList}
+          <div onClick={() => setOpenNav(!openNav)}> {navList}</div>
+
           <div className="flex flex-col gap-x-2 sm:flex-row sm:items-center p-2">
             <div className="relative w-full gap-2 md:w-max">
               <Input
@@ -285,24 +285,28 @@ export function NavbarWithSearch() {
             <Button
               size="md"
               className="mt-1 rounded-lg sm:mt-0 bg-[#55567e]"
-              onClick={handleSearch}
+              onClick={() => {
+                handleSearch();
+                setOpenNav(!openNav);
+              }}
             >
               Search
             </Button>
             {/* login button */}
           </div>
 
-          {success && currentUser?.username ?   (
-            <ProfileMenu />
+          {success && currentUser?.username ? (
+            <ProfileMenu  openNav={openNav} 
+  toggleNav={() => setOpenNav(!openNav)}  />
           ) : (
-            <div className="flex ">
-              <Link to="/signup">
+            <div className="flex justify-around gap-x-2">
+              <Link to="/signup" onClick={() => setOpenNav(!openNav)}>
                 <Button fullWidth variant="text" size="sm" className="">
                   <span>Sign Up</span>
                 </Button>{" "}
               </Link>
 
-              <Link to="/signin">
+              <Link to="/signin" onClick={() => setOpenNav(!openNav)}>
                 {" "}
                 <Button fullWidth variant="text" size="sm">
                   <span>Sign In</span>
