@@ -13,8 +13,10 @@ import { Message } from "./models/message.model.js";
 dotenv.config({
   path: "./env",
 });
+
 const server = createServer(app);
 const io = new Server(server, {});
+
 export const userSoketIDs = new Map();
 
 

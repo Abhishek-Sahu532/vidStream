@@ -8,15 +8,15 @@ import passport from "passport";
 import "./middlewares/google.auth.middleware.js";
 
 const app = express();
-
+console.log(process.env.CORS_ORIGIN)
 app.use(
   cors({
     origin: [
-     "https://vid-stream-client.vercel.app",
+     process.env.CORS_ORIGIN,
       "http://localhost:5173",
       "http://localhost:8000",
     ],
-    credentials: true,
+    // credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -62,8 +62,6 @@ app.use(
     },
   })
 );
-
-// Passport middleware
 
 //routes imports
 import userRouter from "./routes/user.routes.js";

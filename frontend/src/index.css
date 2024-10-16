@@ -2,28 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 /* src/scrollbar.css */
 ::-webkit-scrollbar {
-    width: 16px;
+  width: 16px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    /* margin-top: 80px; */
+  background: #f1f1f1;
+  /* margin-top: 80px; */
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #55567e;
-    border-radius: 10px;
-    border: 3px solid #f1f1f1;
+  background-color: #55567e;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #9197c3;
+  background: #9197c3;
 }
