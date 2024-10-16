@@ -8,33 +8,32 @@ import passport from "passport";
 import "./middlewares/google.auth.middleware.js";
 
 const app = express();
-console.log(process.env.CORS_ORIGIN)
+console.log(process.env.CORS_ORIGIN);
 app.use(
   cors({
-    origin: [
-     process.env.CORS_ORIGIN,
-      "http://localhost:5173",
-      "http://localhost:8000",
-    ],
-    // credentials: true,
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.CORS_ORIGIN
+        : ["http://localhost:5173", "http://localhost:8000"],
+
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://vid-stream-client.vercel.app");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-  next();
-});
-
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://vid-stream-client.vercel.app");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+//   if (req.method === "OPTIONS") {
+//     return res.status(200).end();
+//   }
+//   next();
+// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -57,7 +56,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      secure: true,
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   })
@@ -114,7 +114,7 @@ app.get(
       // Set cookies with the generated tokens
       res.cookie("accessToken", accessToken, options);
       res.cookie("refreshToken", refreshToken, options);
-console.log('user from password block', user)
+      console.log("user from password block", user);
       // Redirect to frontend after successful login
       const redirectUrl =
         process.env.NODE_ENV === "production"
@@ -127,6 +127,5 @@ console.log('user from password block', user)
     }
   }
 );
-
 
 export { app };

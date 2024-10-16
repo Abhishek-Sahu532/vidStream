@@ -19,10 +19,7 @@ const io = new Server(server, {});
 
 export const userSoketIDs = new Map();
 
-
-io.use((socket, next)=>{
-  
-})
+io.use((socket, next) => {});
 
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
