@@ -69,7 +69,7 @@ import videoRouter from "./routes/video.routes.js";
 import commentRouter from "./routes/comment.routes.js";
 import subscribeRouter from "./routes/subscription.routes.js";
 import likeRouter from "./routes/like.routes.js";
-import chatRouter from "./routes/chat.routes.js";
+// import chatRouter from "./routes/chat.routes.js";
 import { generateAccessAndRefreshToken } from "./controller/user.controller.js";
 
 //routes declaration
@@ -78,7 +78,7 @@ app.use("/api/v1/video", videoRouter);
 app.use("/api/v1/comment", commentRouter);
 app.use("/api/v1/subscriber", subscribeRouter);
 app.use("/api/v1/like", likeRouter);
-app.use("/api/v1/chat", chatRouter);
+// app.use("/api/v1/chat", chatRouter);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -114,7 +114,7 @@ app.get(
       // Set cookies with the generated tokens
       res.cookie("accessToken", accessToken, options);
       res.cookie("refreshToken", refreshToken, options);
-      console.log("user from password block", user);
+      // console.log("user from password block", user);
       // Redirect to frontend after successful login
       const redirectUrl =
         process.env.NODE_ENV === "production"
