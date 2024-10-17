@@ -8,11 +8,11 @@ import passport from "passport";
 import "./middlewares/google.auth.middleware.js";
 
 const app = express();
-console.log(process.env.CORS_ORIGIN);
+
+console.log(process.env.CORS_ORIGIN,  process.env.NODE_ENV);
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
+    origin: process.env.NODE_ENV === "production"
         ? process.env.CORS_ORIGIN
         : ["http://localhost:5173", "http://localhost:8000"],
 

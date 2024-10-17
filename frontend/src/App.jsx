@@ -24,6 +24,7 @@ function App() {
       try {
         dispatch(currentUserRequest());
         if (import.meta.env.VITE_DEV_MODE == "production") {
+          console.log(import.meta.env.VITE_BACKEND_URL)
           const res = await axios.get(
             `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/current-user`,
             { withCredentials: true }
